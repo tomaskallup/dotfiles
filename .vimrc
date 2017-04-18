@@ -87,6 +87,9 @@ set writebackup
 
 set scrolloff=5
 
+" Unbind annoying K
+map K <nop>
+
 " Setup custom shortcuts
 map <F6> :tabp<CR>
 map <F7> :tabn<CR>
@@ -198,5 +201,8 @@ endif
 
 " Remove whitespaces on save
 autocmd BufWritePre * :%s/\s\+$//e
+
+" AutoPairs config
+let g:AutoPairsCenterLine = 0
 
 set nocompatible
