@@ -73,6 +73,8 @@ set smartcase "don't ignore Captials when present
 set ignorecase "don't need correct case when searching
 set splitbelow " puts new splits to the bottom
 
+set synmaxcol=250 " Limit syntax highlit to first 250 characters of line (better performance)
+
 syntax on
 highlight Pmenu ctermbg=238 ctermfg=220
 
@@ -93,10 +95,13 @@ map K <nop>
 " Setup custom shortcuts
 map <F6> :tabp<CR>
 map <F7> :tabn<CR>
-map <F8> :tabclose<CR>
+map <F8> :bd<CR>
 nnoremap <leader>ev :vsp $MYVIMRC<CR>
 " Remove highlights from search with ,ev
 map <leader>f :noh<CR>
+ino jj <esc>
+cno jj <c-c>
+vno v <esc>
 
 " Disable default key-mappings
 let g:EasyMotion_do_mapping = 0
@@ -192,12 +197,8 @@ augroup END
 
 " Setup GUI
 set guifont=SauceCodePro\ Nerd\ Font:h14
-" Make the background easier to see in Gui Vim
-if has('gui_running')
-    set background=light
-else
-    set background=dark
-endif
+" Set the colors
+set background=dark
 
 " Remove whitespaces on save
 autocmd BufWritePre * :%s/\s\+$//e
