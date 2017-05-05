@@ -26,7 +26,11 @@ Plugin 'tmhedberg/matchit' " Match HTML open/close tag, support for % on tag
 Plugin 'yggdroot/indentline' " Show indented lines
 Plugin 'ap/vim-css-color' " Color preview in CSS
 Plugin 'digitaltoad/vim-pug' " Pug/Jade support
-Plugin 'jiangmiao/auto-pairs' " Better bracket, qoute controll
+Plugin 'cohama/lexima.vim' " Quotes, parens... autocomplete
+Plugin 'Valloric/YouCompleteMe' " THIS GUY, OMG!
+Plugin 'SirVer/ultisnips' " Fancy snippet loader, used by YouCompleteMe
+Plugin 'kien/ctrlp.vim' " Last open files
+Plugin 'ternjs/tern_for_vim' " JS support for external libs
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -97,11 +101,16 @@ map <F6> :tabp<CR>
 map <F7> :tabn<CR>
 map <F8> :bd<CR>
 nnoremap <leader>ev :vsp $MYVIMRC<CR>
-" Remove highlights from search with ,ev
+" Remove highlights from search with ,f
 map <leader>f :noh<CR>
 ino jj <esc>
 cno jj <c-c>
 vno v <esc>
+
+" Reindent whole file and go back to curosr
+map <leader>= gg=G``
+" Copy whole file and go back to curosr
+map <leader>y ggyG``
 
 " Disable default key-mappings
 let g:EasyMotion_do_mapping = 0
@@ -127,6 +136,10 @@ let NERDTreeMapActivateNode='l'
 let NERDTreeMapCloseChildren='h'
 
 let NERDTreeAutoDeleteBuffer = 1
+let NERDTreeQuitOnOpen = 1
+
+" Close vim if nerdtree is the last buffer
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " Change colors of NERDtree
 hi Directory guifg=#5fff87 ctermfg=84
@@ -146,6 +159,7 @@ endif
 " Highlight .tpl files as TWIG
 au BufNewFile,BufRead *.tpl set filetype=html.twig
 
+" Syntastic settings
 let g:syntastic_scss_checkers = ['scss_lint']
 let g:syntastic_javascript_checkers = ['jshint']
 let g:syntastic_check_on_open = 1
@@ -169,6 +183,10 @@ let g:airline#extensions#tabline#fnamemod = ':t' " show just the filename of buf
 let g:airline_detect_modified=1
 let g:airline#extensions#bufferline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline#extensions#tabline#tab_nr_type = 1
+
+let g:airline#extensions#tabline#buffers_label = 'Buff'
+let g:airline#extensions#tabline#tabs_label = 'Tab'
 
 " Disable arrow keys
 map  <up>    <nop>
@@ -177,7 +195,10 @@ map  <left>  <nop>
 map  <right> <nop>
 
 " Remember cursor pos
-autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+autocmd BufReadPost *
+  \  if line("'\"") > 1 && line("'\"") <= line("$") |
+  \    exe "normal! g`\"" |
+  \  endif
 
 " Ignore the node_modules folder and all its subfolders
 set wildignore+=**/node_modules/**
@@ -203,7 +224,22 @@ set background=dark
 " Remove whitespaces on save
 autocmd BufWritePre * :%s/\s\+$//e
 
-" AutoPairs config
-let g:AutoPairsCenterLine = 0
+" YouCompleteMe settings
+let g:ycm_semantic_triggers =  {
+  \   'c' : ['->', '.'],
+  \   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
+  \             're!\[.*\]\s'],
+  \   'ocaml' : ['.', '#'],
+  \   'cpp,objcpp' : ['->', '.', '::'],
+  \   'perl' : ['->'],
+  \   'php' : ['->', '::'],
+  \   'cs,java,javascript,typescript,d,python,perl6,scala,vb,elixir,go' : ['.'],
+  \   'ruby' : ['.', '::'],
+  \   'lua' : ['.', ':'],
+  \   'erlang' : [':'],
+  \   'css' : [': '],
+  \ }
+
+let g:ycm_autoclose_preview_window_after_completion=1
 
 set nocompatible
