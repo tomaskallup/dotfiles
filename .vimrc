@@ -4,33 +4,62 @@ filetype off                  " required
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
+
+" --------------------------------------------------------------------- "
+"  Better movement plugins                                              "
+" --------------------------------------------------------------------- "
 Plugin 'Lokaltog/vim-easymotion' " Fast cursor jumping in files
 Plugin 'scrooloose/nerdtree' " Nice file explorer inside vim
+Plugin 'jlanzarotta/bufexplorer' " Better buffer management
 Plugin 'Xuyuanp/nerdtree-git-plugin' " Show git changes in NERDtree
-Plugin 'vim-airline/vim-airline' " Airline bar for coziness
-Plugin 'vim-airline/vim-airline-themes' " Airline themes
-Plugin 'JulesWang/css.vim' " Better CSS support (for highlight)
-Plugin 'scrooloose/syntastic' " Syntax checker
-Plugin 'tpope/vim-fugitive' " GIT integration using :Gcommand
+Plugin 'tmhedberg/matchit' " Match HTML open/close tag, support for % on tag
+Plugin 'ctrlpvim/ctrlp.vim' " File finder
+Plugin 'xolox/vim-easytags' " OPOP
+Plugin 'xolox/vim-misc' " ^ He needs it
+
+" -------------------------------------------------------------------- "
+"  Design changing plugins                                             "
+" -------------------------------------------------------------------- "
+Plugin 'itchyny/lightline.vim' " Nice bar
 Plugin 'ryanoasis/vim-devicons' " Nice file icons
+Plugin 'mhinz/vim-startify' " Cool startup screen
+Plugin 'ap/vim-css-color' " Color preview in CSS
+
+" -------------------------------------------------------------------- "
+"  Syntax and autocomplete                                             "
+" -------------------------------------------------------------------- "
+Plugin 'JulesWang/css.vim' " Better CSS support (for highlight)
+Plugin 'tpope/vim-fugitive' " GIT integration using :Gcommand
 Plugin 'othree/html5.vim' " HTML5 tags
 Plugin 'pangloss/vim-javascript' " Better JS syntax & indent
+Plugin 'mxw/vim-jsx' " JSX syntax
 Plugin 'lumiliet/vim-twig' " Twig syntax
 Plugin 'groenewege/vim-less' " Less syntax
-Plugin 'tmhedberg/matchit' " Match HTML open/close tag, support for % on tag
-Plugin 'yggdroot/indentline' " Show indented lines
-Plugin 'ap/vim-css-color' " Color preview in CSS
-Plugin 'digitaltoad/vim-pug' " Pug/Jade support
-Plugin 'cohama/lexima.vim' " Quotes, parens... autocomplete
+Plugin 'elzr/vim-json' " Json syntax fix
+Plugin 'blueyed/smarty.vim' " Smarty
+"Plugin 'digitaltoad/vim-pug' " Pug/Jade support
+
 Plugin 'Valloric/YouCompleteMe' " THIS GUY, OMG!
-Plugin 'SirVer/ultisnips' " Fancy snippet loader, used by YouCompleteMe
-Plugin 'kien/ctrlp.vim' " Last open files
 Plugin 'ternjs/tern_for_vim' " JS support for external libs
+Plugin 'SirVer/ultisnips' " Fancy snippet loader, used by YouCompleteMe
+
+" -------------------------------------------------------------------- "
+"  Other general stuff                                                 "
+" -------------------------------------------------------------------- "
+Plugin 'scrooloose/nerdcommenter' " KreyGasm comments
+Plugin 'mattn/emmet-vim' " Html godlike
+Plugin 'sjl/gundo.vim' " Better undo
+Plugin 'w0rp/ale' " Linter lul
+Plugin 'tpope/vim-surround' " (o_o)
+
+"Plugin 'cohama/lexima.vim' " Quotes, parens... autocomplete
+
+" For the LULZ
+Plugin 'johngrib/vim-game-code-break'
+
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -42,8 +71,6 @@ set title
 set number
 set relativenumber
 set ruler
-set cursorline
-"set showbreak=^U2026
 set laststatus=2 " Enable the status bar to always show
 set hidden " Set hidden to allow buffers to be browsed
 set breakindent " Make word wrapping behave like it does in every other sane text editor
@@ -51,14 +78,13 @@ set hlsearch " Highlight search results
 set incsearch " Make search jump:
 set gdefault " assume the /g flag on :s substitutions to replace all matches in a line
 set autoread " Make Vim automatically open changed files (e.g. changed after a Git commit)
-au FocusGained,BufEnter * :silent! !
 
 set backspace=indent,eol,start " allow backspacing over everything in insert mode
 set autoindent " always set autoindenting on
 set noesckeys " (Hopefully) removes the delay when hitting esc in insert mode
 set ttimeout " (Hopefully) removes the delay when hitting esc in insert mode
 set ttimeoutlen=1 " (Hopefully) removes the delay when hitting esc in insert mode
-set tabstop=8 " The default is 8 which is MASSIVE!!
+set tabstop=4 " The default is 8 which is MASSIVE!!
 set softtabstop=0
 set expandtab
 set shiftwidth=4
@@ -67,23 +93,34 @@ set wildmenu " visually autocomplete the command menu
 set lazyredraw " only redraw when needed
 set ttyfast " sends more characters to the screen for fast terminal
 set showmatch " highlight matching [{()}]
-set foldenable " enable folding
-set foldlevelstart=10 " open most folds by default
-set foldnestmax=10 " 10 nested folders max
+set nofoldenable " disable folding
 set shiftwidth=4
 set wrap linebreak nolist
+set textwidth=0
+set wrapmargin=0
+set formatoptions+=l
 set virtualedit=onemore
 set smartcase "don't ignore Captials when present
 set ignorecase "don't need correct case when searching
 set splitbelow " puts new splits to the bottom
+set splitright " and to right
 
-set synmaxcol=250 " Limit syntax highlit to first 250 characters of line (better performance)
+set shortmess+=c "Disable annoying message from YCM
+
+" Show tabs and spaces
+set listchars=tab:›\ ,trail:-,extends:#,nbsp:.
+set list
 
 syntax on
-highlight Pmenu ctermbg=238 ctermfg=220
+highlight Pmenu ctermbg=8 ctermfg=14
+
+" Custom 'Silent' commnad
+command! -nargs=1 Silent
+\   execute 'silent !' . <q-args>
+\ | execute 'redraw!'
 
 " Change leader key to ","
-let mapleader=","
+let mapleader="\<space>"
 
 " Backups
 set backup
@@ -91,19 +128,35 @@ set backupdir=~/.vim/SWP
 set directory=~/.vim/SWP
 set writebackup
 
+" Undo directory
+set undofile
+set undodir=$HOME/.vim/undo
+set undolevels=150
+
 set scrolloff=5
 
-" Unbind annoying K
-map K <nop>
-
 " Setup custom shortcuts
-map <F6> :tabp<CR>
-map <F7> :tabn<CR>
+map J gT
+map K gt
 map <F8> :bd<CR>
 nnoremap <leader>ev :vsp $MYVIMRC<CR>
 " Remove highlights from search with ,f
 map <leader>f :noh<CR>
-ino jj <esc>
+
+map <leader>w :w<CR>
+map <leader>q :q<cr>
+map <leader>Q :qall<CR>
+map <leader>x :x<CR>
+map <leader>X :xall<CR>
+map <leader>n :tabnew<CR>
+map <leader>s :Startify<CR>
+
+map <leader>g :GundoToggle<CR>
+
+map <leader>r :Silent curl localhost:3000/reload/%:t <CR>
+
+ino jk <esc>
+ino kj <esc>
 cno jj <c-c>
 vno v <esc>
 
@@ -111,16 +164,18 @@ vno v <esc>
 map <leader>= gg=G``
 " Copy whole file and go back to curosr
 map <leader>y ggyG``
+" Paste and indent pasted text
+map <leader>p p=`]
 
 " Disable default key-mappings
 let g:EasyMotion_do_mapping = 0
 
 " Jump to anywhere you want with minimal keystrokes, with just one key
 " binding.
-nmap <Space> <Plug>(easymotion-overwin-f)
+nmap , <Plug>(easymotion-overwin-f)
 
 " Need one more keystroke, but on average, it may be more comfortable.
-nmap <Space> <Plug>(easymotion-overwin-f2)
+nmap , <Plug>(easymotion-overwin-f2)
 
 " Turn on case insensitive feature
 let g:EasyMotion_smartcase = 1
@@ -141,10 +196,23 @@ let NERDTreeQuitOnOpen = 1
 " Close vim if nerdtree is the last buffer
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-" Change colors of NERDtree
-hi Directory guifg=#5fff87 ctermfg=84
-hi NERDTreeOpenable guifg=#00ff00 ctermfg=green
-hi NERDTreeClosable guifg=#af0000 ctermfg=124
+" Change colors
+hi Directory guifg=#5fff87 ctermfg=3
+hi NERDTreeOpenable guifg=#00ff00 ctermfg=12
+hi NERDTreeClosable guifg=#af0000 ctermfg=1
+hi WarningMsg cterm=bold ctermfg=1 ctermbg=16
+hi type ctermfg=10
+hi Visual ctermbg=5
+hi Special ctermfg=11
+
+hi link htmlTag Identifier
+hi link htmlTagName statement
+hi link htmlEndTag Identifier
+
+" Fix XML colors
+hi link xmlTag htmlTag
+hi link xmlTagName htmlTagName
+hi link xmlEndTag htmlEndTag
 
 " Character encoding
 if has("multi_byte")
@@ -157,36 +225,110 @@ if has("multi_byte")
 endif
 
 " Highlight .tpl files as TWIG
-au BufNewFile,BufRead *.tpl set filetype=html.twig
-
-" Syntastic settings
-let g:syntastic_scss_checkers = ['scss_lint']
-let g:syntastic_javascript_checkers = ['jshint']
-let g:syntastic_check_on_open = 1
-let g:syntastic_error_symbol='✗'
-let g:syntastic_warning_symbol='⚠'
-let g:syntastic_style_error_symbol = '✗'
-let g:syntastic_style_warning_symbol = '⚠'
-let g:syntastic_html_tidy_ignore_errors = [ 'discarding unexpected </a>', 'trimming empty <span>', 'trimming empty <li>', 'trimming empty <button>' ]
+"au BufNewFile,BufRead *.tpl set filetype=html.twig
 
 let g:html_indent_inctags = "html,body,head,tbody,span,b,a,div"
 
-" Airline settup
-let g:airline_powerline_fonts = 1
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
+" ALE
+let g:ale_sign_warning = '▲'
+let g:ale_sign_error = '✗'
+highlight link ALEWarningSign String
+highlight link ALEErrorSign Title
 
-let g:airline_theme="kolor"
-let g:airline#extensions#tabline#enabled = 1 "enable the tabline
-let g:airline#extensions#tabline#fnamemod = ':t' " show just the filename of buffers in the tab line
-let g:airline_detect_modified=1
-let g:airline#extensions#bufferline#enabled = 1
-let g:airline#extensions#tabline#buffer_nr_show = 1
-let g:airline#extensions#tabline#tab_nr_type = 1
+" Get rekt Airline - lightline is the new god
+let g:lightline = {
+    \ 'colorscheme': 'zupa',
+    \ 'separator': { 'left': '', 'right': '' },
+    \ 'subseparator': { 'left': '', 'right': '' },
+    \ 'active': {
+    \   'left': [ [ 'mode', 'paste' ],
+    \             [ 'fugitive', 'readonly', 'filename' ] ],
+    \   'right': [ [ 'fileformat', 'fileencoding', 'filetype' ], [ 'lineinfo' ], ['linter_warnings', 'linter_errors', 'linter_ok'] ]
+    \ },
+    \ 'component_expand': {
+    \   'linter_warnings': 'LightlineLinterWarnings',
+    \   'linter_errors': 'LightlineLinterErrors',
+    \   'linter_ok': 'LightlineLinterOK'
+    \ },
+    \ 'component_function': {
+    \   'modified': 'LightlineModified',
+    \   'readonly': 'LightlineReadonly',
+    \   'fugitive': 'LightlineFugitive',
+    \   'filename': 'LightlineFilename',
+    \   'fileformat': 'LightlineFileformat',
+    \   'filetype': 'LightlineFiletype',
+    \   'fileencoding': 'LightlineFileencoding',
+    \   'mode': 'LightlineMode',
+    \ },
+    \ 'component_type': {
+    \   'linter_warning': 'warning',
+    \   'linter_errors': 'error',
+    \ }
+    \ }
 
-let g:airline#extensions#tabline#buffers_label = 'Buff'
-let g:airline#extensions#tabline#tabs_label = 'Tab'
+function! LightlineModified()
+  return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+endfunction
+
+function! LightlineReadonly()
+  return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? '' : ''
+endfunction
+
+function! LightlineFilename()
+  return ('' != LightlineReadonly() ? LightlineReadonly() . ' ' : '') .
+        \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
+        \  &ft == 'unite' ? unite#get_status_string() :
+        \  &ft == 'vimshell' ? vimshell#get_status_string() :
+        \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
+        \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
+endfunction
+
+function! LightlineFugitive()
+  if &ft !~? 'vimfiler\|gundo' && exists("*fugitive#head")
+    let branch = fugitive#head()
+    return branch !=# '' ? ' '.branch : ''
+  endif
+  return ''
+endfunction
+
+function! LightlineFileformat()
+  return winwidth(0) > 70 ? &fileformat : ''
+endfunction
+
+function! LightlineFiletype()
+  return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
+endfunction
+
+function! LightlineFileencoding()
+  return winwidth(0) > 70 ? (&fenc !=# '' ? &fenc : &enc) : ''
+endfunction
+
+function! LightlineMode()
+  return winwidth(0) > 60 ? lightline#mode() : ''
+endfunction
+
+function! LightlineLinterWarnings() abort
+  let l:counts = ale#statusline#Count(bufnr(''))
+  let l:all_errors = l:counts.error + l:counts.style_error
+  let l:all_non_errors = l:counts.total - l:all_errors
+  return l:counts.total == 0 ? '' : printf('%d ◆', all_non_errors)
+endfunction
+
+function! LightlineLinterErrors() abort
+  let l:counts = ale#statusline#Count(bufnr(''))
+  let l:all_errors = l:counts.error + l:counts.style_error
+  let l:all_non_errors = l:counts.total - l:all_errors
+  return l:counts.total == 0 ? '' : printf('%d ✗', all_errors)
+endfunction
+
+function! LightlineLinterOK() abort
+  let l:counts = ale#statusline#Count(bufnr(''))
+  let l:all_errors = l:counts.error + l:counts.style_error
+  let l:all_non_errors = l:counts.total - l:all_errors
+  return l:counts.total == 0 ? '✓ ' : ''
+endfunction
+
+autocmd User ALELint call lightline#update()
 
 " Disable arrow keys
 map  <up>    <nop>
@@ -211,15 +353,10 @@ else
 endif
 
 " Highlight current line number
-hi CursorLineNR cterm=bold ctermfg=220
-augroup CLNRSet
-    autocmd! ColorScheme * hi CursorLineNR cterm=bold ctermfg=220
-augroup END
+hi CursorLineNR cterm=bold ctermfg=1
 
 " Setup GUI
-set guifont=SauceCodePro\ Nerd\ Font:h14
-" Set the colors
-set background=dark
+set guifont=SauceCodePro\ Nerd\ Font:h16
 
 " Remove whitespaces on save
 autocmd BufWritePre * :%s/\s\+$//e
@@ -241,5 +378,38 @@ let g:ycm_semantic_triggers =  {
   \ }
 
 let g:ycm_autoclose_preview_window_after_completion=1
+
+" Ultisnips keybinds
+let g:UltiSnipsExpandTrigger="<C-j>"
+
+" Tags
+set tags=./.vimtags;,.vimtags;
+
+" Vim-easytags
+
+let g:easytags_dynamic_files = 1
+
+" Update tags in background and don't interrupt the foreground processes
+let g:easytags_async = 1
+
+let g:indentLine_faster = 1
+
+let g:startify_fortune_use_unicode = 1
+
+let g:vim_json_syntax_conceal = 0
+
+let g:jsx_ext_required = 0
+
+let g:ale_linters = {
+  \   'html': ['htmlhint'],
+  \   'javascript': ['eslint'],
+  \}
+
+function! SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
 
 set nocompatible
