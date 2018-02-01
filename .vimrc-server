@@ -174,7 +174,6 @@ let g:html_indent_inctags = "html,body,head,tbody,span,b,a,div"
 
 " Get rekt Airline - lightline is the new god
 let g:lightline = {
-    \ 'colorscheme': 'zupa',
     \ 'separator': { 'left': '', 'right': '' },
     \ 'subseparator': { 'left': '', 'right': '' },
     \ 'active': {
