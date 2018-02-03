@@ -23,12 +23,15 @@ var rightHalf = leftHalf.dup({
     x: 'screenOriginX + screenSizeX/2 + ' + edgeSpacing,
 });
 
+/* Center with edge spacing */
 var center = slate.op('move', {
     x: 'screenOriginX + ' + edgeSpacing,
     y: 'screenOriginY + ' + edgeSpacing,
     width: 'screenSizeX - ' + edgeSpacing * 2,
     height: 'screenSizeY - ' + edgeSpacing * 2
 });
+
+/* Center with 70% width & height */
 var centerSmaller = slate.op('move', {
     x: 'screenOriginX + screenSizeX * 0.15',
     y: 'screenOriginY + screenSizeY * 0.15',
@@ -57,7 +60,7 @@ slate.bind('l:ctrl', rightHalf);
 slate.bind('k:ctrl', topHalf);
 slate.bind('j:ctrl', bottomHalf);
 
-/* Move window to screen */
+/* Move window to previous screen */
 slate.bind('h:ctrl,shift', function (win) {
     var currentId = slate.screen().id(),
         next = --currentId < 0 ? slate.screenCount() - 1 : currentId;
@@ -66,6 +69,7 @@ slate.bind('h:ctrl,shift', function (win) {
         screen: next
     }));
 });
+/* Move window to next screen */
 slate.bind('l:ctrl,shift', function (win) {
     var currentId = slate.screen().id(),
         next = ++currentId < slate.screenCount() - 1 ? 0 : currentId;
