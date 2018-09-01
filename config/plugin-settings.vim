@@ -26,7 +26,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                    ROOTER                               "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:rooter_patterns = ['package.json', '.git/']
+let g:rooter_patterns = ['tslint.json', '.vimtags', 'package.json', '.git/']
 
 
 
@@ -40,9 +40,14 @@ let g:ale_sign_error = '✗'
 let g:ale_linters = {
   \   'html': ['htmlhint'],
   \   'javascript': ['eslint'],
-  \   'typescript': ['tsserver']
+  \   'typescript': ['tsserver', 'tslint'],
+  \   'typescriptreact': ['tsserver', 'tslint'],
   \}
 
+let g:ale_fixers = {
+  \   'javascript': ['eslint'],
+  \   'typescript': ['tslint']
+  \}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -139,11 +144,6 @@ function! LightlineLinterOK() abort
   let l:all_non_errors = l:counts.total - l:all_errors
   return l:counts.total == 0 ? '✓ ' : ''
 endfunction
-
-augroup UpdateAleLightLine
-  autocmd!
-  autocmd User ALELintPost call lightline#update()
-augroup END
 
 
 

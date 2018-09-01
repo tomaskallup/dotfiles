@@ -24,13 +24,12 @@ hi link xmlTag htmlTag
 hi link xmlTagName htmlTagName
 hi link xmlEndTag htmlEndTag
 
-" Fix Flow
-hi link jsFlowTypeKeyword Keyword
-
 " Fix typescript
-hi link typescriptReserved PreProc
-hi link typescriptParens Normal
-hi link typescriptEndColons Normal
-hi link typescriptIdentifier Type
-hi link typescriptLabel Type
-hi link xmlError Normal
+hi link tsxTagName htmlTagName
+hi link typescriptInterfaceName typescriptTypeReference
+hi link typescriptAliasDeclaration typescriptTypeReference
+hi link typescriptObjectLabel specialkey
+hi link typescriptMember typescriptObjectLabel
+hi link typescriptPredefinedType typescriptTypeReference
+hi link typescriptVariable keyword
+hi link typescriptOperator keyword

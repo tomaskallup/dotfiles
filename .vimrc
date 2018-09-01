@@ -5,10 +5,10 @@ func LoadConfig(name)
 endfunc
 
 call LoadConfig('plugins')
-
 call LoadConfig('base')
 call LoadConfig('plugin-settings')
 call LoadConfig('keymap')
 call LoadConfig('colors')
+call LoadConfig('ui')
 
 set nocompatible
