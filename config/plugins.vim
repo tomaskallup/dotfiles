@@ -31,8 +31,7 @@ Plug 'HerringtonDarkholme/yats.vim' " TS + TSX
 Plug 'digitaltoad/vim-pug'
 
 if !&diff
-    Plug 'maralla/completor.vim', { 'do': 'make js' }
-    Plug 'maralla/completor-typescript'
+    Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 endif
 
 " -------------------------------------------------------------------- "

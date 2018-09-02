@@ -26,7 +26,6 @@ set expandtab
 set shiftwidth=4
 set smarttab
 set wildmenu " visually autocomplete the command menu
-set lazyredraw " only redraw when needed
 set ttyfast " sends more characters to the screen for fast terminal
 set showmatch " highlight matching [{()}]
 set nofoldenable " disable folding
