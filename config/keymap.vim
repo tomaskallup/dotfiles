@@ -1,3 +1,9 @@
+" Disable arrow keys
+map  <up>    :echoerr "What are you doing?"<cr>
+map  <down>  :echoerr "What are you doing?"<cr>
+map  <left>  :echoerr "What are you doing?"<cr>
+map  <right> :echoerr "What are you doing?"<cr>
+
 " Change leader key to ","
 let mapleader="\<space>"
 
@@ -17,6 +23,7 @@ map <leader>X :xall<CR>
 map <leader>n :tabnew<CR>
 map <leader>s :Startify<CR>
 map <leader>p :lcd %:p:h<CR>
+map <leader>i :YcmCompleter FixIt<CR>
 
 map <leader>g :GundoToggle<CR>
 

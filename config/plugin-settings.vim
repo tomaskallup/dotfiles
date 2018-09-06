@@ -40,8 +40,7 @@ let g:ale_sign_error = '✗'
 let g:ale_linters = {
   \   'html': ['htmlhint'],
   \   'javascript': ['eslint'],
-  \   'typescript': ['tsserver', 'tslint'],
-  \   'typescriptreact': ['tsserver', 'tslint'],
+  \   'typescript': ['tslint'],
   \}
 
 let g:ale_fixers = {

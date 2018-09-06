@@ -1,23 +1,37 @@
 """""""""""""""""""""""""""""""""""
+" Custom colors
+"""""""""""""""""""""""""""""""""""
+hi TabFill ctermbg=232 ctermfg=255
+hi TabInactive ctermbg=235 ctermfg=255
+hi TabActive ctermbg=240 ctermfg=255
+hi TabSeparator ctermfg=232
+
+"""""""""""""""""""""""""""""""""""
 " Custom status line
 """""""""""""""""""""""""""""""""""
 set statusline=%#Normal#
-set statusline+=  
-set statusline+=%#PMenu#
+set statusline+=\  
+set statusline+=%#TabFill#
 set statusline+= %f%m
-set statusline+=%#Constant#
+set statusline+=%#TabSeparator#
 set statusline+=
 set statusline+=%#Normal#
 set statusline+=%=
-set statusline+=%-#Constant#
+set statusline+=%-#TabSeparator#
 set statusline+=
-set statusline+=%#Pmenu#
-set statusline+= %l:%c 
-set statusline+=%{GitBranch()} 
+set statusline+=%#TabFill#
+set statusline+= %l:%c
+set statusline+= \| 
+set statusline+=%{StatusLineGit()} 
 
-function! GitBranch()
-  return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
-endfunction
+func GitBranch()
+    return system("echo ${$(git symbolic-ref HEAD 2>/dev/null)##refs/heads/} | tr -d '\n'")
+endfunc
+
+func StatusLineGit()
+    let l:branchname = GitBranch()
+    return strlen(l:branchname) > 0 ? l:branchname : '[No Git]'
+endfunc
 
 """""""""""""""""""""""""""""""""""
 " Custom tabbar
@@ -29,9 +43,9 @@ function MyTabLine()
     for i in range(tabpagenr('$'))
         " select the highlighting
         if i + 1 == tabpagenr()
-            let s .= '%#PMenu#'
+            let s .= '%#TabActive#'
         else
-            let s .= '%#PMenuSel#'
+            let s .= '%#TabInactive#'
         endif
 
         " set the tab page number (for mouse clicks)
@@ -42,19 +56,15 @@ function MyTabLine()
     endfor
 
     " after the last tab fill with TabLineFill and reset tab page nr
-    let s .= '%#Normal#%T'
+    let s .= '%#TabFill#%T'
 
     return s
 endfunction
 
+
 function MyTabLabel(n)
     let buflist = tabpagebuflist(a:n)
     let winnr = tabpagewinnr(a:n)
-    let name = bufname(buflist[winnr - 1])
-
-    if len(name) == 0
-        let name = '[No name]'
-    endif
-
-    return name
+    let _ = expand('#'.buflist[winnr - 1].':t')
+    return _ !=# '' ? _ : '[No Name]'
 endfunction

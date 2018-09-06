@@ -3,10 +3,8 @@ filetype plugin on
 " Basic VIM settings
 set showcmd
 set showmode
-set title
 set number
 set relativenumber
-set ruler
 set laststatus=2 " Enable the status bar to always show
 set hidden " Set hidden to allow buffers to be browsed
 set breakindent " Make word wrapping behave like it does in every other sane text editor
@@ -17,9 +15,6 @@ set autoread " Make Vim automatically open changed files (e.g. changed after a G
 
 set backspace=indent,eol,start " allow backspacing over everything in insert mode
 set autoindent " always set autoindenting on
-set noesckeys " (Hopefully) removes the delay when hitting esc in insert mode
-set ttimeout " (Hopefully) removes the delay when hitting esc in insert mode
-set ttimeoutlen=1 " (Hopefully) removes the delay when hitting esc in insert mode
 set tabstop=4 " The default is 8 which is MASSIVE!!
 set softtabstop=0
 set expandtab
@@ -27,16 +22,16 @@ set shiftwidth=4
 set smarttab
 set wildmenu " visually autocomplete the command menu
 set ttyfast " sends more characters to the screen for fast terminal
+set lazyredraw
 set showmatch " highlight matching [{()}]
 set nofoldenable " disable folding
 set shiftwidth=4
-set wrap linebreak nolist
+set wrap linebreak
 set textwidth=0
 set wrapmargin=0
 set formatoptions+=l
 set virtualedit=onemore
 set smartcase "don't ignore Captials when present
-set ignorecase "don't need correct case when searching
 set splitbelow " puts new splits to the bottom
 set splitright " and to right
 set synmaxcol=300 " Prevent long lines from ruining my life
@@ -90,12 +85,6 @@ if has("multi_byte")
 endif
 
 let g:html_indent_inctags = "html,body,head,tbody,span,b,a,div"
-
-" Disable arrow keys
-map  <up>    :echoerr "What are you doing?"<cr>
-map  <down>  :echoerr "What are you doing?"<cr>
-map  <left>  :echoerr "What are you doing?"<cr>
-map  <right> :echoerr "What are you doing?"<cr>
 
 " Remember cursor pos
 autocmd BufReadPost *
