@@ -8,8 +8,8 @@ map  <right> :echoerr "What are you doing?"<cr>
 let mapleader="\<space>"
 
 " Setup custom shortcuts
-map J gT
 map K gt
+map J gT
 map <F8> :bd<CR>
 nnoremap <leader>ev :e $MYVIMRC<CR>
 " Remove highlights from search with ,f

@@ -33,3 +33,5 @@ hi link typescriptMember typescriptObjectLabel
 hi link typescriptPredefinedType typescriptTypeReference
 hi link typescriptVariable keyword
 hi link typescriptOperator keyword
+hi link typescriptEnum typescriptInterfaceName
+hi link typescriptEnumKeyword Keyword

@@ -67,6 +67,10 @@ set guifont=SauceCodePro\ Nerd\ Font:h16
 " Remove whitespaces on save
 autocmd BufWritePre * :%s/\s\+$//e
 
+" Current workaround for long classes
+autocmd BufReadPost *.tsx,*.ts :syntax sync fromstart
+
+
 " Set the default clipboard
 if has('unnamedplus')
     set clipboard=unnamedplus

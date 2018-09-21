@@ -23,6 +23,7 @@ set statusline+=%#TabFill#
 set statusline+= %l:%c
 set statusline+= \| 
 set statusline+=%{StatusLineGit()} 
+set statusline+=%#Normal#
 
 func GitBranch()
     return system("echo ${$(git symbolic-ref HEAD 2>/dev/null)##refs/heads/} | tr -d '\n'")
@@ -36,35 +37,107 @@ endfunc
 """""""""""""""""""""""""""""""""""
 " Custom tabbar
 """""""""""""""""""""""""""""""""""
-set tabline=%!MyTabLine()
+"set tabline=%!MyTabLine()
 
-function MyTabLine()
-    let s = ''
-    for i in range(tabpagenr('$'))
-        " select the highlighting
-        if i + 1 == tabpagenr()
-            let s .= '%#TabActive#'
-        else
-            let s .= '%#TabInactive#'
+fun MyTabLine()
+
+    let screen_width = &columns - 2
+    let text_width = 0
+
+    let on_screen = tabpagebuflist()
+
+    let names = []
+    let cur = bufnr('%')
+    for i in range(1, bufnr('$'))
+
+        if !s:IsVisible(i)
+            continue
         endif
 
-        " set the tab page number (for mouse clicks)
-        let s .= '%' . (i + 1) . 'T'
+        let name = s:TabLabel(i)
 
-        " the label is made by MyTabLabel()
-        let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
+        let synname = 'TabInactive'
+        if cur == i
+            let synname = 'TabActive'
+        elseif index(on_screen, i) >= 0
+            let synname = 'TabFill'
+        endif
+
+        let names += [{'text': name, 'syn': synname}]
+        let text_width += strlen(name)
+
+        if cur < i - 1
+            if text_width > screen_width
+                let dif = text_width - screen_width
+                let names[-1]['text'] = names[-1]['text'][: -dif]
+                let text_width -= strlen(dif)
+
+                break
+            endif
+        else
+            while text_width > screen_width
+                let dif = text_width - screen_width
+                let first = names[0]
+                if strlen(first['text']) <= dif
+                    call remove(names, 0)
+                    let text_width -= strlen(first['text'])
+                else
+                    let first['text'] = first['text'][dif :]
+                    let text_width -= dif
+                endif
+            endwhile
+        endif
     endfor
 
-    " after the last tab fill with TabLineFill and reset tab page nr
-    let s .= '%#TabFill#%T'
+    let rst = ''
+    for elt in names
+        let rst .= '%#' . elt['syn'] . '#' . elt['text'] . '%#TabFill#'
+    endfor
 
-    return s
+    return rst
 endfunction
 
+fun! s:IsVisible(i)
+    if !bufexists(a:i) || !buflisted(a:i)
+        return 0
+    endif
 
-function MyTabLabel(n)
-    let buflist = tabpagebuflist(a:n)
-    let winnr = tabpagewinnr(a:n)
-    let _ = expand('#'.buflist[winnr - 1].':t')
-    return _ !=# '' ? _ : '[No Name]'
+    if getbufvar(a:i, 'current_syntax') == 'qf'
+        return 0
+    endif
+
+    return 1
+endfunction
+
+fun! s:TabLabel(i)
+    let mod = getbufvar(a:i, "&mod")
+    let text = ""
+
+    if mod == 1
+        let text = "[+]"
+    endif
+
+    return s:BufLabel(a:i) . text
+endfunction
+
+fun! s:BufLabel(i)
+    let path = bufname(a:i)
+    if path == ""
+        return ' [No Name] '
+    endif
+
+    let path = s:PathForHuman(path)
+    return substitute(' {path} ', '\V{path}', path, 'g')
+
+endfunction
+
+fun! s:PathForHuman(p)
+    let p = a:p
+    let p = simplify(p)
+    let p = substitute(p, '\', '/', 'g')
+
+    let p = substitute(p, '^\V' . escape( $HOME, '\' ), '~', '')
+
+    let p = pathshorten(p)
+    return p
 endfunction

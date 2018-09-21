@@ -28,7 +28,7 @@ Plug 'elzr/vim-json' " Json syntax fix
 Plug 'pangloss/vim-javascript' " Better JS syntax & indent
 Plug 'mxw/vim-jsx' " JSX syntax
 Plug 'HerringtonDarkholme/yats.vim' " TS + TSX
-Plug 'digitaltoad/vim-pug'
+Plug 'styled-components/vim-styled-components'
 
 if !&diff
     Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
