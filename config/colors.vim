@@ -11,7 +11,6 @@ hi NERDTreeOpenable guifg=#00ff00 ctermfg=12
 hi NERDTreeClosable guifg=#af0000 ctermfg=1
 hi WarningMsg cterm=bold ctermfg=1 ctermbg=16
 hi type ctermfg=10
-hi Visual ctermbg=5
 hi Special ctermfg=11
 
 " Fix HTML
@@ -35,3 +34,6 @@ hi link typescriptVariable keyword
 hi link typescriptOperator keyword
 hi link typescriptEnum typescriptInterfaceName
 hi link typescriptEnumKeyword Keyword
+
+" Fix SpellBad for strings etc.
+hi SpellBad ctermbg=9 gui=undercurl guisp=Red ctermfg=white

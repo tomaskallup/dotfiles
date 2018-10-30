@@ -8,13 +8,13 @@ Plug 'scrooloose/nerdtree' " Nice file explorer inside vim
 Plug 'jlanzarotta/bufexplorer' " Better buffer management
 Plug 'Xuyuanp/nerdtree-git-plugin' " Show git changes in NERDtree
 Plug 'ctrlpvim/ctrlp.vim' " File finder
-Plug 'xolox/vim-easytags' " OPOP
-Plug 'xolox/vim-misc' " ^ He needs it
+Plug 'romainl/vim-cool' " Easy search highlight toggle
+Plug 'majutsushi/tagbar'
 
 " -------------------------------------------------------------------- "
 "  Design changing plugins                                             "
 " -------------------------------------------------------------------- "
-"Plug 'itchyny/lightline.vim' " Nice bar
+Plug 'itchyny/lightline.vim' " Nice bar
 Plug 'ryanoasis/vim-devicons' " Nice file icons
 Plug 'mhinz/vim-startify' " Cool startup screen
 
@@ -28,10 +28,11 @@ Plug 'elzr/vim-json' " Json syntax fix
 Plug 'pangloss/vim-javascript' " Better JS syntax & indent
 Plug 'mxw/vim-jsx' " JSX syntax
 Plug 'HerringtonDarkholme/yats.vim' " TS + TSX
-Plug 'styled-components/vim-styled-components'
+Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 
 if !&diff
-    Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+    Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}} " YCM, your demise is getting close!
+    " Plug 'Valloric/YouCompleteMe', { 'do': './install.py' } " Bye bye YCM
 endif
 
 " -------------------------------------------------------------------- "

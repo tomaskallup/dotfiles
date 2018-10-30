@@ -9,21 +9,21 @@ hi TabSeparator ctermfg=232
 """""""""""""""""""""""""""""""""""
 " Custom status line
 """""""""""""""""""""""""""""""""""
-set statusline=%#Normal#
-set statusline+=\  
-set statusline+=%#TabFill#
-set statusline+= %f%m
-set statusline+=%#TabSeparator#
-set statusline+=
-set statusline+=%#Normal#
-set statusline+=%=
-set statusline+=%-#TabSeparator#
-set statusline+=
-set statusline+=%#TabFill#
-set statusline+= %l:%c
-set statusline+= \| 
-set statusline+=%{StatusLineGit()} 
-set statusline+=%#Normal#
+"set statusline=%#Normal#
+"set statusline+=\  
+"set statusline+=%#TabFill#
+"set statusline+= %f%m
+"set statusline+=%#TabSeparator#
+"set statusline+=
+"set statusline+=%#Normal#
+"set statusline+=%=
+"set statusline+=%-#TabSeparator#
+"set statusline+=
+"set statusline+=%#TabFill#
+"set statusline+= %l:%c
+"set statusline+= \| 
+"set statusline+=%{StatusLineGit()} 
+"set statusline+=%#Normal#
 
 func GitBranch()
     return system("echo ${$(git symbolic-ref HEAD 2>/dev/null)##refs/heads/} | tr -d '\n'")

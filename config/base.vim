@@ -31,7 +31,8 @@ set textwidth=0
 set wrapmargin=0
 set formatoptions+=l
 set virtualedit=onemore
-set smartcase "don't ignore Captials when present
+set ignorecase " ignore case when searching
+set smartcase " don't ignore Captials when present
 set splitbelow " puts new splits to the bottom
 set splitright " and to right
 set synmaxcol=300 " Prevent long lines from ruining my life
@@ -104,3 +105,4 @@ function! SynStack()
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
 
+runtime macros/matchit.vim

@@ -26,7 +26,8 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                    ROOTER                               "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:rooter_patterns = ['tslint.json', '.vimtags', 'package.json', '.git/']
+let g:rooter_patterns = ['tsconfig.json', 'jsconfig.json', '.git/', 'package.json']
+"let g:rooter_targets = '/,tsconfig.json,jsconfig.json,tslint.json,.vimtags,package.json'
 
 
 
@@ -40,26 +41,22 @@ let g:ale_sign_error = '✗'
 let g:ale_linters = {
   \   'html': ['htmlhint'],
   \   'javascript': ['eslint'],
-  \   'typescript': ['tslint'],
+  \   'typescript': ['stylelint', 'tslint'],
+  \}
+
+let g:ale_linter_aliases = {
+  \ 'tsx': 'css'
   \}
 
 let g:ale_fixers = {
   \   'javascript': ['eslint'],
-  \   'typescript': ['tslint']
+  \   'typescript': ['tsserver', 'tslint']
   \}
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                  YOUCOMPLETEME                          "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ycm_autoclose_preview_window_after_completion = 1
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                  EASY TAGS                              "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:easytags_file = '.vimtags'
-
-" Update tags in background and don't interrupt the foreground processes
-let g:easytags_async = 1
 
 
 
@@ -89,3 +86,13 @@ let g:jsx_ext_required = 0
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Fix HTML
 autocmd FileType html let b:match_words='<:>,<\@<=\([^/][^ \t>]*\)[^>]*\%(>\|$\):<\@<=/\1>'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                     CTRL P                              "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ctrlp_clear_cache_on_exit = 0
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                      YATS                               "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:yats_host_keyword = 0

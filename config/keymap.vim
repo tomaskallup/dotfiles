@@ -10,8 +10,6 @@ let mapleader="\<space>"
 " Setup custom shortcuts
 map K gt
 map J gT
-map <F8> :bd<CR>
-nnoremap <leader>ev :e $MYVIMRC<CR>
 " Remove highlights from search with ,f
 map <leader>f :noh<CR>
 
@@ -22,10 +20,7 @@ map <leader>x :x<CR>
 map <leader>X :xall<CR>
 map <leader>n :tabnew<CR>
 map <leader>s :Startify<CR>
-map <leader>p :lcd %:p:h<CR>
 map <leader>i :YcmCompleter FixIt<CR>
-
-map <leader>g :GundoToggle<CR>
 
 map <leader>ad :ALEDetail<CR>
 
@@ -58,7 +53,22 @@ map m :NERDTreeToggle<CR>
 let NERDTreeMapActivateNode='l'
 let NERDTreeMapCloseChildren='h'
 
-" Change Completor keybind to replicate YCM
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
+" COC intelisense
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" use <tab> for trigger completion and navigate next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+" Tagbar
+nmap <leader>tb :TagbarToggle<CR>
