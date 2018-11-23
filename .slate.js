@@ -33,12 +33,12 @@ var center = slate.op('move', {
     height: 'screenSizeY - ' + edgeSpacing * 2
 });
 
-/* Center with 70% width & height */
+/* Center with 75% width & height */
 var centerSmaller = slate.op('move', {
-    x: 'screenOriginX + screenSizeX * 0.15',
-    y: 'screenOriginY + screenSizeY * 0.15',
-    width: 'screenSizeX * 0.7',
-    height: 'screenSizeY * 0.7'
+    x: 'screenOriginX + screenSizeX * 0.125',
+    y: 'screenOriginY + screenSizeY * 0.125',
+    width: 'screenSizeX * 0.75',
+    height: 'screenSizeY * 0.75'
 });
 
 /* Center with 40% width & 35% height */
@@ -182,16 +182,3 @@ slate.bind('l:ctrl,alt', slate.op('focus', {direction: 'right'}));
 slate.bind('j:ctrl,alt', slate.op('focus', {direction: 'down'}));
 slate.bind('k:ctrl,alt', slate.op('focus', {direction: 'up'}));
 slate.bind('b:ctrl,alt', slate.op('focus', {direction: 'behind'}));
-
-/* Predefined focus for most used apps */
-slate.bind('1:ctrl', slate.op('focus', {app: 'iTerm2'}));
-slate.bind('2:ctrl', slate.op('focus', {app: 'Firefox'}));
-
-/* ==================================
- * Events *
- * ================================== */
-slate.on('windowOpened', function(event, win) {
-    if (win.app().name() === 'iTerm2') {
-        win.doOperation(centerTiny);
-    }
-});

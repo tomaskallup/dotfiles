@@ -20,7 +20,6 @@ map <leader>x :x<CR>
 map <leader>X :xall<CR>
 map <leader>n :tabnew<CR>
 map <leader>s :Startify<CR>
-map <leader>i :YcmCompleter FixIt<CR>
 
 map <leader>ad :ALEDetail<CR>
 
@@ -58,6 +57,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nmap <leader>i <Plug>(coc-codeaction)
 
 " use <tab> for trigger completion and navigate next complete item
 function! s:check_back_space() abort

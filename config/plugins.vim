@@ -16,7 +16,7 @@ Plug 'majutsushi/tagbar'
 " -------------------------------------------------------------------- "
 Plug 'itchyny/lightline.vim' " Nice bar
 Plug 'ryanoasis/vim-devicons' " Nice file icons
-Plug 'mhinz/vim-startify' " Cool startup screen
+"Plug 'mhinz/vim-startify' " Cool startup screen
 
 " -------------------------------------------------------------------- "
 "  Syntax and autocomplete                                             "
@@ -31,7 +31,7 @@ Plug 'HerringtonDarkholme/yats.vim' " TS + TSX
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 
 if !&diff
-    Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}} " YCM, your demise is getting close!
+    Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}, 'tag': '*'} " YCM, your demise is getting close!
     " Plug 'Valloric/YouCompleteMe', { 'do': './install.py' } " Bye bye YCM
 endif
 
