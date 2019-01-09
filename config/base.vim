@@ -65,6 +65,9 @@ set wildignore+=**/node_modules/**
 " Setup GUI
 set guifont=SauceCodePro\ Nerd\ Font:h16
 
+" Set language
+language en_GB.UTF-8
+
 " Remove whitespaces on save
 autocmd BufWritePre * :%s/\s\+$//e
 

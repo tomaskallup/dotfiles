@@ -3,20 +3,17 @@ call plug#begin()
 " --------------------------------------------------------------------- "
 "  Better movement plugins                                              "
 " --------------------------------------------------------------------- "
-Plug 'Lokaltog/vim-easymotion' " Fast cursor jumping in files
+"Plug 'Lokaltog/vim-easymotion' " Fast cursor jumping in files
 Plug 'scrooloose/nerdtree' " Nice file explorer inside vim
 Plug 'jlanzarotta/bufexplorer' " Better buffer management
 Plug 'Xuyuanp/nerdtree-git-plugin' " Show git changes in NERDtree
 Plug 'ctrlpvim/ctrlp.vim' " File finder
-Plug 'romainl/vim-cool' " Easy search highlight toggle
-Plug 'majutsushi/tagbar'
 
 " -------------------------------------------------------------------- "
 "  Design changing plugins                                             "
 " -------------------------------------------------------------------- "
 Plug 'itchyny/lightline.vim' " Nice bar
 Plug 'ryanoasis/vim-devicons' " Nice file icons
-"Plug 'mhinz/vim-startify' " Cool startup screen
 
 " -------------------------------------------------------------------- "
 "  Syntax and autocomplete                                             "
@@ -29,24 +26,29 @@ Plug 'pangloss/vim-javascript' " Better JS syntax & indent
 Plug 'mxw/vim-jsx' " JSX syntax
 Plug 'HerringtonDarkholme/yats.vim' " TS + TSX
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+Plug 'janiczek/vim-latte' " I don't like where this is going
 
 if !&diff
-    Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}, 'tag': '*'} " YCM, your demise is getting close!
-    " Plug 'Valloric/YouCompleteMe', { 'do': './install.py' } " Bye bye YCM
+    "Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}, 'tag': '*'} " YCM, your demise is getting close!
+    Plug 'felixfbecker/php-language-server', {'do': 'composer install && composer run-script parse-stubs'}
+    Plug 'prabirshrestha/asyncomplete.vim'
+    Plug 'prabirshrestha/async.vim'
+    Plug 'prabirshrestha/vim-lsp'
+    Plug 'prabirshrestha/asyncomplete-lsp.vim'
+    Plug 'prabirshrestha/asyncomplete-file.vim'
+    Plug 'prabirshrestha/asyncomplete-buffer.vim'
+    Plug 'w0rp/ale'
 endif
 
 " -------------------------------------------------------------------- "
 "  Other general stuff                                                 "
 " -------------------------------------------------------------------- "
 Plug 'scrooloose/nerdcommenter' " Comments
-Plug 'mattn/emmet-vim' " Html godlike
-Plug 'sjl/gundo.vim' " Better undo
+"Plug 'mattn/emmet-vim' " Html godlike
+"Plug 'sjl/gundo.vim' " Better undo
 Plug 'tpope/vim-surround' " (o_o)
 Plug 'airblade/vim-rooter'
-
-if !&diff
-    Plug 'w0rp/ale' " Linter lul
-endif
+Plug 'editorconfig/editorconfig-vim'
 
 call plug#end()
 

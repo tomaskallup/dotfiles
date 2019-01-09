@@ -52,12 +52,11 @@ map m :NERDTreeToggle<CR>
 let NERDTreeMapActivateNode='l'
 let NERDTreeMapCloseChildren='h'
 
-" COC intelisense
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-nmap <leader>i <Plug>(coc-codeaction)
+" LSP
+nmap <silent> gd :LspDefinition<CR>
+nmap <silent> gi :LspImplementation<CR>
+nmap <silent> gr :LspReferences<CR>
+nmap <leader>i :LspCodeAction<CR>
 
 " use <tab> for trigger completion and navigate next complete item
 function! s:check_back_space() abort
@@ -65,10 +64,10 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
 
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-
 " Tagbar
 nmap <leader>tb :TagbarToggle<CR>
+
+" Asyncomplete
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"

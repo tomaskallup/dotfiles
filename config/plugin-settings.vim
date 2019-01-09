@@ -1,17 +1,4 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                  EASY MOTION                            "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" Turn on smart case feature for EasyMotion
-let g:EasyMotion_smartcase = 1
-
-" Disable default key-mappings
-" Custom ones are defined in keymap.vim
-let g:EasyMotion_do_mapping = 0
-
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                   NERD TREE                             "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -41,7 +28,7 @@ let g:ale_sign_error = '✗'
 let g:ale_linters = {
   \   'html': ['htmlhint'],
   \   'javascript': ['eslint'],
-  \   'typescript': ['stylelint', 'tslint'],
+  \   'typescript': [],
   \}
 
 let g:ale_linter_aliases = {
@@ -50,20 +37,8 @@ let g:ale_linter_aliases = {
 
 let g:ale_fixers = {
   \   'javascript': ['eslint'],
-  \   'typescript': ['tsserver', 'tslint']
+  \   'typescript': []
   \}
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                  YOUCOMPLETEME                          "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:ycm_autoclose_preview_window_after_completion = 1
-
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                   STARTIFY                              "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:startify_fortune_use_unicode = 1
 
 
 
@@ -92,7 +67,62 @@ autocmd FileType html let b:match_words='<:>,<\@<=\([^/][^ \t>]*\)[^>]*\%(>\|$\)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ctrlp_clear_cache_on_exit = 0
 
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                      YATS                               "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:yats_host_keyword = 0
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                       LSP                               "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:lsp_signs_enabled = 1         " enable signs
+let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+
+if executable('typescript-language-server')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'typescript-language-server',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
+        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json'))},
+        \ 'whitelist': ['typescript', 'typescript.tsx'],
+        \ })
+
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'javascript-language-server',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
+        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'jsconfig.json'))},
+        \ 'whitelist': ['javascript', 'javascript.jsx'],
+        \ })
+endif
+
+au User lsp_setup call lsp#register_server({
+     \ 'name': 'php-language-server',
+     \ 'cmd': {server_info->['php', expand('~/.vim/plugged/php-language-server/bin/php-language-server.php')]},
+     \ 'whitelist': ['php'],
+     \ })
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                    ASYNCOMPLETE                         "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:asyncomplete_remove_duplicates = 1
+let g:asyncomplete_smart_completion = 1
+let g:asyncomplete_auto_popup = 1
+
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+
+au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
+    \ 'name': 'file',
+    \ 'whitelist': ['*'],
+    \ 'priority': 10,
+    \ 'completor': function('asyncomplete#sources#file#completor')
+    \ }))
+
+"call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
+    "\ 'name': 'buffer',
+    "\ 'whitelist': ['*'],
+    "\ 'blacklist': ['go'],
+    "\ 'priority': -1,
+    "\ 'completor': function('asyncomplete#sources#buffer#completor'),
+    "\ }))
