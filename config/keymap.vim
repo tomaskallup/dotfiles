@@ -22,6 +22,7 @@ map <leader>n :tabnew<CR>
 map <leader>s :Startify<CR>
 
 map <leader>ad :ALEDetail<CR>
+map <leader>af :ALEFix<CR>
 
 ino jk <esc>
 ino kj <esc>

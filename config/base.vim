@@ -69,7 +69,7 @@ set guifont=SauceCodePro\ Nerd\ Font:h16
 language en_GB.UTF-8
 
 " Remove whitespaces on save
-autocmd BufWritePre * :%s/\s\+$//e
+" autocmd BufWritePre * :%s/\s\+$//e
 
 " Current workaround for long classes
 autocmd BufReadPost *.tsx,*.ts :syntax sync fromstart
