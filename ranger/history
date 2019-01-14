@@ -1,0 +1,50 @@
+search light
+rename jsconfig.json
+search PPPF
+search PForm
+rename animations.ts
+touch adManager.ts
+search Protocol
+touch 2018-12-10.sql
+open_with Preview.app
+search ProtocolForm
+search rn-fetch
+search rn-fe
+search react-native-photo
+touch ProductsListContainer.tsx
+rename ProductContainer.tsx
+touch react-native-timer-mixin.d.ts
+q!
+touch cache.ts
+rename products.ts
+rename reactotronConfig.ts
+rename BranchFlyersList.tsx
+search StoreSel
+search StoreSelecto
+search eslit
+search eslint
+mkdir 
+delete
+touch u
+rename update.js
+rename update2.js
+mkdir event
+mkdir EventCalendar
+touch index.jsx
+search react-big-calendaer
+search react-big-calendar
+touch CustomToolbar.jsx
+rename SpeditionCompany.js
+mkdir CreateEvent
+
+rename EventCreateForm
+touch EventCreateForm.jsx
+touch styles.js
+open_with vim
+rename EventCalendar.jsx
+touch index.js
+rename supplier
+rename spedition-companies
+rename suppliers
+mkdir axiosClient
+touch axiosClient.js
