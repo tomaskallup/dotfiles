@@ -19,7 +19,7 @@ map <leader>Q :qall<CR>
 map <leader>x :x<CR>
 map <leader>X :xall<CR>
 map <leader>n :tabnew<CR>
-map <leader>s :Startify<CR>
+map <leader>d :bd<CR>
 
 map <leader>ad :ALEDetail<CR>
 map <leader>af :ALEFix<CR>

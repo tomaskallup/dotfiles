@@ -172,6 +172,7 @@ slate.bind('space:ctrl', slate.op('chain', {
         centerTiny
     ]
 }));
+slate.bind('space:ctrl,alt', center);
 slate.bind('space:ctrl,shift', centerSmaller);
 slate.bind('space:ctrl,alt,shift', centerTiny);
 

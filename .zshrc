@@ -113,8 +113,6 @@ export ANDROID_HOME=$ANDROID_SDK_ROOT/
 export MAVEN_HOME=$ANDROID_SDK_ROOT/extras/m2repository/
 export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH
 
-source /usr/local/lib/dnx/bin/dnvm.sh
-
 if [ -f /etc/bash.command-not-found ]; then
     . /etc/bash.command-not-found
 fi

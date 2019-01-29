@@ -21,7 +21,7 @@ fi
 if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
   PR_HOST='%F{red}%m%f' # SSH
 else
-  PR_HOST='%F{green}%m%f' # no SSH
+  PR_HOST='%F{green}Macous%f' # no SSH
 fi
 
 

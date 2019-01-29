@@ -4,7 +4,7 @@
 [core]
     editor = "vim"
 	pager = diff-so-fancy | less --tabs=4 -RFX
-	excludesfile = ~/.config/git/ignore
+	excludesfile = /Users/tomaskallup/.gitignore_global
 	attributesfile = ~/.gitattributes
 [color]
     branch = auto
@@ -30,7 +30,7 @@
 [alias]
     bcleanup = !git fetch --prune && git branch --merged | egrep -v \"(^\\*|master|develop)\" > /tmp/git-branch-cleanup && vim /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git branch -d
     pbcleanup = !git fetch --prune && git branch -vv | grep ': gone]' | egrep -v \"(^\\*|master|develop)\" > /tmp/git-branch-cleanup && vim /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup
-    rbcleanup = !git fetch --prune && git branch -r --merged | egrep -v \"(^\\*|master|develop)\" > /tmp/git-branch-cleanup && vim /tmp/git-branch-cleanup && sed -i \"\" \"s/origin\\///\" /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git push --delete
+    rbcleanup = !git fetch --prune && git branch -r --merged | egrep -v \"(^\\*|master|develop)\" > /tmp/git-branch-cleanup && vim /tmp/git-branch-cleanup && sed -i \"\" \"s/origin\\///\" /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git push origin --delete
     a = add
     aa = add *
     b = branch
@@ -60,7 +60,8 @@
     pl = pull
     psuo = push --set-upstream origin
     psu = push --set-upstream
-	dt = difftool
+    dt = difftool
+    fixc = "!$EDITOR `git diff --name-only --diff-filter=U`"
 
 [color "diff-highlight"]
 	oldNormal = red bold
