@@ -35,5 +35,23 @@ hi link typescriptOperator keyword
 hi link typescriptEnum typescriptInterfaceName
 hi link typescriptEnumKeyword Keyword
 
+" Fix javascript
+hi link javascriptObjectLabel specialkey
+hi link javascriptVariable keyword
+hi link javascriptExport keyword
+hi link jsxAttrib type
+hi link javascriptArrowFuncArg PreProc
+hi link jsClassDefinition cleared
+hi link jsObjectKey specialkey
+hi link jsClassFuncName specialkey
+hi link jsFuncCall cleared
+hi link jsThis Type
+hi link jsSuper Type
+hi link jsOperator cleared
+hi link jsFuncArgs specialkey
+hi link jsStorageClass keyword
+hi link jsImport keyword
+hi link jsModuleAs keyword
+
 " Fix SpellBad for strings etc.
 hi SpellBad ctermbg=9 gui=undercurl guisp=Red ctermfg=white

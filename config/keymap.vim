@@ -4,13 +4,13 @@ map  <down>  :echoerr "What are you doing?"<cr>
 map  <left>  :echoerr "What are you doing?"<cr>
 map  <right> :echoerr "What are you doing?"<cr>
 
-" Change leader key to ","
+" Change leader key to "space"
 let mapleader="\<space>"
 
 " Setup custom shortcuts
 map K gt
 map J gT
-" Remove highlights from search with ,f
+" Remove highlights from search with <space>f
 map <leader>f :noh<CR>
 
 map <leader>w :w<CR>
@@ -23,6 +23,13 @@ map <leader>d :bd<CR>
 
 map <leader>ad :ALEDetail<CR>
 map <leader>af :ALEFix<CR>
+
+" Session saving
+map <leader>ss :mksession! ~/.vim_session<CR>
+map <leader>sl :source ~/.vim_session<CR>
+
+" Terminal in vim
+map <leader>t :terminal<CR>
 
 ino jk <esc>
 ino kj <esc>
@@ -64,9 +71,6 @@ function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
-
-" Tagbar
-nmap <leader>tb :TagbarToggle<CR>
 
 " Asyncomplete
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"

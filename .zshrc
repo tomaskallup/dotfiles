@@ -137,11 +137,23 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 bindkey '^[clear' clear-screen
 
-setopt nosharehistory
+setopt HIST_IGNORE_ALL_DUPS # Delete old recorded entry if new entry is a duplicate.
+setopt hist_reduce_blanks # remove superfluous blanks from history items
+setopt inc_append_history # save history entries as soon as they are entered
+setopt share_history # share history between different instances of the shell
+setopt auto_cd # cd by typing directory name if it's not a command
 
-# tabtab source for electron-forge package
-# uninstall by removing these lines or running `tabtab uninstall electron-forge`
-[[ -f /Users/tomaskallup/.config/yarn/global/node_modules/electron-forge/node_modules/tabtab/.completions/electron-forge.zsh ]] && . /Users/tomaskallup/.config/yarn/global/node_modules/electron-forge/node_modules/tabtab/.completions/electron-forge.zsh
+autoload -Uz compinit
+
+typeset -i updated_at=$(date +'%j' -r ~/.zcompdump 2>/dev/null || stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null)
+if [ $(date +'%j') != $updated_at ]; then
+  compinit -i
+else
+  compinit -C -i
+fi
+
+zmodload -i zsh/complist
+
 # tabtab source for yarn package
 # uninstall by removing these lines or running `tabtab uninstall yarn`
 [[ -f /Users/tomaskallup/.config/yarn/global/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh ]] && . /Users/tomaskallup/.config/yarn/global/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh

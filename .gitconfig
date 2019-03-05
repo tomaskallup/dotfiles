@@ -1,27 +1,27 @@
 [user]
     email = tomas.kallup@diginex.cz
-    name = tomaskallup
+    name = Tomáš Kallup
 [core]
     editor = "vim"
-	pager = diff-so-fancy | less --tabs=4 -RFX
-	excludesfile = /Users/tomaskallup/.gitignore_global
-	attributesfile = ~/.gitattributes
+    pager = diff-so-fancy | less --tabs=4 -RFX
+    excludesfile = /Users/tomaskallup/.gitignore_global
+    attributesfile = ~/.gitattributes
 [color]
     branch = auto
     diff = auto
     status = auto
-	ui = true
+    ui = true
 [color "branch"]
     current = green bold
     local = blue
     remote = cyan
 [color "diff"]
-	meta = yellow
-	frag = magenta bold
-	old = red bold
-	new = green bold
-	commit = yellow bold
-	whitespace = red reverse
+    meta = yellow
+    frag = magenta bold
+    old = red bold
+    new = green bold
+    commit = yellow bold
+    whitespace = red reverse
 [color "status"]
     added = green
     changed = cyan
@@ -64,15 +64,21 @@
     fixc = "!$EDITOR `git diff --name-only --diff-filter=U`"
 
 [color "diff-highlight"]
-	oldNormal = red bold
-	oldHighlight = red bold 52
-	newNormal = green bold
-	newHighlight = green bold 22
+    oldNormal = red bold
+    oldHighlight = red bold 52
+    newNormal = green bold
+    newHighlight = green bold 22
 [diff]
-	tool = vimdiff
+    tool = vimdiff
 [difftool]
-	prompt = false
+    prompt = false
 [pull]
-	rebase = true
+    rebase = true
 [rebase]
-	autoStash = true
+    autoStash = true
+[difftool "sourcetree"]
+    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+    path =
+[mergetool "sourcetree"]
+    cmd = /private/var/folders/8v/mzg4j70s7y70pn3w4xn7k0sm0000gn/T/AppTranslocation/4ED1F354-69AC-4514-BC68-F93ADA107E14/d/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+    trustExitCode = true

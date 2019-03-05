@@ -22,7 +22,7 @@ set shiftwidth=4
 set smarttab
 set wildmenu " visually autocomplete the command menu
 set ttyfast " sends more characters to the screen for fast terminal
-set lazyredraw
+set nolazyredraw
 set showmatch " highlight matching [{()}]
 set nofoldenable " disable folding
 set shiftwidth=4
@@ -36,6 +36,7 @@ set smartcase " don't ignore Captials when present
 set splitbelow " puts new splits to the bottom
 set splitright " and to right
 set synmaxcol=300 " Prevent long lines from ruining my life
+set tws=10x0 " Set terminal height to 15 rows
 
 " Show tabs and spaces
 set listchars=tab:›\ ,trail:-,extends:#,nbsp:.
@@ -68,8 +69,12 @@ set guifont=SauceCodePro\ Nerd\ Font:h16
 " Set language
 language en_GB.UTF-8
 
+" Fix session saving
+set ssop-=options
+set ssop-=folds
+
 " Remove whitespaces on save
-" autocmd BufWritePre * :%s/\s\+$//e
+autocmd BufWritePre * :%s/\s\+$//e
 
 " Current workaround for long classes
 autocmd BufReadPost *.tsx,*.ts :syntax sync fromstart
@@ -107,5 +112,8 @@ function! SynStack()
   endif
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
+
+" Fix filetype for jsx files
+au BufNewFile,BufRead *.jsx set filetype=javascript.jsx
 
 runtime macros/matchit.vim
