@@ -1,0 +1,9 @@
+{
+  "eslint.filetypes": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "eslint.enable": false,
+  "highlight.document.enable": true,
+  "diagnostic.displayByAle": false,
+  "typescript.implementationsCodeLens.enable": true,
+  "diagnostic.refreshOnInsertMode": false,
+  "diagnostic.refreshAfterSave": true
+}
