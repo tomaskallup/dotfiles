@@ -100,6 +100,7 @@ alias art='php artisan'
 alias docku='docker-compose up'
 alias dockd='docker-compose down'
 alias dockr='docker-compose down && docker-compose up'
+alias c1='cd -1'
 
 dockb() {
     docker exec -it $1 bash
@@ -111,7 +112,8 @@ export ANDROID_SDK_ROOT=/users/tomaskallup/Library/Android/sdk/
 export ANDROID_AVD_HOME=$HOME/.android/avd
 export ANDROID_HOME=$ANDROID_SDK_ROOT/
 export MAVEN_HOME=$ANDROID_SDK_ROOT/extras/m2repository/
-export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH
+#export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH
+export PATH=/usr/local/opt/sqlite/bin:$PATH
 
 if [ -f /etc/bash.command-not-found ]; then
     . /etc/bash.command-not-found

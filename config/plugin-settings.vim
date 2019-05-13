@@ -28,7 +28,7 @@ let g:ale_sign_error = '✗'
 let g:ale_linters = {
   \   'html': ['htmlhint'],
   \   'javascript': ['eslint'],
-  \   'typescript': [],
+  \   'typescript': ['eslint'],
   \}
 
 let g:ale_linter_aliases = {
@@ -73,6 +73,14 @@ let g:ctrlp_clear_cache_on_exit = 0
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:yats_host_keyword = 0
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                       COC                               "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                     MARKDOWN                            "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:markdown_fenced_languages = ['css', 'javascript', 'js=javascript', 'typescript']
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                       LSP                               "

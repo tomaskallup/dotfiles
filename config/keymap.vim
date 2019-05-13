@@ -19,7 +19,9 @@ map <leader>Q :qall<CR>
 map <leader>x :x<CR>
 map <leader>X :xall<CR>
 map <leader>n :tabnew<CR>
-map <leader>d :bd<CR>
+map <leader>h :LspHover<CR>
+map <leader>rr :LspReferences<CR>
+map <leader>rn :LspNextReference<CR>
 
 map <leader>ad :ALEDetail<CR>
 map <leader>af :ALEFix<CR>
@@ -60,19 +62,35 @@ map m :NERDTreeToggle<CR>
 let NERDTreeMapActivateNode='l'
 let NERDTreeMapCloseChildren='h'
 
+" Go back
+nmap <silent> gb :bp<CR>
+
 " LSP
-nmap <silent> gd :LspDefinition<CR>
-nmap <silent> gi :LspImplementation<CR>
-nmap <silent> gr :LspReferences<CR>
-nmap <leader>i :LspCodeAction<CR>
+"nmap <silent> gd :LspDefinition<CR>
+"nmap <silent> gi :LspImplementation<CR>
+"nmap <silent> gr :LspReferences<CR>
+"nmap <leader>i :LspCodeAction<CR>
+
+" CoC
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gh :call CocAction('doHover')<CR>
+nmap <leader>i <Plug>(coc-codeaction)
 
 " use <tab> for trigger completion and navigate next complete item
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
 
 " Asyncomplete
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
+"inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+"inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+"inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"

@@ -25,26 +25,28 @@ Plug 'elzr/vim-json' " Json syntax fix
 Plug 'pangloss/vim-javascript' " Better JS syntax & indent
 Plug 'chemzqm/vim-jsx-improve'
 Plug 'HerringtonDarkholme/yats.vim' " TS + TSX
-Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
-Plug 'janiczek/vim-latte' " I don't like where this is going
+Plug 'mustache/vim-mustache-handlebars'
+Plug 'jasonshell/vim-svg-indent'
+Plug 'vim-ruby/vim-ruby'
+Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-endwise' " Autoclose if etc.
+Plug 'tpope/vim-rails', {'for': 'ruby'}
 
 if !&diff
-    "Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}, 'tag': '*'} " YCM, your demise is getting close!
-    Plug 'prabirshrestha/asyncomplete.vim'
-    Plug 'prabirshrestha/async.vim'
-    Plug 'prabirshrestha/vim-lsp'
-    Plug 'prabirshrestha/asyncomplete-lsp.vim'
-    Plug 'prabirshrestha/asyncomplete-file.vim'
-    Plug 'prabirshrestha/asyncomplete-buffer.vim'
-    Plug 'w0rp/ale'
+    Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+    "Plug 'prabirshrestha/asyncomplete.vim'
+    "Plug 'prabirshrestha/async.vim'
+    "Plug 'prabirshrestha/vim-lsp'
+    "Plug 'prabirshrestha/asyncomplete-lsp.vim'
+    "Plug 'prabirshrestha/asyncomplete-file.vim'
+    "Plug 'prabirshrestha/asyncomplete-buffer.vim'
+    "Plug 'w0rp/ale'
 endif
 
 " -------------------------------------------------------------------- "
 "  Other general stuff                                                 "
 " -------------------------------------------------------------------- "
 Plug 'scrooloose/nerdcommenter' " Comments
-"Plug 'mattn/emmet-vim' " Html godlike
-"Plug 'sjl/gundo.vim' " Better undo
 Plug 'tpope/vim-surround' " (o_o)
 Plug 'airblade/vim-rooter'
 Plug 'editorconfig/editorconfig-vim'

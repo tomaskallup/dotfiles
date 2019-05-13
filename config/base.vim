@@ -15,17 +15,16 @@ set autoread " Make Vim automatically open changed files (e.g. changed after a G
 
 set backspace=indent,eol,start " allow backspacing over everything in insert mode
 set autoindent " always set autoindenting on
-set tabstop=4 " The default is 8 which is MASSIVE!!
+set tabstop=2 " The default is 8 which is MASSIVE!!
 set softtabstop=0
 set expandtab
-set shiftwidth=4
+set shiftwidth=2
 set smarttab
 set wildmenu " visually autocomplete the command menu
 set ttyfast " sends more characters to the screen for fast terminal
 set nolazyredraw
 set showmatch " highlight matching [{()}]
 set nofoldenable " disable folding
-set shiftwidth=4
 set wrap linebreak
 set textwidth=0
 set wrapmargin=0
@@ -77,8 +76,7 @@ set ssop-=folds
 autocmd BufWritePre * :%s/\s\+$//e
 
 " Current workaround for long classes
-autocmd BufReadPost *.tsx,*.ts :syntax sync fromstart
-
+autocmd BufReadPost *.tsx,*.ts,*.jsx,*.js :syntax sync fromstart
 
 " Set the default clipboard
 if has('unnamedplus')

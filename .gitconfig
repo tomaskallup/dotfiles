@@ -3,7 +3,7 @@
     name = Tomáš Kallup
 [core]
     editor = "vim"
-    pager = diff-so-fancy | less --tabs=4 -RFX
+	pager = diff-so-fancy | less --tabs=4 -RFX
     excludesfile = /Users/tomaskallup/.gitignore_global
     attributesfile = ~/.gitattributes
 [color]
