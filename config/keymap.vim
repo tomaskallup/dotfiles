@@ -19,9 +19,10 @@ map <leader>Q :qall<CR>
 map <leader>x :x<CR>
 map <leader>X :xall<CR>
 map <leader>n :tabnew<CR>
-map <leader>h :LspHover<CR>
-map <leader>rr :LspReferences<CR>
-map <leader>rn :LspNextReference<CR>
+map <leader>b :CtrlPBuffer<CR>
+"map <leader>h :LspHover<CR>
+"map <leader>rr :LspReferences<CR>
+"map <leader>rn :LspNextReference<CR>
 
 map <leader>ad :ALEDetail<CR>
 map <leader>af :ALEFix<CR>
@@ -51,10 +52,17 @@ if &diff
     map <leader>q :qall<CR>
 endif
 
-nnoremap <leader>j <C-W><C-J>
-nnoremap <leader>k <C-W><C-K>
-nnoremap <leader>l <C-W><C-L>
-nnoremap <leader>h <C-W><C-H>
+nnoremap <leader>j <C-W>j
+nnoremap <leader>k <C-W>k
+nnoremap <leader>l <C-W>l
+nnoremap <leader>h <C-W>h
+nnoremap <leader>J <C-W>J
+nnoremap <leader>K <C-W>K
+nnoremap <leader>L <C-W>L
+nnoremap <leader>H <C-W>H
+
+nnoremap <silent><leader>vp :vsp \| bp<CR>
+nnoremap <silent><leader>vn :vsp \| bn<CR>
 
 " NERDtree settings
 map <C-n> :NERDTreeFind<CR>
@@ -64,6 +72,8 @@ let NERDTreeMapCloseChildren='h'
 
 " Go back
 nmap <silent> gb :bp<CR>
+" Go next
+nmap <silent> gn :next<CR>
 
 " LSP
 "nmap <silent> gd :LspDefinition<CR>
@@ -72,11 +82,13 @@ nmap <silent> gb :bp<CR>
 "nmap <leader>i :LspCodeAction<CR>
 
 " CoC
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-nmap <silent> gh :call CocAction('doHover')<CR>
+nmap  gd <Plug>(coc-definition)
+nmap  gi <Plug>(coc-implementation)
+nmap <leader>r <Plug>(coc-references)
+nmap <leader>m <Plug>(coc-rename)
 nmap <leader>i <Plug>(coc-codeaction)
+nmap <leader>d <Plug>(coc-diagnostic-info)
+nmap <silent> gh :call CocAction('doHover')<CR>
 
 " use <tab> for trigger completion and navigate next complete item
 inoremap <silent><expr> <TAB>
@@ -90,7 +102,9 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
 
+" use <cr> to confirm completion (for autoimporting etc)
+"inoremap <expr><cr> pumvisible() ? "\<C-y>" : "\<cr>"
+
 " Asyncomplete
 "inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 "inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-"inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"

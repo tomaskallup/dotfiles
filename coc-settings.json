@@ -1,9 +1,21 @@
 {
-  "eslint.filetypes": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
-  "eslint.enable": false,
-  "highlight.document.enable": true,
+  "coc.preferences.enableFloatHighlight": true,
+  "codeLens.enable": true,
+  "codeLens.separator": "‣",
+  "diagnostic.checkCurrentLine": false,
   "diagnostic.displayByAle": false,
+  "diagnostic.maxWindowHeight": 20,
+  "diagnostic.messageTarget": "float",
+  "diagnostic.refreshAfterSave": true,
+  "diagnostic.refreshOnInsertMode": true,
+  "eslint.enable": false,
+  "eslint.filetypes": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "highlight.document.enable": true,
+  "prettier.eslintIntegration": false,
+  "signature.enable": true,
+  "signature.target": "float",
+  "suggest.enablePreview": true,
   "typescript.implementationsCodeLens.enable": true,
-  "diagnostic.refreshOnInsertMode": false,
-  "diagnostic.refreshAfterSave": true
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.referencesCodeLens.enable": true
 }

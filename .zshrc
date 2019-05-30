@@ -65,7 +65,7 @@ source $ZSH/oh-my-zsh.sh
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
-export EDITOR='vim'
+export EDITOR='nvim'
 # else
 #   export EDITOR='mvim'
 # fi
@@ -101,6 +101,7 @@ alias docku='docker-compose up'
 alias dockd='docker-compose down'
 alias dockr='docker-compose down && docker-compose up'
 alias c1='cd -1'
+alias e=$EDITOR
 
 dockb() {
     docker exec -it $1 bash

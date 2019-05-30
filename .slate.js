@@ -81,8 +81,8 @@ slate.bind('u:ctrl,alt', slate.op('undo'));
 /* Basic window moving (top, right, bottom, left) by halves */
 slate.bind('h:ctrl', leftHalf);
 slate.bind('l:ctrl', rightHalf);
-slate.bind('k:ctrl', topHalf);
-slate.bind('j:ctrl', bottomHalf);
+//slate.bind('k:ctrl', topHalf);
+//slate.bind('j:ctrl', bottomHalf);
 
 /* Move window to previous screen */
 slate.bind('h:ctrl,shift', function (win) {

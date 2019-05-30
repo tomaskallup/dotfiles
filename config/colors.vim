@@ -26,6 +26,7 @@ hi link xmlEndTag htmlEndTag
 
 " Fix typescript
 hi link tsxTagName htmlTagName
+hi link typescriptTypeReference Type
 hi link typescriptInterfaceName typescriptTypeReference
 hi link typescriptAliasDeclaration typescriptTypeReference
 hi link typescriptObjectLabel specialkey
@@ -68,3 +69,5 @@ hi lspReference ctermfg=white ctermbg=240
 
 " Fix CoC
 hi CocUnderline ctermbg=52 cterm=none gui=none
+hi CocFloating ctermbg=darkgrey ctermfg=yellow
+hi CocInfoFloat ctermfg=red

@@ -1,84 +1,86 @@
 [user]
-    email = tomas.kallup@diginex.cz
-    name = Tomáš Kallup
+  email = T.Kallup@gmail.com
+  name = Tomáš Kallup
 [core]
-    editor = "vim"
-	pager = diff-so-fancy | less --tabs=4 -RFX
-    excludesfile = /Users/tomaskallup/.gitignore_global
-    attributesfile = ~/.gitattributes
+  editor = "vim"
+  pager = diff-so-fancy | less --tabs=4 -RFX
+  excludesfile = /Users/tomaskallup/.gitignore_global
+  attributesfile = ~/.gitattributes
 [color]
-    branch = auto
-    diff = auto
-    status = auto
-    ui = true
+  branch = auto
+  diff = auto
+  status = auto
+  ui = true
 [color "branch"]
-    current = green bold
-    local = blue
-    remote = cyan
+  current = green bold
+  local = blue
+  remote = cyan
 [color "diff"]
-    meta = yellow
-    frag = magenta bold
-    old = red bold
-    new = green bold
-    commit = yellow bold
-    whitespace = red reverse
+  meta = yellow
+  frag = magenta bold
+  old = red bold
+  new = green bold
+  commit = yellow bold
+  whitespace = red reverse
 [color "status"]
-    added = green
-    changed = cyan
-    unmerged = yellow
-    untracked = red
+  added = green
+  changed = cyan
+  unmerged = yellow
+  untracked = red
 [alias]
-    bcleanup = !git fetch --prune && git branch --merged | egrep -v \"(^\\*|master|develop)\" > /tmp/git-branch-cleanup && vim /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git branch -d
-    pbcleanup = !git fetch --prune && git branch -vv | grep ': gone]' | egrep -v \"(^\\*|master|develop)\" > /tmp/git-branch-cleanup && vim /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup
-    rbcleanup = !git fetch --prune && git branch -r --merged | egrep -v \"(^\\*|master|develop)\" > /tmp/git-branch-cleanup && vim /tmp/git-branch-cleanup && sed -i \"\" \"s/origin\\///\" /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git push origin --delete
-    a = add
-    aa = add *
-    b = branch
-    c = commit
-    ca = commit -a
-    ch = checkout
-    cm = commit -m
-    cam = commit -am
-    chp = cherry-pick
-    chpc = cherry-pick --continue
-    d = diff
-    f = fetch
-    fp = fetch --prune
-    m = merge
-    md = merge develop
-    r = reset
-    rh = reset HEAD
-    rb = rebase
-    rbc = rebase --continue
-    rba = rebase --abort
-    rbs = rebase --skip
-    s = status -sb
-    st = stash
-    sta = stash apply
-    p = push
-    pf = push --force-with-lease
-    pl = pull
-    psuo = push --set-upstream origin
-    psu = push --set-upstream
-    dt = difftool
-    fixc = "!$EDITOR `git diff --name-only --diff-filter=U`"
+  bcleanup = !git fetch --prune && git branch --merged | egrep -v \"(^\\*|master|develop)\" > /tmp/git-branch-cleanup && vim /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git branch -d
+  pbcleanup = !git fetch --prune && git branch -vv | grep ': gone]' | egrep -v \"(^\\*|master|develop)\" > /tmp/git-branch-cleanup && vim /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup
+  rbcleanup = !git fetch --prune && git branch -r --merged | egrep -v \"(^\\*|master|develop)\" > /tmp/git-branch-cleanup && vim /tmp/git-branch-cleanup && sed -i \"\" \"s/origin\\///\" /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git push origin --delete
+  a = add
+  aa = add *
+  ac = !git diff --name-only --diff-filter=U | xargs git add
+  b = branch
+  c = commit
+  ca = commit -a
+  ch = checkout
+  cm = commit -m
+  cam = commit -am
+  chp = cherry-pick
+  chpc = cherry-pick --continue
+  d = diff
+  f = fetch
+  fp = fetch --prune
+  fc = !git diff --name-only --diff-filter=U | xargs $EDITOR
+  m = merge
+  md = merge develop
+  r = reset
+  rh = reset HEAD
+  rb = rebase
+  rbc = rebase --continue
+  rba = rebase --abort
+  rbs = rebase --skip
+  s = status -sb
+  st = stash
+  sta = stash apply
+  p = push
+  pf = push --force-with-lease
+  pl = pull
+  psuo = push --set-upstream origin
+  psu = push --set-upstream
+  dt = difftool
+  fixc = "!$EDITOR `git diff --name-only --diff-filter=U`"
 
 [color "diff-highlight"]
-    oldNormal = red bold
-    oldHighlight = red bold 52
-    newNormal = green bold
-    newHighlight = green bold 22
+  oldNormal = red bold
+  oldHighlight = red bold 52
+  newNormal = green bold
+  newHighlight = green bold 22
 [diff]
-    tool = vimdiff
+  tool = vimdiff
 [difftool]
-    prompt = false
+  prompt = false
 [pull]
-    rebase = true
+  rebase = true
 [rebase]
-    autoStash = true
+  autoStash = true
 [difftool "sourcetree"]
-    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-    path =
+  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+  path =
 [mergetool "sourcetree"]
-    cmd = /private/var/folders/8v/mzg4j70s7y70pn3w4xn7k0sm0000gn/T/AppTranslocation/4ED1F354-69AC-4514-BC68-F93ADA107E14/d/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-    trustExitCode = true
+  cmd = /private/var/folders/8v/mzg4j70s7y70pn3w4xn7k0sm0000gn/T/AppTranslocation/4ED1F354-69AC-4514-BC68-F93ADA107E14/d/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+  trustExitCode = true

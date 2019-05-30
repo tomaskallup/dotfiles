@@ -5,9 +5,10 @@ call plug#begin()
 " --------------------------------------------------------------------- "
 Plug 'Lokaltog/vim-easymotion' " Fast cursor jumping in files
 Plug 'scrooloose/nerdtree' " Nice file explorer inside vim
-Plug 'jlanzarotta/bufexplorer' " Better buffer management
+"Plug 'jlanzarotta/bufexplorer' " Better buffer management
 Plug 'Xuyuanp/nerdtree-git-plugin' " Show git changes in NERDtree
 Plug 'ctrlpvim/ctrlp.vim' " File finder
+Plug 'mileszs/ack.vim' " Grep in vim
 
 " -------------------------------------------------------------------- "
 "  Design changing plugins                                             "
@@ -24,9 +25,9 @@ Plug 'groenewege/vim-less' " Less syntax
 Plug 'elzr/vim-json' " Json syntax fix
 Plug 'pangloss/vim-javascript' " Better JS syntax & indent
 Plug 'chemzqm/vim-jsx-improve'
-Plug 'HerringtonDarkholme/yats.vim' " TS + TSX
-Plug 'mustache/vim-mustache-handlebars'
-Plug 'jasonshell/vim-svg-indent'
+Plug 'tomaskallup/yats.vim' " TS + TSX
+"Plug 'mustache/vim-mustache-handlebars'
+"Plug 'jasonshell/vim-svg-indent'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-endwise' " Autoclose if etc.
@@ -52,8 +53,3 @@ Plug 'airblade/vim-rooter'
 Plug 'editorconfig/editorconfig-vim'
 
 call plug#end()
-
-" -------------------------------------------------------------------- "
-"  Default vim stuff                                                   "
-" -------------------------------------------------------------------- "
-packadd! matchit

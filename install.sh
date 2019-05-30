@@ -1,4 +1,4 @@
 #! /usr/bin bash
-ln -s ./vimrc ~/.vimrc
 mkdir ~/.vim
+ln -s ./vimrc ~/.vimrc
 ln -s ./config ~/.vim/config

@@ -35,7 +35,8 @@ set smartcase " don't ignore Captials when present
 set splitbelow " puts new splits to the bottom
 set splitright " and to right
 set synmaxcol=300 " Prevent long lines from ruining my life
-set tws=10x0 " Set terminal height to 15 rows
+set completeopt+=preview
+set guicursor=n-v-c-sm:hor20,i-ci-ve:ver25,r-cr-o:hor20,a:Cursor
 
 " Show tabs and spaces
 set listchars=tab:›\ ,trail:-,extends:#,nbsp:.
@@ -114,4 +115,4 @@ endfunc
 " Fix filetype for jsx files
 au BufNewFile,BufRead *.jsx set filetype=javascript.jsx
 
-runtime macros/matchit.vim
+" runtime macros/matchit.vim
