@@ -40,7 +40,10 @@ cno jj <c-c>
 vno v <esc>
 
 " Reindent whole file and go back to curosr
-map <leader>= gg=G``
+" map <leader>= gg=G``
+" Repalced with coc formatter
+map <silent><leader>= :CocCommand prettier.formatFile<CR>
+
 " Copy whole file and go back to curosr
 map <leader>y ggyG``
 
@@ -60,9 +63,11 @@ nnoremap <leader>J <C-W>J
 nnoremap <leader>K <C-W>K
 nnoremap <leader>L <C-W>L
 nnoremap <leader>H <C-W>H
+nnoremap <leader>p <C-W>p
 
 nnoremap <silent><leader>vp :vsp \| bp<CR>
 nnoremap <silent><leader>vn :vsp \| bn<CR>
+nnoremap <silent><leader>vd :vsp \| call CocActionAsync('jumpDefinition')<CR>
 
 " NERDtree settings
 map <C-n> :NERDTreeFind<CR>
@@ -88,6 +93,7 @@ nmap <leader>r <Plug>(coc-references)
 nmap <leader>m <Plug>(coc-rename)
 nmap <leader>i <Plug>(coc-codeaction)
 nmap <leader>d <Plug>(coc-diagnostic-info)
+nmap <leader>vd :vsp<CR><Plug>(coc-definition)
 nmap <silent> gh :call CocAction('doHover')<CR>
 
 " use <tab> for trigger completion and navigate next complete item

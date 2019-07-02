@@ -69,5 +69,6 @@ hi lspReference ctermfg=white ctermbg=240
 
 " Fix CoC
 hi CocUnderline ctermbg=52 cterm=none gui=none
-hi CocFloating ctermbg=darkgrey ctermfg=yellow
+hi CocFloating ctermbg=black ctermfg=yellow
 hi CocInfoFloat ctermfg=red
+hi CocErrorSign ctermfg=160

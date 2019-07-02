@@ -1,5 +1,6 @@
 {
   "coc.preferences.enableFloatHighlight": true,
+  "coc.preferences.hoverTarget": "float",
   "codeLens.enable": true,
   "codeLens.separator": "‣",
   "diagnostic.checkCurrentLine": false,
@@ -8,14 +9,18 @@
   "diagnostic.messageTarget": "float",
   "diagnostic.refreshAfterSave": true,
   "diagnostic.refreshOnInsertMode": true,
-  "eslint.enable": false,
+  "eslint.enable": true,
   "eslint.filetypes": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
   "highlight.document.enable": true,
   "prettier.eslintIntegration": false,
+  "prettier.semi": true,
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "all",
   "signature.enable": true,
   "signature.target": "float",
   "suggest.enablePreview": true,
   "typescript.implementationsCodeLens.enable": true,
   "typescript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.referencesCodeLens.enable": true
+  "typescript.referencesCodeLens.enable": true,
+  "git.addGlameToVirtualText": false
 }

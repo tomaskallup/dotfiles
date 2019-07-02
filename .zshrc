@@ -2,7 +2,9 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/tomaskallup/.oh-my-zsh
+export ZSH=~/.oh-my-zsh
+
+(cat ~/.cache/wal/sequences &)
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -52,7 +54,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(brew node yarn zsh-autosuggestions osx vi-mode docker zsh-nvm)
+plugins=(node yarn zsh-autosuggestions vi-mode zsh-nvm)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -65,7 +67,6 @@ source $ZSH/oh-my-zsh.sh
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
-export EDITOR='nvim'
 # else
 #   export EDITOR='mvim'
 # fi
@@ -107,14 +108,13 @@ dockb() {
     docker exec -it $1 bash
 }
 
-export LANG="cs_CZ.UTF-8"
-export LC_ALL=$LANG
-export ANDROID_SDK_ROOT=/users/tomaskallup/Library/Android/sdk/
-export ANDROID_AVD_HOME=$HOME/.android/avd
-export ANDROID_HOME=$ANDROID_SDK_ROOT/
-export MAVEN_HOME=$ANDROID_SDK_ROOT/extras/m2repository/
+#kexport LC_ALL=$LANG
+#kexport ANDROID_SDK_ROOT=/users/tomaskallup/Library/Android/sdk/
+#kexport ANDROID_AVD_HOME=$HOME/.android/avd
+#kexport ANDROID_HOME=$ANDROID_SDK_ROOT/
+#kexport MAVEN_HOME=$ANDROID_SDK_ROOT/extras/m2repository/
 #export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH
-export PATH=/usr/local/opt/sqlite/bin:$PATH
+#kexport PATH=/usr/local/opt/sqlite/bin:$PATH
 
 if [ -f /etc/bash.command-not-found ]; then
     . /etc/bash.command-not-found

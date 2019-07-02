@@ -32,6 +32,7 @@ Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-endwise' " Autoclose if etc.
 Plug 'tpope/vim-rails', {'for': 'ruby'}
+Plug 'baskerville/vim-sxhkdrc'
 
 if !&diff
     Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
@@ -51,5 +52,6 @@ Plug 'scrooloose/nerdcommenter' " Comments
 Plug 'tpope/vim-surround' " (o_o)
 Plug 'airblade/vim-rooter'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'godlygeek/tabular' " Align stuff
 
 call plug#end()

@@ -1,6 +1,7 @@
 [user]
   email = T.Kallup@gmail.com
   name = Tomáš Kallup
+	signingkey = 774B849F1E711FC2
 [core]
   editor = "vim"
   pager = diff-so-fancy | less --tabs=4 -RFX
@@ -34,6 +35,7 @@
   a = add
   aa = add *
   ac = !git diff --name-only --diff-filter=U | xargs git add
+  ap = add -p
   b = branch
   c = commit
   ca = commit -a
@@ -60,10 +62,11 @@
   p = push
   pf = push --force-with-lease
   pl = pull
-  psuo = push --set-upstream origin
+  psuo = !git push --set-upstream origin $(git branch --show-current)
   psu = push --set-upstream
   dt = difftool
   fixc = "!$EDITOR `git diff --name-only --diff-filter=U`"
+  bi =  !git checkout $(git branch -a | sed '/HEAD/d' | sed -e 's/*\\?\\s\\+\\(remotes\\/origin\\/\\)\\?//' | sort -u | fzf)
 
 [color "diff-highlight"]
   oldNormal = red bold

@@ -37,6 +37,7 @@ set splitright " and to right
 set synmaxcol=300 " Prevent long lines from ruining my life
 set completeopt+=preview
 set guicursor=n-v-c-sm:hor20,i-ci-ve:ver25,r-cr-o:hor20,a:Cursor
+set updatetime=500
 
 " Show tabs and spaces
 set listchars=tab:›\ ,trail:-,extends:#,nbsp:.
