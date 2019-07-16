@@ -89,8 +89,8 @@ nmap <silent> gn :next<CR>
 " CoC
 nmap  gd <Plug>(coc-definition)
 nmap  gi <Plug>(coc-implementation)
-nmap <leader>r <Plug>(coc-references)
-nmap <leader>m <Plug>(coc-rename)
+nmap <leader>rr <Plug>(coc-references)
+nmap <leader>rm <Plug>(coc-rename)
 nmap <leader>i <Plug>(coc-codeaction)
 nmap <leader>d <Plug>(coc-diagnostic-info)
 nmap <leader>vd :vsp<CR><Plug>(coc-definition)
