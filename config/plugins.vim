@@ -14,10 +14,10 @@ Plug 'mileszs/ack.vim' " Grep in vim
 "  Design changing plugins                                             "
 " -------------------------------------------------------------------- "
 Plug 'itchyny/lightline.vim' " Nice bar
-Plug 'ryanoasis/vim-devicons' " Nice file icons
+"Plug 'ryanoasis/vim-devicons' " Nice file icons
 
 " -------------------------------------------------------------------- "
-"  Syntax and autocomplete                                             "
+"  IDE-like stuff ( Syntax and autocomplete )                          "
 " -------------------------------------------------------------------- "
 Plug 'JulesWang/css.vim' " Better CSS support (for highlight)
 Plug 'othree/html5.vim' " HTML5 tags
@@ -28,21 +28,17 @@ Plug 'chemzqm/vim-jsx-improve'
 Plug 'tomaskallup/yats.vim' " TS + TSX
 "Plug 'mustache/vim-mustache-handlebars'
 "Plug 'jasonshell/vim-svg-indent'
-Plug 'vim-ruby/vim-ruby'
+"Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-endwise' " Autoclose if etc.
-Plug 'tpope/vim-rails', {'for': 'ruby'}
+"Plug 'tpope/vim-rails', {'for': 'ruby'}
 Plug 'baskerville/vim-sxhkdrc'
+"Plug 'dag/vim-fish'
+Plug 'digitaltoad/vim-pug'
 
 if !&diff
     Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
-    "Plug 'prabirshrestha/asyncomplete.vim'
-    "Plug 'prabirshrestha/async.vim'
-    "Plug 'prabirshrestha/vim-lsp'
-    "Plug 'prabirshrestha/asyncomplete-lsp.vim'
-    "Plug 'prabirshrestha/asyncomplete-file.vim'
-    "Plug 'prabirshrestha/asyncomplete-buffer.vim'
-    "Plug 'w0rp/ale'
+    Plug 'puremourning/vimspector', {'do': './install_gadget.py --force-enable-node' }
 endif
 
 " -------------------------------------------------------------------- "
@@ -53,5 +49,6 @@ Plug 'tpope/vim-surround' " (o_o)
 Plug 'airblade/vim-rooter'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'godlygeek/tabular' " Align stuff
+Plug 'plytophogy/vim-virtualenv' " Virtual env
 
 call plug#end()

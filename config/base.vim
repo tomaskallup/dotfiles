@@ -29,12 +29,13 @@ set wrap linebreak
 set textwidth=0
 set wrapmargin=0
 set formatoptions+=l
+set formatoptions-=t
 set virtualedit=onemore
 set ignorecase " ignore case when searching
 set smartcase " don't ignore Captials when present
 set splitbelow " puts new splits to the bottom
 set splitright " and to right
-set synmaxcol=300 " Prevent long lines from ruining my life
+set synmaxcol=400 " Prevent long lines from ruining my life
 set completeopt+=preview
 set guicursor=n-v-c-sm:hor20,i-ci-ve:ver25,r-cr-o:hor20,a:Cursor
 set updatetime=500
@@ -46,10 +47,10 @@ set list
 syntax on
 
 " Backups
-set backup
 set backupdir=~/.vim/SWP
 set directory=~/.vim/SWP
 set writebackup
+set backupcopy=yes
 
 " Undo directory
 set undofile
@@ -75,10 +76,12 @@ set ssop-=options
 set ssop-=folds
 
 " Remove whitespaces on save
-autocmd BufWritePre * :%s/\s\+$//e
+"autocmd BufWritePre * :%s/\s\+$//e
 
 " Current workaround for long classes
 autocmd BufReadPost *.tsx,*.ts,*.jsx,*.js :syntax sync fromstart
+
+autocmd BufNewFile,BufRead calcurse-note.* :set filetype=markdown
 
 " Set the default clipboard
 if has('unnamedplus')

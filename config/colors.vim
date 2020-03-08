@@ -1,6 +1,9 @@
 " Highlight current line number
 hi CursorLineNR cterm=bold ctermfg=1
 
+" Better Visual highlight
+hi Visual ctermbg=0 ctermfg=NONE
+
 " Ale colors
 highlight link ALEWarningSign String
 highlight link ALEErrorSign Title

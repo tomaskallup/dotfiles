@@ -67,6 +67,8 @@ autocmd FileType html let b:match_words='<:>,<\@<=\([^/][^ \t>]*\)[^>]*\%(>\|$\)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ctrlp_clear_cache_on_exit = 1
 
+let g:ctrlp_user_command = 'git ls-files . --exclude-standard'
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                      YATS                               "
@@ -74,8 +76,11 @@ let g:ctrlp_clear_cache_on_exit = 1
 let g:yats_host_keyword = 0
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                       COC                               "
+"                       ACK                               "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                     MARKDOWN                            "

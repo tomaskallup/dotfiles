@@ -42,7 +42,7 @@ vno v <esc>
 " Reindent whole file and go back to curosr
 " map <leader>= gg=G``
 " Repalced with coc formatter
-map <silent><leader>= :CocCommand prettier.formatFile<CR>
+map <silent><leader>= <Plug>(coc-format)
 
 " Copy whole file and go back to curosr
 map <leader>y ggyG``
@@ -87,14 +87,14 @@ nmap <silent> gn :next<CR>
 "nmap <leader>i :LspCodeAction<CR>
 
 " CoC
-nmap  gd <Plug>(coc-definition)
-nmap  gi <Plug>(coc-implementation)
+nmap <silent>gd :call CocActionAsync('jumpDefinition')<CR>
+nmap gi <Plug>(coc-implementation)
 nmap <leader>rr <Plug>(coc-references)
 nmap <leader>rm <Plug>(coc-rename)
 nmap <leader>i <Plug>(coc-codeaction)
 nmap <leader>d <Plug>(coc-diagnostic-info)
 nmap <leader>vd :vsp<CR><Plug>(coc-definition)
-nmap <silent> gh :call CocAction('doHover')<CR>
+nmap <silent> gh :call CocActionAsync('doHover')<CR>
 
 " use <tab> for trigger completion and navigate next complete item
 inoremap <silent><expr> <TAB>

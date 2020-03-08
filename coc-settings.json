@@ -10,7 +10,14 @@
   "diagnostic.refreshAfterSave": true,
   "diagnostic.refreshOnInsertMode": true,
   "eslint.enable": true,
-  "eslint.filetypes": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "eslint.filetypes": [
+    "javascript",
+    "javascriptreact",
+    "javascript.jsx",
+    "typescript",
+    "typescriptreact",
+    "typescript.tsx"
+  ],
   "highlight.document.enable": true,
   "prettier.eslintIntegration": false,
   "prettier.semi": true,
@@ -20,7 +27,26 @@
   "signature.target": "float",
   "suggest.enablePreview": true,
   "typescript.implementationsCodeLens.enable": true,
-  "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.referencesCodeLens.enable": true,
-  "git.addGlameToVirtualText": false
+  "git.addGBlameToVirtualText": false,
+  "languageserver": {
+    "ccls": {
+      "command": "ccls",
+      "filetypes": ["c", "cpp", "objc", "objcpp"],
+      "rootPatterns": [
+        ".ccls",
+        "compile_commands.json",
+        ".vim/",
+        ".git/",
+        ".hg/"
+      ],
+      "initializationOptions": {
+        "cache": {
+          "directory": "/tmp/ccls"
+        }
+      }
+    }
+  },
+  "python.linting.lintOnSave": true,
+  "python.jediEnabled": false
 }

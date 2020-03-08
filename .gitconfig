@@ -3,26 +3,23 @@
   name = Tomáš Kallup
 	signingkey = 774B849F1E711FC2
 [core]
-  editor = "vim"
-  pager = diff-so-fancy | less --tabs=4 -RFX
-  excludesfile = /Users/tomaskallup/.gitignore_global
+  editor = "$EDITOR"
+	pager = diff-so-fancy | less --tabs=4 -RFX
+  excludesfile = ~/.gitignore_global
   attributesfile = ~/.gitattributes
 [color]
-  branch = auto
-  diff = auto
-  status = auto
-  ui = true
+	ui = true
 [color "branch"]
   current = green bold
   local = blue
   remote = cyan
 [color "diff"]
-  meta = yellow
-  frag = magenta bold
-  old = red bold
-  new = green bold
-  commit = yellow bold
-  whitespace = red reverse
+	meta = yellow
+	frag = magenta bold
+	old = red bold
+	new = green bold
+	commit = yellow bold
+	whitespace = red reverse
 [color "status"]
   added = green
   changed = cyan
@@ -30,7 +27,7 @@
   untracked = red
 [alias]
   bcleanup = !git fetch --prune && git branch --merged | egrep -v \"(^\\*|master|develop|staging)\" > /tmp/git-branch-cleanup && $EDITOR /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git branch -d
-  pbcleanup = !git fetch --prune && git branch -vv | grep ': gone]' | sed \"s/^\\s\\+\\([^ ]\\+\\).*/\\1/\" | egrep -v \"(^\\*|master|develop|staging)\" > /tmp/git-branch-cleanup && $EDITOR /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git branch -d
+  pbcleanup = !git fetch --prune && git branch -vv | grep ': gone]' | sed \"s/^\\s\\+\\([^ ]\\+\\).*/\\1/\" | egrep -v \"(^\\*|master|develop|staging)\" > /tmp/git-branch-cleanup && $EDITOR /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git branch -D
   rbcleanup = !git fetch --prune && git branch -r --merged | egrep -v \"(^\\*|master|develop|staging)\" > /tmp/git-branch-cleanup && $EDITOR /tmp/git-branch-cleanup && sed -i \"\" \"s/origin\\///\" /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git push origin --delete
   a = add
   aa = add *
@@ -69,22 +66,13 @@
   bi =  !git checkout $(git branch | sed '/HEAD/d' | sed -e 's/*\\?\\s\\+\\(remotes\\/origin\\/\\)\\?//' | sort -u | fzf)
   bia =  !git checkout $(git branch -a | sed '/HEAD/d' | sed -e 's/*\\?\\s\\+\\(remotes\\/origin\\/\\)\\?//' | sort -u | fzf)
 
-[color "diff-highlight"]
-  oldNormal = red bold
-  oldHighlight = red bold 52
-  newNormal = green bold
-  newHighlight = green bold 22
-[diff]
-  tool = vimdiff
-[difftool]
-  prompt = false
 [pull]
   rebase = true
 [rebase]
   autoStash = true
-[difftool "sourcetree"]
-  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-  path =
-[mergetool "sourcetree"]
-  cmd = /private/var/folders/8v/mzg4j70s7y70pn3w4xn7k0sm0000gn/T/AppTranslocation/4ED1F354-69AC-4514-BC68-F93ADA107E14/d/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-  trustExitCode = true
+[gpg]
+	program = gpg2
+[commit]
+	gpgSign = true
+[diff-so-fancy]
+	first-run = false
