@@ -8,7 +8,21 @@ let NERDTreeQuitOnOpen = 1
 " Close vim if nerdtree is the last buffer
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
+let g:NERDTreeDirArrowExpandable = '+'
+let g:NERDTreeDirArrowCollapsible = '-'
 
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "M",
+    \ "Staged"    : "A",
+    \ "Untracked" : "?",
+    \ "Renamed"   : "R",
+    \ "Unmerged"  : "U",
+    \ "Deleted"   : "D",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : 'I',
+    \ "Unknown"   : "?"
+    \ }
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                    ROOTER                               "
@@ -21,7 +35,7 @@ let g:rooter_patterns = ['tsconfig.json', 'jsconfig.json', '.git/', 'package.jso
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                     ALE                                 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:ale_sign_warning = '▲'
+let g:ale_sign_warning = '⚠'
 let g:ale_sign_error = '✗'
 
 " Limit ALE linters
@@ -85,7 +99,7 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                     MARKDOWN                            "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:markdown_fenced_languages = ['css', 'javascript', 'js=javascript', 'typescript']
+let g:markdown_fenced_languages = ['css', 'javascript', 'js=javascript', 'typescript', 'typescript.tsx=typescript', 'scss=css', 'typescriptreact=typescript']
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                       LSP                               "
@@ -116,6 +130,14 @@ if executable('pyls')
         \ 'whitelist': ['python'],
         \ })
 endif
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                       COC                               "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:coc_filetype_map = {
+  \ 'sass': 'scss',
+  \ }
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                    ASYNCOMPLETE                         "

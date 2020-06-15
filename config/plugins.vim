@@ -26,19 +26,15 @@ Plug 'elzr/vim-json' " Json syntax fix
 Plug 'pangloss/vim-javascript' " Better JS syntax & indent
 Plug 'chemzqm/vim-jsx-improve'
 Plug 'tomaskallup/yats.vim' " TS + TSX
-"Plug 'mustache/vim-mustache-handlebars'
 "Plug 'jasonshell/vim-svg-indent'
-"Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-endwise' " Autoclose if etc.
-"Plug 'tpope/vim-rails', {'for': 'ruby'}
 Plug 'baskerville/vim-sxhkdrc'
 "Plug 'dag/vim-fish'
-Plug 'digitaltoad/vim-pug'
+"Plug 'digitaltoad/vim-pug'
 
 if !&diff
     Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
-    Plug 'puremourning/vimspector', {'do': './install_gadget.py --force-enable-node' }
 endif
 
 " -------------------------------------------------------------------- "
