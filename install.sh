@@ -7,3 +7,4 @@ ln -s $DIR/.vimrc ~/.vimrc
 ln -s $DIR/config ~/.vim/config
 ln -s $DIR/.gitconfig ~/.gitconfig
 ln -s $DIR/.zshrc ~/.zshrc
+ln -s $DIR/todo ~/.todo
