@@ -10,6 +10,13 @@
 # Nvm
 [ -r /usr/share/nvm/init-nvm.sh ] && source /usr/share/nvm/init-nvm.sh
 
+autoload -Uz promptinit
+promptinit
+
+autoload -Uz compinit
+compinit
+
+
 # Plugin manager
 source /usr/share/zsh/share/zgen.zsh
 
@@ -18,14 +25,17 @@ if ! zgen saved; then
 
   # specify plugins here
   zgen oh-my-zsh plugins/vi-mode
-  zgen load owenstranathan/pipenv.zsh
+
   zgen load ~/.config/zsh/themes/custom
+  zgen load owenstranathan/pipenv.zsh
   zgen load zdharma/fast-syntax-highlighting
   zgen load MichaelAquilina/zsh-autoswitch-virtualenv
 
   # generate the init script from plugins above
   zgen save
 fi
+
+ZSH_THEME='custom'
 
 # Better arrow search
 autoload -U up-line-or-beginning-search
@@ -57,10 +67,6 @@ setopt INC_APPEND_HISTORY # save history entries as soon as they are entered
 
 setopt auto_cd # cd by typing directory name if it's not a command
 
-autoload -Uz promptinit
-
-promptinit
-
 # Autojump
 source /etc/profile.d/autojump.zsh
 
@@ -69,7 +75,7 @@ alsi
 todo.sh list
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/armeeh/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/home/armeeh/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f '/home/armeeh/Pkg/google-cloud-sdk/path.zsh.inc' ]; then . '/home/armeeh/Pkg/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/home/armeeh/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/armeeh/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f '/home/armeeh/Pkg/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/armeeh/Pkg/google-cloud-sdk/completion.zsh.inc'; fi
