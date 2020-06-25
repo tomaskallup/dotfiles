@@ -30,6 +30,8 @@ if ! zgen saved; then
   zgen load owenstranathan/pipenv.zsh
   zgen load zdharma/fast-syntax-highlighting
   zgen load MichaelAquilina/zsh-autoswitch-virtualenv
+  zgen load buonomo/yarn-completion
+  zgen load arzzen/calc.plugin.zsh
 
   # generate the init script from plugins above
   zgen save

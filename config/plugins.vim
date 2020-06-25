@@ -8,7 +8,8 @@ Plug 'scrooloose/nerdtree' " Nice file explorer inside vim
 "Plug 'jlanzarotta/bufexplorer' " Better buffer management
 Plug 'Xuyuanp/nerdtree-git-plugin' " Show git changes in NERDtree
 Plug 'ctrlpvim/ctrlp.vim' " File finder
-Plug 'mileszs/ack.vim' " Grep in vim
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+"Plug 'mileszs/ack.vim' " Grep in vim
 
 " -------------------------------------------------------------------- "
 "  Design changing plugins                                             "
@@ -27,10 +28,11 @@ Plug 'pangloss/vim-javascript' " Better JS syntax & indent
 Plug 'chemzqm/vim-jsx-improve'
 Plug 'tomaskallup/yats.vim' " TS + TSX
 "Plug 'jasonshell/vim-svg-indent'
+"Plug 'PratikBhusal/vim-grip' " Grip integration
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-endwise' " Autoclose if etc.
+Plug 'tpope/vim-fugitive'
 Plug 'baskerville/vim-sxhkdrc'
-"Plug 'dag/vim-fish'
 "Plug 'digitaltoad/vim-pug'
 
 if !&diff
@@ -44,7 +46,7 @@ Plug 'scrooloose/nerdcommenter' " Comments
 Plug 'tpope/vim-surround' " (o_o)
 Plug 'airblade/vim-rooter'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'godlygeek/tabular' " Align stuff
+"Plug 'godlygeek/tabular' " Align stuff
 Plug 'plytophogy/vim-virtualenv' " Virtual env
 
 call plug#end()

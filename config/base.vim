@@ -71,7 +71,7 @@ set wildignore+=**/node_modules/**
 set guifont=SauceCodePro\ Nerd\ Font:h16
 
 " Set language
-language en_GB.UTF-8
+language en_US.UTF-8
 
 " Fix session saving
 set ssop-=options

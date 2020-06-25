@@ -48,5 +48,5 @@
   "python.linting.lintOnSave": true,
   "python.jediEnabled": false,
   "css.validate": false,
-  "scss.validate": false
+  "scss.validate": true
 }
