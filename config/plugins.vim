@@ -30,8 +30,8 @@ Plug 'tomaskallup/yats.vim' " TS + TSX
 "Plug 'jasonshell/vim-svg-indent'
 "Plug 'PratikBhusal/vim-grip' " Grip integration
 Plug 'tpope/vim-markdown'
-Plug 'tpope/vim-endwise' " Autoclose if etc.
-Plug 'tpope/vim-fugitive'
+"Plug 'tpope/vim-endwise' " Autoclose if etc.
+"Plug 'tpope/vim-fugitive'
 Plug 'baskerville/vim-sxhkdrc'
 "Plug 'digitaltoad/vim-pug'
 
@@ -48,5 +48,6 @@ Plug 'airblade/vim-rooter'
 Plug 'editorconfig/editorconfig-vim'
 "Plug 'godlygeek/tabular' " Align stuff
 Plug 'plytophogy/vim-virtualenv' " Virtual env
+Plug 'blindFS/vim-taskwarrior' " Task management
 
 call plug#end()

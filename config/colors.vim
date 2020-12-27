@@ -5,8 +5,8 @@ hi CursorLineNR cterm=bold ctermfg=1
 hi Visual ctermbg=0 ctermfg=NONE
 
 " Ale colors
-highlight link ALEWarningSign String
-highlight link ALEErrorSign Title
+hi link ALEWarningSign String
+hi link ALEErrorSign Title
 
 " Change colors
 hi Directory guifg=#5fff87 ctermfg=3
@@ -39,6 +39,8 @@ hi link typescriptVariable keyword
 hi link typescriptOperator keyword
 hi link typescriptEnum typescriptInterfaceName
 hi link typescriptEnumKeyword Keyword
+hi link typescriptDestructureVariable normal
+hi link typescriptDestructureLabel specialkey
 
 " Fix javascript
 hi link javascriptObjectLabel specialkey

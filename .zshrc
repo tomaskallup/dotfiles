@@ -54,6 +54,8 @@ bindkey '^[[Z' reverse-menu-complete
 autoload -Uz run-help
 (( $+aliases[run-help] )) && unalias run-help
 
+zle_highlight+=(paste:none)
+
 # History setup
 HISTFILE=~/.zsh_history
 HISTSIZE=10000

@@ -19,10 +19,10 @@ hi WarningMsg term=standout cterm=bold ctermfg=1 ctermbg=16 guifg=Red
 hi WildMenu term=standout ctermfg=0 ctermbg=11 guifg=Black guibg=Yellow
 hi Folded term=standout ctermfg=4 ctermbg=248 guifg=DarkBlue guibg=LightGrey
 hi FoldColumn term=standout ctermfg=4 ctermbg=248 guifg=DarkBlue guibg=Grey
-hi DiffAdd term=bold ctermbg=81 guibg=LightBlue
-hi DiffChange term=bold ctermbg=225 guibg=LightMagenta
-hi DiffDelete term=bold ctermfg=12 ctermbg=159 gui=bold guifg=Blue guibg=LightCyan
-hi DiffText term=reverse cterm=bold ctermbg=9 gui=bold guibg=Red
+hi DiffAdd cterm=bold ctermfg=NONE ctermbg=22
+hi DiffDelete cterm=bold ctermfg=NONE ctermbg=52
+hi DiffChange cterm=bold ctermfg=NONE ctermbg=238
+hi DiffText cterm=bold ctermfg=NONE ctermbg=28
 hi SignColumn term=standout ctermfg=4 ctermbg=248 guifg=DarkBlue guibg=Grey
 hi Conceal ctermfg=7 ctermbg=242 guifg=LightGrey guibg=DarkGrey
 hi SpellBad term=reverse ctermfg=15 ctermbg=9 gui=undercurl guisp=Red

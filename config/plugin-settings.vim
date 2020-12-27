@@ -11,7 +11,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 let g:NERDTreeDirArrowExpandable = '+'
 let g:NERDTreeDirArrowCollapsible = '-'
 
-let g:NERDTreeIndicatorMapCustom = {
+let g:NERDTreeGitStatusIndicatorMapCustom = {
     \ "Modified"  : "M",
     \ "Staged"    : "A",
     \ "Untracked" : "?",
@@ -27,7 +27,8 @@ let g:NERDTreeIndicatorMapCustom = {
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                    ROOTER                               "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:rooter_patterns = ['tsconfig.json', 'jsconfig.json', '.git/', 'package.json']
+let g:rooter_patterns = ['.venv', '.git/', '.vim/']
+"let g:rooter_patterns = ['tsconfig.json', 'jsconfig.json', '.venv', 'requirements.txt', '.git/', 'package.json']
 "let g:rooter_targets = '/,tsconfig.json,jsconfig.json,tslint.json,.vimtags,package.json'
 
 

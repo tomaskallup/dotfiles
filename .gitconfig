@@ -67,6 +67,7 @@
   psuo = !git push --set-upstream origin $(git branch --show-current)
   psu = push --set-upstream
   dt = difftool
+  mt = mergetool
   fixc = "!$EDITOR `git diff --name-only --diff-filter=U`"
   bi =  !git checkout $(git branch | sed '/HEAD/d' | sed -e 's/*\\?\\s\\+\\(remotes\\/origin\\/\\)\\?//' | sort -u | fzf)
   bia =  !git checkout $(git branch -a | sed '/HEAD/d' | sed -e 's/*\\?\\s\\+\\(remotes\\/origin\\/\\)\\?//' | sort -u | fzf)
@@ -81,3 +82,9 @@
 	gpgSign = true
 [diff-so-fancy]
 	first-run = false
+[diff]
+	tool = vimdiff
+[merge]
+	tool = vimdiff
+[mergetool "vimdiff"]
+	path = nvim
