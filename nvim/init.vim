@@ -1,6 +1,19 @@
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath = &runtimepath
-source ~/.vimrc
+
+let g:custom_path = '~/.config/nvim/'
+
+func LoadConfig(name)
+    exec 'source' g:custom_path . a:name . '.vim'
+endfunc
+
+call LoadConfig('plugins')
+call LoadConfig('base')
+call LoadConfig('plugin-settings')
+call LoadConfig('keymap')
+call LoadConfig('colors')
+
+set nocompatible
 
 colorscheme custom
 set inccommand=split

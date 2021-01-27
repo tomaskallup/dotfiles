@@ -23,7 +23,7 @@ hi DiffAdd cterm=bold ctermfg=NONE ctermbg=22
 hi DiffDelete cterm=bold ctermfg=NONE ctermbg=52
 hi DiffChange cterm=bold ctermfg=NONE ctermbg=238
 hi DiffText cterm=bold ctermfg=NONE ctermbg=28
-hi SignColumn term=standout ctermfg=4 ctermbg=248 guifg=DarkBlue guibg=Grey
+hi SignColumn term=standout ctermfg=4 ctermbg=8 guifg=DarkBlue guibg=Grey
 hi Conceal ctermfg=7 ctermbg=242 guifg=LightGrey guibg=DarkGrey
 hi SpellBad term=reverse ctermfg=15 ctermbg=9 gui=undercurl guisp=Red
 hi SpellCap term=reverse ctermbg=81 gui=undercurl guisp=Blue
@@ -47,37 +47,14 @@ hi ToolbarButton cterm=bold ctermfg=15 ctermbg=242 gui=bold guifg=White guibg=Gr
 hi Comment term=bold ctermfg=4 guifg=Blue
 hi Constant term=underline ctermfg=1 guifg=Magenta
 hi Special term=bold ctermfg=11 guifg=SlateBlue
-hi Identifier term=underline ctermfg=6 guifg=DarkCyan
+hi Identifier term=underline cterm=None ctermfg=5 guifg=DarkCyan
 hi Statement term=bold ctermfg=130 gui=bold guifg=Brown
-hi PreProc term=underline ctermfg=5 guifg=Purple
+hi PreProc term=underline ctermfg=6 guifg=Purple
 hi Type term=underline ctermfg=10 gui=bold guifg=SeaGreen
 hi Underlined term=underline cterm=underline ctermfg=5 gui=underline guifg=SlateBlue
 hi Ignore ctermfg=15 guifg=bg
 hi Error term=reverse ctermfg=15 ctermbg=9 guifg=White guibg=Red
 hi Todo term=standout ctermfg=0 ctermbg=11 guifg=Blue guibg=Yellow
-hi link String Constant
-hi link Character Constant
-hi link Number Constant
-hi link Boolean Constant
-hi link Float Number
-hi link Function Identifier
-hi link Conditional Statement
-hi link Repeat Statement
-hi link Label Statement
-hi link Operator Statement
-hi link Keyword Statement
-hi link Exception Statement
-hi link Include PreProc
-hi link Define PreProc
-hi link Macro PreProc
-hi link PreCondit PreProc
-hi link StorageClass Type
-hi link Structure Type
-hi link Typedef Type
-hi link Tag Special
-hi link SpecialChar Special
-hi link Delimiter Special
-hi link SpecialComment Special
-hi link Debug Special
-hi link EndOfBuffer NonText
-hi link QuickFixLine Search
+
+hi link TSFunction Normal
+hi link TSConstructor Normal

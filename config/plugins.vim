@@ -34,6 +34,7 @@ Plug 'tpope/vim-markdown'
 "Plug 'tpope/vim-fugitive'
 Plug 'baskerville/vim-sxhkdrc'
 "Plug 'digitaltoad/vim-pug'
+Plug 'puremourning/vimspector'
 
 if !&diff
     Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}

@@ -24,7 +24,7 @@ source /usr/share/zsh/share/zgen.zsh
 if ! zgen saved; then
 
   # specify plugins here
-  zgen oh-my-zsh plugins/vi-mode
+  # zgen oh-my-zsh plugins/vi-mode
 
   zgen load ~/.config/zsh/themes/custom
   zgen load owenstranathan/pipenv.zsh
@@ -75,8 +75,6 @@ setopt auto_cd # cd by typing directory name if it's not a command
 source /etc/profile.d/autojump.zsh
 
 alsi
-
-todo.sh list
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/home/armeeh/Pkg/google-cloud-sdk/path.zsh.inc' ]; then . '/home/armeeh/Pkg/google-cloud-sdk/path.zsh.inc'; fi

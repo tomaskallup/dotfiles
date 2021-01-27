@@ -48,5 +48,8 @@
   "python.linting.lintOnSave": true,
   "python.jediEnabled": false,
   "css.validate": false,
-  "scss.validate": true
+  "scss.validate": true,
+  "explorer.icon.enableNerdfont": true,
+  "explorer.filename.colored.enable": false,
+  "git.addGBlameToVirtualText": false
 }
