@@ -1,5 +1,4 @@
 local lspconfig = require'lspconfig'
---local completion = require'completion'
 
 -- Use ehanced LSP stuff
 vim.lsp.handlers['textDocument/codeAction'] = require'lsputil.codeAction'.code_action_handler
@@ -10,28 +9,17 @@ vim.lsp.handlers['textDocument/typeDefinition'] = require'lsputil.locations'.typ
 vim.lsp.handlers['textDocument/implementation'] = require'lsputil.locations'.implementation_handler
 vim.lsp.handlers['textDocument/documentSymbol'] = require'lsputil.symbols'.document_handler
 vim.lsp.handlers['workspace/symbol'] = require'lsputil.symbols'.workspace_handler
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics, {
+    virtual_text = false,
+  }
+)
 
-local chain_complete_list = {
-  default = {
-    {complete_items = {'lsp', 'snippet'}},
-    {complete_items = {'buffers'}},
-    {complete_items = {'path'}, triggered_only = {'/'}},
-  },
-  string = {
-    {complete_items = {'path'}, triggered_only = {'/'}},
-    {complete_items = {'buffers'}},
-  },
-  comment = {},
-}
+vim.cmd [[autocmd CursorHoldI * silent! lua vim.lsp.buf.signature_help()]]
 
 -- Prepare completion
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-
-  --completion.on_attach({
-    --sorting="None",
-    --chain_complete_list=chain_complete_list,
-  --})
 
   -- Mappings.
   local opts = { noremap=true, silent=true }
@@ -40,17 +28,13 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'gh', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  --buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  --buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  --buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-  --buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   buf_set_keymap('n', '<space>rm', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('n', '<space>rr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   buf_set_keymap('n', '<space>d', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+
   buf_set_keymap('n', '<space>i', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  --buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
 
   -- Set some keybinds conditional on server capabilities
   if client.resolved_capabilities.document_formatting then
@@ -64,22 +48,30 @@ end
 
 lspconfig.tsserver.setup{
   root_dir = lspconfig.util.root_pattern("yarn.lock", "lerna.json", ".git"),
-  on_attach = on_attach
+  on_attach = function (client, bufnr)
+    -- This makes sure tsserver is not used for formatting (I prefer prettier)
+    client.resolved_capabilities.document_formatting = false
+
+    on_attach(client, bufnr)
+  end,
+  settings = {
+    documentFormatting = false
+  }
 }
 
 
 -- Lua (sumneko) setup
 local function get_lua_runtime()
-    local result = {}
-    for _, path in pairs(vim.api.nvim_list_runtime_paths()) do
-        local lua_path = path .. "/lua/"
-        if vim.fn.isdirectory(lua_path) then
-            result[lua_path] = true
-        end
+  local result = {}
+  for _, path in pairs(vim.api.nvim_list_runtime_paths()) do
+    local lua_path = path .. "/lua/"
+    if vim.fn.isdirectory(lua_path) then
+      result[lua_path] = true
     end
-    result[vim.fn.expand("$VIMRUNTIME/lua")] = true
-    result[vim.fn.expand("/usr/share/nvim/runtime/lua")] = true
-    return result
+  end
+  result[vim.fn.expand("$VIMRUNTIME/lua")] = true
+  result[vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true
+  return result
 end
 
 lspconfig.sumneko_lua.setup {
@@ -88,29 +80,20 @@ lspconfig.sumneko_lua.setup {
   settings = {
     Lua = {
       runtime = {
-        version = "LuaJIT"
+        version = "LuaJIT",
+        path = vim.split(package.path, ';'),
       },
       completion = {
         keywordSnippet = "Disable"
       },
       diagnostics = {
         enable = true,
-        globals = {
-          -- Neovim
-          "vim",
-          -- Busted
-          "describe",
-          "it",
-          "before_each",
-          "after_each",
-          "teardown",
-          "pending"
-        },
-        workspace = {
-          library = get_lua_runtime(),
-          maxPreload = 1000,
-          preloadFileSize = 1000
-        }
+        globals = {'vim'},
+      },
+      workspace = {
+        library = get_lua_runtime(),
+        maxPreload = 1000,
+        preloadFileSize = 1000
       }
     }
   }
@@ -122,49 +105,6 @@ lspconfig.jsonls.setup {
   on_attach = on_attach,
   cmd = {"json-languageserver", "--stdio"}
 }
-
--- Diagnostics (eslint, etc.) setup
---[[
-require'lspconfig'.diagnosticls.setup {
-  root_dir = lspconfig.util.root_pattern("yarn.lock", "lerna.json", ".git"),
-  filetypes = {"javascript", "typescript"},
-  init_options = {
-    linters = {
-      eslint = {
-        command = "eslint_d",
-        rootPatterns = {".git"},
-        debounce = 100,
-        args = {
-          "--stdin",
-          "--stdin-filename",
-          "%filepath",
-          "--format",
-          "json"
-        },
-        sourceName = "eslint",
-        parseJson = {
-          errorsRoot = "[0].messages",
-          line = "line",
-          column = "column",
-          endLine = "endLine",
-          endColumn = "endColumn",
-          message = "${message} [${ruleId}]",
-          security = "severity"
-        },
-        securities = {
-          [2] = "error",
-          [1] = "warning"
-        }
-      },
-    },
-    filetypes = {
-      javascript = "eslint",
-      typescript = "eslint"
-    }
-  },
-  on_attach = on_attach
-}
-]]
 
 -- Formatting via efm
 local prettier = require "efm/prettier"
