@@ -1,26 +1,7 @@
 "======================================="
-"             Coc settings              "
-"======================================="
-let g:coc_filetype_map = {
-  \ 'sass': 'scss',
-  \ }
-
-"======================================="
 "           Rooter settings             "
 "======================================="
 let g:rooter_patterns = ['.venv', '.git/', '.vim/']
-
-"======================================="
-"           Ctrl-p settings             "
-"======================================="
-let g:ctrlp_clear_cache_on_exit = 1
-
-let g:ctrlp_user_command = 'git ls-files . --exclude-standard'
-
-"======================================="
-"            Yats settings              "
-"======================================="
-let g:yats_host_keyword = 0
 
 "======================================="
 "         Vimspector settings           "
@@ -52,3 +33,16 @@ exec 'luafile' expand(g:custom_path . 'lua/lsp-config.lua')
 "            Nvim compe                 "
 "======================================="
 exec 'luafile' expand(g:custom_path . 'lua/nvim-compe.lua')
+
+"======================================="
+"             Nvim compe                "
+"======================================="
+exec 'luafile' expand(g:custom_path . 'lua/nvim-compe.lua')
+
+"======================================="
+"             CHAD tree                 "
+"======================================="
+let g:chadtree_settings = {
+      \"theme.text_colour_set": "env",
+      \"options": { "session": v:false }
+      \}

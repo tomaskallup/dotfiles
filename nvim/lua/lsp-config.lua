@@ -11,6 +11,7 @@ vim.lsp.handlers['textDocument/documentSymbol'] = require'lsputil.symbols'.docum
 vim.lsp.handlers['workspace/symbol'] = require'lsputil.symbols'.workspace_handler
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
+    underline = true,
     virtual_text = false,
   }
 )
@@ -59,51 +60,44 @@ lspconfig.tsserver.setup{
   }
 }
 
-
--- Lua (sumneko) setup
-local function get_lua_runtime()
-  local result = {}
-  for _, path in pairs(vim.api.nvim_list_runtime_paths()) do
-    local lua_path = path .. "/lua/"
-    if vim.fn.isdirectory(lua_path) then
-      result[lua_path] = true
-    end
-  end
-  result[vim.fn.expand("$VIMRUNTIME/lua")] = true
-  result[vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true
-  return result
-end
-
+local util = require 'lspconfig/util'
 lspconfig.sumneko_lua.setup {
+  cmd = {"/usr/bin/lua-language-server", "-E", "/usr/share/lua-language-server/main.lua"},
   on_attach = on_attach,
-  cmd = {"lua-language-server"},
+  root_dir = function(fname)
+    return util.find_git_ancestor(fname) or
+      util.path.dirname(fname)
+  end,
   settings = {
     Lua = {
       runtime = {
-        version = "LuaJIT",
+        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+        version = 'LuaJIT',
+        -- Setup your lua path
         path = vim.split(package.path, ';'),
       },
-      completion = {
-        keywordSnippet = "Disable"
-      },
       diagnostics = {
-        enable = true,
+        -- Get the language server to recognize the `vim` global
         globals = {'vim'},
       },
       workspace = {
-        library = get_lua_runtime(),
-        maxPreload = 1000,
-        preloadFileSize = 1000
-      }
-    }
-  }
+        -- Make the server aware of Neovim runtime files
+        library = {
+          [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+          [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+        },
+      },
+    },
+  },
 }
+
+-- Vim lsp
+lspconfig.vimls.setup{}
 
 -- JSON lsp
 
 lspconfig.jsonls.setup {
   on_attach = on_attach,
-  cmd = {"json-languageserver", "--stdio"}
 }
 
 -- Formatting via efm

@@ -10,6 +10,9 @@
 # Nvm
 [ -r /usr/share/nvm/init-nvm.sh ] && source /usr/share/nvm/init-nvm.sh
 
+# LS_COLORS
+[ -r ~/.local/share/lscolors.sh ] && source ~/.local/share/lscolors.sh
+
 autoload -Uz promptinit
 promptinit
 

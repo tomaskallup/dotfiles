@@ -102,3 +102,11 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 "inoremap <silent><expr> <CR>      compe#confirm('<CR>', 'i')
 inoremap <silent><expr> <C-y>      compe#confirm('<C-y>', 'i')
 "}}}
+
+"{{{ Easy align
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+"}}}

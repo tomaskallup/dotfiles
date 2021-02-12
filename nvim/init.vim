@@ -11,11 +11,12 @@ call LoadConfig('plugins')
 call LoadConfig('base')
 call LoadConfig('plugin-settings')
 call LoadConfig('keymap')
-call LoadConfig('colors')
+"call LoadConfig('colors')
 
 set nocompatible
 
-colorscheme custom
+colorscheme arcolors
+set termguicolors
 set inccommand=split
 
 let g:python_host_prg = '/usr/local/bin/python'

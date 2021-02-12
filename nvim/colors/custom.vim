@@ -37,7 +37,7 @@ hi TabLine term=underline cterm=underline ctermfg=0 ctermbg=7 gui=underline guib
 hi TabLineSel term=bold cterm=bold gui=bold
 hi TabLineFill term=reverse cterm=reverse gui=reverse
 hi CursorColumn term=reverse ctermbg=7 guibg=Grey90
-hi CursorLine term=underline cterm=underline guibg=Grey90
+hi CursorLine term=underline cterm=underline gui=underline
 hi ColorColumn term=reverse ctermbg=224 guibg=LightRed
 hi StatusLineTerm term=bold,reverse cterm=bold ctermfg=15 ctermbg=2 gui=bold guifg=bg guibg=DarkGreen
 hi StatusLineTermNC term=reverse ctermfg=15 ctermbg=2 guifg=bg guibg=DarkGreen
