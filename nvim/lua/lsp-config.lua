@@ -92,7 +92,9 @@ lspconfig.sumneko_lua.setup {
 }
 
 -- Vim lsp
-lspconfig.vimls.setup{}
+lspconfig.vimls.setup{
+  on_attach = on_attach,
+}
 
 -- JSON lsp
 
