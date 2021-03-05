@@ -47,8 +47,14 @@ autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
+bindkey -e
 bindkey "^[[A" up-line-or-beginning-search # Up
 bindkey "^[[B" down-line-or-beginning-search # Down
+
+# Edit current command in editor
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '^xe' edit-command-line
 
 # Allow shift-tab for backwards complete
 bindkey '^[[Z' reverse-menu-complete

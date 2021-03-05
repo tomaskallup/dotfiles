@@ -46,3 +46,15 @@ let g:chadtree_settings = {
       \"theme.text_colour_set": "env",
       \"options": { "session": v:false }
       \}
+
+"======================================="
+"              Nvim dap                 "
+"======================================="
+exec 'luafile' expand(g:custom_path . 'lua/dap.lua')
+
+
+"======================================="
+"           Nvim telescope              "
+"======================================="
+exec 'luafile' expand(g:custom_path . 'lua/telescope-nvim.lua')
+

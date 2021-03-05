@@ -11,7 +11,7 @@ Plug 'RishabhRD/popfix' " Required by lsputils
 "======================================="
 "     Movement & editation plugins      "
 "======================================="
-"Plug 'ctrlpvim/ctrlp.vim' " File finder
+Plug 'tpope/vim-repeat' " Use `.` to repeat surrount and other commands
 Plug 'tpope/vim-surround' " (o_o) -> ca([ -> [o_o]
 Plug 'scrooloose/nerdcommenter' " Comments
 Plug 'jiangmiao/auto-pairs' " Matching parens, quotes etc.
@@ -20,6 +20,7 @@ Plug 'jiangmiao/auto-pairs' " Matching parens, quotes etc.
 "               UI plugins              "
 "======================================="
 Plug 'itchyny/lightline.vim' " Nice bar
+Plug 'tomaskallup/arcolors' " Colorscheme
 
 "======================================="
 "             Syntax plugins            "
@@ -31,7 +32,7 @@ Plug 'nvim-treesitter/playground'
 "======================================="
 "      IDE (completion, debugging)      "
 "======================================="
-"Plug 'puremourning/vimspector'
+Plug 'puremourning/vimspector'
 Plug 'plytophogy/vim-virtualenv' " Virtual env
 Plug 'airblade/vim-rooter'
 Plug 'neovim/nvim-lspconfig' " LSP configurations for builtin LSP client
@@ -54,8 +55,12 @@ Plug 'nvim-telescope/telescope.nvim' " Better than fzf, amazing search
 "======================================="
 "    Experimental (testing plugins)     "
 "======================================="
-Plug 'tomaskallup/arcolors' " Colorscheme
+Plug 'moll/vim-bbye' " Better buffer management
 Plug 'junegunn/vim-easy-align' " Align stuff
-
+Plug 'rafcamlet/nvim-luapad' " Lua pad
+Plug 'mfussenegger/nvim-dap' " Debugging, not yet ready
+Plug 'aklt/plantuml-syntax' " Plant uml syntax
+Plug 'weirongxu/plantuml-previewer.vim' " Plant uml preview
+Plug 'tyru/open-browser.vim' " Open previews in browser
 
 call plug#end()
