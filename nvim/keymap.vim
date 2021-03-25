@@ -24,13 +24,12 @@ nnoremap <silent><leader>H <C-W>H
 nnoremap <silent><leader>W <C-W>W
 
 if &diff
-    map <silent><leader>q :qall<CR>
+  map <silent><leader>q :qall<CR>
 endif
 
 " Escaping insert/visual modes
 ino jk <esc>
 ino kj <esc>
-cno jj <c-c>
 vno v <esc>
 
 " Yank whole file
@@ -92,7 +91,12 @@ map <silent>[vimspect]r :<C-u>VimspectorReset<CR>
 "}}}
 
 "{{{ CHAD Tree
-nmap <silent><leader>m <cmd>CHADopen<cr>
+"nmap <silent><leader>m <cmd>CHADopen<cr>
+"}}}
+
+"{{{ Nvim Tree
+nmap <silent><leader>m <cmd>NvimTreeToggle<cr>
+nmap <silent><leader>n <cmd>NvimTreeFindFile<cr>
 "}}}
 
 "{{{ Buffer managament
@@ -106,7 +110,6 @@ map <silent> [buffer]D :bd<CR>
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-"inoremap <silent><expr> <CR>      compe#confirm('<CR>', 'i')
 inoremap <silent><expr> <C-y>      compe#confirm('<C-y>', 'i')
 "}}}
 
@@ -124,4 +127,21 @@ xmap ga <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
+"}}}
+
+"{{{
+nmap <Leader>R [run]
+vmap <Leader>R [run]
+
+nnoremap <silent> [run]t :TerminatorOpenTerminal <CR>
+nnoremap <silent> [run]r :TerminatorStartREPL <CR>
+nnoremap <silent> [run]f :TerminatorRunFileInTerminal <CR>
+nnoremap <silent> [run]F :TerminatorRunFileInOutputBuffer <CR>
+nnoremap <silent> [run]s :TerminatorStopRun <CR>
+
+nnoremap <silent> [run]d :call terminator#send_delimiter_to_terminal()<CR>
+vnoremap <silent> [run]t :<C-U> call terminator#send_to_terminal(terminator#get_visual_selection())<CR>
+
+vnoremap <silent> [run]f :<C-U> call terminator#run_part_of_file("output_buffer", terminator#get_visual_selection())<CR>
+vnoremap <silent> [run]F :<C-U> call terminator#run_part_of_file("terminal", terminator#get_visual_selection())<CR>
 "}}}

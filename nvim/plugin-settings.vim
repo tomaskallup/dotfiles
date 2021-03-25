@@ -35,17 +35,38 @@ exec 'luafile' expand(g:custom_path . 'lua/lsp-config.lua')
 exec 'luafile' expand(g:custom_path . 'lua/nvim-compe.lua')
 
 "======================================="
-"             Nvim compe                "
+"             Nvim tree                 "
 "======================================="
-exec 'luafile' expand(g:custom_path . 'lua/nvim-compe.lua')
+let g:nvim_tree_follow = 1
+let g:nvim_tree_indent_markers = 1
+let g:nvim_tree_git_hl = 1
+let g:nvim_tree_width_allow_resize  = 0
+let g:nvim_tree_show_icons = {
+    \ 'git': 1,
+    \ 'folders': 1,
+    \ 'files': 1,
+    \ }
 
-"======================================="
-"             CHAD tree                 "
-"======================================="
-let g:chadtree_settings = {
-      \"theme.text_colour_set": "env",
-      \"options": { "session": v:false }
-      \}
+" default will show icon by default if no icon is provided
+" default shows no icon by default
+let g:nvim_tree_icons = {
+    \ 'default': '',
+    \ 'symlink': '',
+    \ 'git': {
+    \   'unstaged': "✗",
+    \   'staged': "✓",
+    \   'unmerged': "",
+    \   'renamed': "➜",
+    \   'untracked': "★"
+    \   },
+    \ 'folder': {
+    \   'default': "",
+    \   'open': "",
+    \   'empty': "",
+    \   'empty_open': "",
+    \   'symlink': "",
+    \   }
+    \ }
 
 "======================================="
 "              Nvim dap                 "
@@ -58,3 +79,14 @@ exec 'luafile' expand(g:custom_path . 'lua/dap.lua')
 "======================================="
 exec 'luafile' expand(g:custom_path . 'lua/telescope-nvim.lua')
 
+
+"======================================="
+"           vim terminator              "
+"======================================="
+let g:terminator_clear_default_mappings = 1
+
+
+"======================================="
+"            Gitsigns.nvim              "
+"======================================="
+exec 'luafile' expand(g:custom_path . 'lua/gitsigns.lua')

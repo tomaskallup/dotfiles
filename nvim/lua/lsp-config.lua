@@ -23,7 +23,12 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] =
 
 vim.cmd [[autocmd CursorHoldI * silent! lua vim.lsp.buf.signature_help()]]
 
--- Prepare completion
+-- Setup completion labels
+require('lspkind').init({
+    with_text = true,
+})
+
+-- Setup everything on lsp attach
 local on_attach = function(client, bufnr)
     local function buf_set_keymap(...)
         vim.api.nvim_buf_set_keymap(bufnr, ...)

@@ -21,18 +21,21 @@ Plug 'jiangmiao/auto-pairs' " Matching parens, quotes etc.
 "======================================="
 Plug 'itchyny/lightline.vim' " Nice bar
 Plug 'tomaskallup/arcolors' " Colorscheme
+Plug 'kyazdani42/nvim-web-devicons' " Icons
+Plug 'onsails/lspkind-nvim' " For icons in completion
 
 "======================================="
 "             Syntax plugins            "
 "======================================="
 Plug 'powerman/vim-plugin-AnsiEsc' " Ensure ansi color codes are handled
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " Godly highlight (not yet)
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " Godly highlight
 Plug 'nvim-treesitter/playground'
+Plug 'aklt/plantuml-syntax' " Plant uml syntax
 
 "======================================="
 "      IDE (completion, debugging)      "
 "======================================="
-Plug 'puremourning/vimspector'
+"Plug 'puremourning/vimspector'
 Plug 'plytophogy/vim-virtualenv' " Virtual env
 Plug 'airblade/vim-rooter'
 Plug 'neovim/nvim-lspconfig' " LSP configurations for builtin LSP client
@@ -46,21 +49,22 @@ endif
 "======================================="
 "           Workflow plugins            "
 "======================================="
-Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'} " Explorer
+Plug 'kyazdani42/nvim-tree.lua' " Explorer
 Plug 'vimwiki/vimwiki'
 Plug 'blindFS/vim-taskwarrior' " Task management
 Plug 'tools-life/taskwiki'
 Plug 'nvim-telescope/telescope.nvim' " Better than fzf, amazing search
+Plug 'nvim-telescope/telescope-dap.nvim' " Dap integration for telescope
+Plug 'moll/vim-bbye' " Better buffer management
 
 "======================================="
 "    Experimental (testing plugins)     "
 "======================================="
-Plug 'moll/vim-bbye' " Better buffer management
-Plug 'junegunn/vim-easy-align' " Align stuff
-Plug 'rafcamlet/nvim-luapad' " Lua pad
+"Plug 'junegunn/vim-easy-align' " Align stuff
+
 Plug 'mfussenegger/nvim-dap' " Debugging, not yet ready
-Plug 'aklt/plantuml-syntax' " Plant uml syntax
-Plug 'weirongxu/plantuml-previewer.vim' " Plant uml preview
-Plug 'tyru/open-browser.vim' " Open previews in browser
+"Plug 'erietz/vim-terminator'
+Plug 'pwntester/octo.nvim' " Github integration
+Plug 'lewis6991/gitsigns.nvim'
 
 call plug#end()
