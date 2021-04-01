@@ -71,7 +71,7 @@ let g:nvim_tree_icons = {
 "======================================="
 "              Nvim dap                 "
 "======================================="
-exec 'luafile' expand(g:custom_path . 'lua/dap.lua')
+exec 'luafile' expand(g:custom_path . 'lua/nvim-dap.lua')
 
 
 "======================================="

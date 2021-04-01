@@ -7,9 +7,11 @@ func LoadConfig(name)
     exec 'source' g:custom_path . a:name . '.vim'
 endfunc
 
-call LoadConfig('plugins')
+exec 'luafile' expand(g:custom_path . 'lua/plugins.lua')
+
+"call LoadConfig('plugins')
 call LoadConfig('base')
-call LoadConfig('plugin-settings')
+"call LoadConfig('plugin-settings')
 call LoadConfig('keymap')
 "call LoadConfig('colors')
 
