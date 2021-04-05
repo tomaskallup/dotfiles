@@ -53,7 +53,7 @@ return packer.startup(function()
 
     use { -- LSP configurations for builtin LSP client
         'neovim/nvim-lspconfig',
-        config = function() require 'plugins.lsp-config' end
+        config = function() require 'plugins.lspconfig' end
     }
     use { -- Enhance built in LSP functions
         'RishabhRD/nvim-lsputils',

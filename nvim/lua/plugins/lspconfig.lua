@@ -61,7 +61,7 @@ local on_attach = function(client, bufnr)
         buf_set_keymap("n", "<space>=", "<cmd>lua vim.lsp.buf.formatting()<CR>",
                        opts)
     elseif client.resolved_capabilities.document_range_formatting then
-        buf_set_keymap("n", "<space>=", "<cmd>lua vim.lsp.buf.formatting()<CR>",
+        buf_set_keymap("v", "<space>=", "<cmd>lua vim.lsp.buf.formatting()<CR>",
                        opts)
     end
 end
@@ -121,6 +121,7 @@ lspconfig.jsonls.setup {on_attach = on_attach}
 local prettier = require "efm/prettier"
 local eslint = require "efm/eslint"
 local luafmt = require "efm/luafmt"
+local rustfmt = require "efm/rustfmt"
 
 local languages = {
     lua = {luafmt},
@@ -133,7 +134,8 @@ local languages = {
     html = {prettier},
     scss = {prettier},
     css = {prettier},
-    markdown = {prettier}
+    markdown = {prettier},
+    rust = {rustfmt},
 }
 
 lspconfig.efm.setup {
@@ -141,5 +143,17 @@ lspconfig.efm.setup {
     filetypes = vim.tbl_keys(languages),
     init_options = {documentFormatting = true, codeAction = true},
     settings = {languages = languages, log_level = 1, log_file = '~/efm.log'},
+    on_attach = on_attach
+}
+
+lspconfig.rls.setup {
+    root_dir = lspconfig.util.root_pattern("Cargo.toml", ".git"),
+    settings = {
+        rust = {
+            unstable_features = true,
+            build_on_save = false,
+            all_features = true
+        }
+    },
     on_attach = on_attach
 }
