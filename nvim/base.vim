@@ -41,9 +41,12 @@ set undolevels=150
 set scrolloff=5
 set wildignore+=**/node_modules/**
 set gdefault
+set wildmenu
+set wildmode=longest:full,full
 
 " Set completeopt to have a better completion experience
-set completeopt=menuone,noinsert,noselect,preview
+"set completeopt=menuone,noinsert,noselect,preview
+set completeopt=menuone,noselect
 
 " Avoid showing message extra message when using completion
 set shortmess+=c

@@ -6,5 +6,8 @@ require'compe'.setup {
     buffer = true;
     vsnip = true;
     nvim_lsp = true;
+    emoji = true;
+    spell = true;
+    nvim_treesitter = true;
   }
 }

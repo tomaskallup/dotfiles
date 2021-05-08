@@ -71,6 +71,7 @@
   fixc = "!$EDITOR `git diff --name-only --diff-filter=U`"
   bi =  !git checkout $(git branch | sed '/HEAD/d' | sed -e 's/*\\?\\s\\+\\(remotes\\/origin\\/\\)\\?//' | sort -u | fzf)
   bia =  !git checkout $(git branch -a | sed '/HEAD/d' | sed -e 's/*\\?\\s\\+\\(remotes\\/origin\\/\\)\\?//' | sort -u | fzf)
+  lg = "log --format='%C(auto) %h %s'"
 
 [pull]
   rebase = true

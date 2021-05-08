@@ -9,15 +9,12 @@ endfunc
 
 exec 'luafile' expand(g:custom_path . 'lua/plugins.lua')
 
-"call LoadConfig('plugins')
 call LoadConfig('base')
-"call LoadConfig('plugin-settings')
 call LoadConfig('keymap')
-"call LoadConfig('colors')
 
 set nocompatible
 
-colorscheme arcolors
+"colorscheme arcolors
 set termguicolors
 set inccommand=split
 

@@ -9,7 +9,17 @@ dap.configurations.javascript = {
   {
     type = 'node2',
     request = 'launch',
-    program = '${file}',
+    cwd = vim.fn.getcwd(),
+    sourceMaps = true,
+    protocol = 'inspector',
+    console = 'integratedTerminal',
+  },
+}
+
+dap.configurations.typescript = {
+  {
+    type = 'node2',
+    request = 'launch',
     cwd = vim.fn.getcwd(),
     sourceMaps = true,
     protocol = 'inspector',

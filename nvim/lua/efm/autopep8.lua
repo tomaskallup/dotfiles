@@ -1,4 +1,4 @@
 return {
-  formatCommand = "rustfmt",
+  formatCommand = "autopep8 -",
   formatStdin = true
 }

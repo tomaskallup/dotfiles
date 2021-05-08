@@ -31,6 +31,8 @@ endif
 ino jk <esc>
 ino kj <esc>
 vno v <esc>
+tno jk <C-\><C-n>
+tno kj <C-\><C-n>
 
 " Yank whole file
 map <leader>y ggyG``
@@ -71,6 +73,7 @@ xmap <Leader>f [telescope]
 
 nnoremap [telescope]f <cmd>Telescope find_files theme=get_dropdown<cr>
 nnoremap [telescope]g <cmd>Telescope live_grep theme=get_dropdown<cr>
+nnoremap [telescope]G <cmd>Telescope git_status theme=get_dropdown<cr>
 nnoremap [telescope]b <cmd>Telescope buffers theme=get_dropdown<cr>
 nnoremap [telescope]h <cmd>Telescope help_tags<cr>
 nnoremap [telescope]r <cmd>Telescope lsp_references<cr>
@@ -104,6 +107,8 @@ nmap <Leader>b [buffer]
 
 map <silent> [buffer]d :Bdelete<CR>
 map <silent> [buffer]D :bd<CR>
+map <silent> [buffer]n :bn<CR>
+map <silent> [buffer]p :bp<CR>
 "}}}
 
 "{{{ Completion

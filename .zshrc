@@ -84,6 +84,7 @@ setopt auto_cd # cd by typing directory name if it's not a command
 source /etc/profile.d/autojump.zsh
 
 alsi
+task long
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/home/armeeh/Pkg/google-cloud-sdk/path.zsh.inc' ]; then . '/home/armeeh/Pkg/google-cloud-sdk/path.zsh.inc'; fi

@@ -10,12 +10,26 @@ return packer.startup(function()
     use 'tpope/vim-surround' -- (o_o) -> ca([ -> [o_o]
     use 'scrooloose/nerdcommenter' -- Comments
     use 'jiangmiao/auto-pairs' -- Matching parens, quotes etc.
+    use { -- Add matching HTML tag
+        'windwp/nvim-ts-autotag',
+        config = function() require'nvim-ts-autotag'.setup() end
+    }
 
     -- =======================================--
     --               UI plugins              --
     -- =======================================--
-    use 'itchyny/lightline.vim' -- Nice bar
-    use 'tomaskallup/arcolors' -- Colorscheme
+    use { -- Nice bar
+        'hoob3rt/lualine.nvim',
+        config = function() require 'plugins.lualine' end
+    }
+    -- use 'tomaskallup/arcolors' -- Colorscheme
+    use { -- Colorscheme
+        'marko-cerovac/material.nvim',
+        config = function()
+            vim.g.material_style = 'deep ocean'
+            require'material'.set()
+        end
+    }
     use 'kyazdani42/nvim-web-devicons' -- Icons
     use 'onsails/lspkind-nvim' -- For icons in completion
 
@@ -53,7 +67,7 @@ return packer.startup(function()
 
     use { -- LSP configurations for builtin LSP client
         'neovim/nvim-lspconfig',
-        config = function() require 'plugins.lspconfig' end
+        config = function() require 'plugins.nvim-lspconfig' end
     }
     use { -- Enhance built in LSP functions
         'RishabhRD/nvim-lsputils',
@@ -62,6 +76,12 @@ return packer.startup(function()
     use { -- LSP Completion
         'hrsh7th/nvim-compe',
         config = function() require 'plugins.nvim-compe' end
+    }
+    use "rafamadriz/friendly-snippets" -- Some nice snippets
+    use "hrsh7th/vim-vsnip" -- Snippets framework
+    use { -- Typescript LSP enhancements (configured in LSP)
+        'jose-elias-alvarez/nvim-lsp-ts-utils',
+        branch = 'develop'
     }
 
     -- =======================================--
@@ -94,12 +114,20 @@ return packer.startup(function()
     -- =======================================--
     --    Experimental (testing plugins)     --
     -- =======================================--
-    use 'pwntester/octo.nvim' -- Github integration
+    use 'pwntester/octo.nvim' -- Github integration, with telescope support!
     use {
-        'lewis6991/gitsigns.nvim',
+        -- 'lewis6991/gitsigns.nvim',
+        '~/Pkg/gitsigns.nvim',
         config = function() require 'plugins.gitsigns' end
     }
+    use 'teal-language/vim-teal' -- Teal language support
+    use 'rust-lang/rust.vim' -- Rust support
 
     -- use 'junegunn/vim-easy-align' -- Align stuff
     -- use 'erietz/vim-terminator'
+    use 'ron-rs/ron.vim' -- Ron syntax
+    use { -- Show colors in neovim (Red, Green, Blue, etc.)
+        'norcalli/nvim-colorizer.lua',
+        config = function() require'colorizer'.setup() end
+    }
 end)
