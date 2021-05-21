@@ -43,6 +43,8 @@ set wildignore+=**/node_modules/**
 set gdefault
 set wildmenu
 set wildmode=longest:full,full
+set diffopt+=algorithm:minimal
+set grepprg=ag\ --vimgrep
 
 " Set completeopt to have a better completion experience
 "set completeopt=menuone,noinsert,noselect,preview

@@ -6,7 +6,7 @@ return packer.startup(function()
     -- =======================================--
     --     Movement & editation plugins      --
     -- =======================================--
-    use 'tpope/vim-repeat' -- Use `.` to repeat surrount and other commands
+    use 'tpope/vim-repeat' -- Use `.` to repeat surround and other commands
     use 'tpope/vim-surround' -- (o_o) -> ca([ -> [o_o]
     use 'scrooloose/nerdcommenter' -- Comments
     use 'jiangmiao/auto-pairs' -- Matching parens, quotes etc.
@@ -31,7 +31,10 @@ return packer.startup(function()
         end
     }
     use 'kyazdani42/nvim-web-devicons' -- Icons
-    use 'onsails/lspkind-nvim' -- For icons in completion
+    use { -- For icons in completion
+        'onsails/lspkind-nvim',
+        config = function() require 'plugins.lspkind-nvim' end
+    }
 
     -- =======================================--
     --             Syntax plugins            --
@@ -47,6 +50,11 @@ return packer.startup(function()
     }
     use 'nvim-treesitter/playground'
     use 'aklt/plantuml-syntax' -- Plant uml syntax
+    use { -- Show colors in neovim (Red, Green, Blue, etc.)
+        'norcalli/nvim-colorizer.lua',
+        config = function() require'colorizer'.setup() end
+    }
+    use 'pantharshit00/vim-prisma'
 
     -- =======================================--
     --      IDE (completion, debugging)      --
@@ -71,7 +79,8 @@ return packer.startup(function()
     }
     use { -- Enhance built in LSP functions
         'RishabhRD/nvim-lsputils',
-        requires = {'RishabhRD/popfix'}
+        requires = {'RishabhRD/popfix'},
+        config = function() require 'plugins.nvim-lsputils' end
     }
     use { -- LSP Completion
         'hrsh7th/nvim-compe',
@@ -81,34 +90,53 @@ return packer.startup(function()
     use "hrsh7th/vim-vsnip" -- Snippets framework
     use { -- Typescript LSP enhancements (configured in LSP)
         'jose-elias-alvarez/nvim-lsp-ts-utils',
-        branch = 'develop'
+        branch = 'main'
+    }
+    use { -- Show signature help when typing
+        'ray-x/lsp_signature.nvim'
+    }
+    use { -- Simple lsp enhancements
+        'nvim-lua/lsp_extensions.nvim',
+        config = function() require 'plugins.lsp_extensions' end
+    }
+    use { -- Spell checking!
+        'kamykn/spelunker.vim'
     }
 
     -- =======================================--
     --           Workflow plugins            --
     -- =======================================--
-    use { -- File explorer
-        'kyazdani42/nvim-tree.lua',
-        confing = function() require 'plugins.nvim-tree' end
-    }
+    use {'ms-jpq/chadtree', branch = 'chad', run = 'python3 -m chadtree deps'}
     use {
         'vimwiki/vimwiki',
         config = function()
-            vim.g.vimwiki_list = {{path = '/home/armeeh/vimwiki'}}
+            vim.g.vimwiki_list = {
+                {path = '/home/armeeh/vimwiki', syntax = 'markdown'}
+            }
             vim.g.vimwiki_map_prefix = '<leader>e'
         end
     }
     use 'blindFS/vim-taskwarrior' -- Task management
     use 'tools-life/taskwiki'
+
     use { -- Better than fzf, amazing search
         'nvim-telescope/telescope.nvim',
         requires = {'nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim'},
         config = function() require 'plugins.telescope' end
     }
-    use {
+    use { -- Dap integration for telescope
         'nvim-telescope/telescope-dap.nvim',
         requires = {'mfussenegger/nvim-dap', 'nvim-telescope/telescope.nvim'}
-    } -- Dap integration for telescope
+    }
+    use {
+        'nvim-telescope/telescope-project.nvim',
+        requires = {'nvim-telescope/telescope.nvim'}
+    }
+    use { -- Better sorting in telescope
+        'nvim-telescope/telescope-fzf-native.nvim',
+        run = 'make'
+    }
+
     use 'moll/vim-bbye' -- Better buffer management
 
     -- =======================================--
@@ -116,18 +144,16 @@ return packer.startup(function()
     -- =======================================--
     use 'pwntester/octo.nvim' -- Github integration, with telescope support!
     use {
-        -- 'lewis6991/gitsigns.nvim',
-        '~/Pkg/gitsigns.nvim',
+        'lewis6991/gitsigns.nvim',
         config = function() require 'plugins.gitsigns' end
     }
-    use 'teal-language/vim-teal' -- Teal language support
-    use 'rust-lang/rust.vim' -- Rust support
-
-    -- use 'junegunn/vim-easy-align' -- Align stuff
-    -- use 'erietz/vim-terminator'
-    use 'ron-rs/ron.vim' -- Ron syntax
-    use { -- Show colors in neovim (Red, Green, Blue, etc.)
-        'norcalli/nvim-colorizer.lua',
-        config = function() require'colorizer'.setup() end
+    use {
+        'TimUntersberger/neogit',
+        config = function() require 'plugins.neogit' end
+    }
+    use {'folke/lua-dev.nvim'}
+    use {
+        'folke/trouble.nvim',
+        config = function() require'trouble'.setup {} end
     }
 end)

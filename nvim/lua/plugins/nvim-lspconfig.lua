@@ -1,37 +1,15 @@
 local lspconfig = require 'lspconfig'
 local configs = require("lspconfig/configs") -- Make sure this is a slash (as theres some metamagic happening behind the scenes)
 
--- Use ehanced LSP stuff
-vim.lsp.handlers['textDocument/codeAction'] =
-    require'lsputil.codeAction'.code_action_handler
-vim.lsp.handlers['textDocument/references'] =
-    require'lsputil.locations'.references_handler
-vim.lsp.handlers['textDocument/definition'] =
-    require'lsputil.locations'.definition_handler
-vim.lsp.handlers['textDocument/declaration'] =
-    require'lsputil.locations'.declaration_handler
-vim.lsp.handlers['textDocument/typeDefinition'] =
-    require'lsputil.locations'.typeDefinition_handler
-vim.lsp.handlers['textDocument/implementation'] =
-    require'lsputil.locations'.implementation_handler
-vim.lsp.handlers['textDocument/documentSymbol'] =
-    require'lsputil.symbols'.document_handler
-vim.lsp.handlers['workspace/symbol'] =
-    require'lsputil.symbols'.workspace_handler
-vim.lsp.handlers["textDocument/publishDiagnostics"] =
-    vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics,
-                 {underline = true, virtual_text = false})
-
-vim.cmd [[autocmd CursorHoldI * silent! lua vim.lsp.buf.signature_help()]]
-
--- Setup completion labels
-require('lspkind').init({with_text = true})
+-- vim.cmd [[autocmd CursorHoldI * silent! lua vim.lsp.buf.signature_help()]]
 
 -- Setup everything on lsp attach
 local on_attach = function(client, bufnr)
     local function buf_set_keymap(...)
         vim.api.nvim_buf_set_keymap(bufnr, ...)
     end
+
+    require'lsp_signature'.on_attach()
 
     -- Mappings.
     local opts = {noremap = true, silent = true}
@@ -80,38 +58,15 @@ lspconfig.tsserver.setup {
     settings = {documentFormatting = false}
 }
 
-local util = require 'lspconfig/util'
-lspconfig.sumneko_lua.setup {
-    cmd = {
-        "/usr/bin/lua-language-server", "-E",
-        "/usr/share/lua-language-server/main.lua"
-    },
-    on_attach = on_attach,
-    root_dir = function(fname)
-        return util.find_git_ancestor(fname) or util.path.dirname(fname)
-    end,
-    settings = {
-        Lua = {
-            runtime = {
-                -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-                version = 'LuaJIT',
-                -- Setup your lua path
-                path = vim.split(package.path, ';')
-            },
-            diagnostics = {
-                -- Get the language server to recognize the `vim` global
-                globals = {'vim'}
-            },
-            workspace = {
-                -- Make the server aware of Neovim runtime files
-                library = {
-                    [vim.fn.expand('$VIMRUNTIME/lua')] = true,
-                    [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true
-                }
-            }
+local luadev = require('lua-dev').setup({
+    lspconfig = {
+        cmd = {
+            "/usr/bin/lua-language-server", "-E",
+            "/usr/share/lua-language-server/main.lua"
         }
     }
-}
+})
+lspconfig.sumneko_lua.setup(luadev)
 
 -- Vim lsp
 lspconfig.vimls.setup {on_attach = on_attach}
@@ -167,7 +122,7 @@ local prettier = require "efm/prettier"
 local eslint = require "efm/eslint"
 local luafmt = require "efm/luafmt"
 local rustfmt = require "efm/rustfmt"
---local autopep = require "efm/autopep8"
+-- local autopep = require "efm/autopep8"
 
 local languages = {
     lua = {luafmt},
@@ -181,8 +136,8 @@ local languages = {
     scss = {prettier},
     css = {prettier},
     markdown = {prettier},
-    rust = {rustfmt},
-    --python = {autopep}
+    rust = {rustfmt}
+    -- python = {autopep}
 }
 
 lspconfig.efm.setup {
@@ -210,70 +165,14 @@ lspconfig.pyls.setup {
     on_attach = on_attach
 }
 
-if not lspconfig.teal then
-    configs.teal = {
+if not lspconfig.prisma then
+    configs.prisma = {
         default_config = {
-            cmd = {
-                "teal-language-server"
-                -- "logging=on", use this to enable logging in /tmp/teal-language-server.log
-            },
-            filetypes = {"teal"},
-            root_dir = lspconfig.util.root_pattern("tlconfig.lua", ".git"),
+            cmd = {"prisma-language-server", "--stdio"},
+            filetypes = {"prisma"},
+            root_dir = lspconfig.util.root_pattern("prisma", ".git"),
             settings = {}
         }
     }
 end
-lspconfig.teal.setup {}
-
-if not lspconfig.tailwindcss then
-    configs.tailwindcss = {
-        default_config = {
-            cmd = {"tailwindcss-language-server", "--stdio"},
-            filetypes = {
-                -- html
-                'aspnetcorerazor', 'blade', 'django-html', 'edge', 'ejs',
-                'eruby', 'gohtml', 'haml', 'handlebars', 'hbs', 'html',
-                'html-eex', 'jade', 'leaf', 'liquid', 'markdown', 'mdx',
-                'mustache', 'njk', 'nunjucks', 'php', 'razor', 'slim', 'twig', -- css
-                'css', 'less', 'postcss', 'sass', 'scss', 'stylus', 'sugarss',
-                -- js
-                'javascript', 'javascriptreact', 'reason', 'rescript',
-                'typescript', 'typescriptreact', -- mixed
-                'vue', 'svelte'
-            },
-            init_options = {userLanguages = {eruby = "html"}},
-            root_dir = function(fname)
-                return util.root_pattern('tailwind.config.js',
-                                         'tailwind.config.ts')(fname) or
-                           util.root_pattern('postcss.config.js',
-                                             'postcss.config.ts')(fname) or
-                           util.find_package_json_ancestor(fname) or
-                           util.find_node_modules_ancestor(fname) or
-                           util.find_git_ancestor(fname)
-            end,
-            handlers = {
-                -- 1. tailwindcss lang server uses this instead of workspace/configuration
-                -- 2. tailwindcss lang server waits for this repsonse before providing hover
-                ["tailwindcss/getConfiguration"] = function(err, _, params,
-                                                            client_id, bufnr, _)
-                    -- params = { _id, languageId? }
-
-                    local client = vim.lsp.get_client_by_id(client_id)
-                    if not client then return end
-                    if err then error(vim.inspect(err)) end
-
-                    local configuration =
-                        vim.lsp.util.lookup_section(client.config.settings,
-                                                    "tailwindCSS") or {}
-                    configuration._id = params._id
-                    configuration.tabSize =
-                        vim.lsp.util.get_effective_tabstop(bufnr) -- used for the CSS preview
-                    vim.lsp.buf_notify(bufnr,
-                                       "tailwindcss/getConfigurationResponse",
-                                       configuration)
-                end
-            }
-        }
-    }
-end
-lspconfig.tailwindcss.setup {}
+lspconfig.prisma.setup {on_attach = on_attach}
