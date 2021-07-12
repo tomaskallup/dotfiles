@@ -43,7 +43,7 @@ set wildignore+=**/node_modules/**
 set gdefault
 set wildmenu
 set wildmode=longest:full,full
-set diffopt+=algorithm:minimal
+set diffopt+=internal,algorithm:patience
 set grepprg=ag\ --vimgrep
 
 " Set completeopt to have a better completion experience
@@ -73,5 +73,9 @@ function! SynStack()
   endif
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
+
+augroup LocalConfig
+  autocmd VimEnter,BufEnter * lua require'localconfig'.check()
+augroup END
 
 let g:vimsyn_embed = "lPr"

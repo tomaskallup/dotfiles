@@ -4,7 +4,6 @@ require('telescope').setup {
             'ag', '--nocolor', '--column', '--noheading', '--numbers',
             '--smart-case'
         },
-        prompt_position = "bottom",
         prompt_prefix = "> ",
         selection_caret = "> ",
         entry_prefix = "  ",
@@ -12,19 +11,16 @@ require('telescope').setup {
         selection_strategy = "reset",
         sorting_strategy = "descending",
         layout_strategy = "horizontal",
-        layout_defaults = {
+        layout_config = {
             horizontal = {mirror = false},
-            vertical = {mirror = false}
+            vertical = {mirror = false},
+            prompt_position = "bottom",
         },
         file_sorter = require'telescope.sorters'.get_fzy_sorter,
         file_ignore_patterns = {},
         generic_sorter = require'telescope.sorters'.get_generic_fuzzy_sorter,
         shorten_path = true,
         winblend = 0,
-        width = 0.75,
-        preview_cutoff = 120,
-        results_height = 1,
-        results_width = 0.8,
         border = {},
         borderchars = {'─', '│', '─', '│', '╭', '╮', '╯', '╰'},
         color_devicons = true,
@@ -37,6 +33,7 @@ require('telescope').setup {
         -- Developer configurations: Not meant for general override
         buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker
     },
+    pickers = {buffers = {mappings = {i = {['<c-d>'] = 'delete_buffer'}}}},
     extensions = {
         fzf = {
             override_generic_sorter = false, -- override the generic sorter
@@ -46,8 +43,8 @@ require('telescope').setup {
         }
     }
 }
--- require('telescope').load_extension('dap')
-require('telescope').load_extension('octo')
+
+require('telescope').load_extension('dap')
 require('telescope').load_extension('project')
 require('telescope').load_extension('fzf')
 
@@ -63,3 +60,5 @@ vim.api.nvim_set_keymap("n", "[tele]b",
 vim.api.nvim_set_keymap("n", "[tele]r",
                         "<cmd>Telescope lsp_references theme=get_dropdown<CR>",
                         {})
+vim.api.nvim_set_keymap("n", "[tele]q",
+                        "<cmd>Telescope quickfix theme=get_dropdown<CR>", {})

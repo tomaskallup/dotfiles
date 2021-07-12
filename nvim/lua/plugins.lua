@@ -25,9 +25,15 @@ return packer.startup(function()
     -- use 'tomaskallup/arcolors' -- Colorscheme
     use { -- Colorscheme
         'marko-cerovac/material.nvim',
+        branch = 'main',
         config = function()
+            vim.g.material_borders = true
             vim.g.material_style = 'deep ocean'
             require'material'.set()
+            vim.cmd([[
+              hi DiffAdd guibg=#002500 guifg=None gui=None
+              hi DiffDelete guibg=#250000 guifg=None gui=None
+            ]])
         end
     }
     use 'kyazdani42/nvim-web-devicons' -- Icons
@@ -49,7 +55,7 @@ return packer.startup(function()
         config = function() require 'plugins.treesitter' end
     }
     use 'nvim-treesitter/playground'
-    use 'aklt/plantuml-syntax' -- Plant uml syntax
+    use { 'aklt/plantuml-syntax' } -- Plant uml syntax
     use { -- Show colors in neovim (Red, Green, Blue, etc.)
         'norcalli/nvim-colorizer.lua',
         config = function() require'colorizer'.setup() end
@@ -59,17 +65,20 @@ return packer.startup(function()
     -- =======================================--
     --      IDE (completion, debugging)      --
     -- =======================================--
-    -- use 'puremourning/vimspector'
-    use {
+    use { -- Debugging, not yet ready
         'mfussenegger/nvim-dap',
-        config = function() require 'plugins.nvim-dap' end
-    } -- Debugging, not yet ready
+        config = function() require 'plugins.nvim-dap' end,
+    }
+    use { -- UI for DAP
+        'rcarriga/nvim-dap-ui',
+        config = function() require 'dapui'.setup() end
+    }
     use 'plytophogy/vim-virtualenv' -- Virtual env
 
     use {
         'airblade/vim-rooter',
         config = function() -- Automatically set pwd when opening a file
-            vim.g.rooter_patterns = {'.venv', '.git/', '.vim/'}
+            vim.g.rooter_patterns = {'.venv', '.git/', '.nvim/'}
         end
     }
 
@@ -77,11 +86,11 @@ return packer.startup(function()
         'neovim/nvim-lspconfig',
         config = function() require 'plugins.nvim-lspconfig' end
     }
-    use { -- Enhance built in LSP functions
-        'RishabhRD/nvim-lsputils',
-        requires = {'RishabhRD/popfix'},
-        config = function() require 'plugins.nvim-lsputils' end
-    }
+    -- use { -- Enhance built in LSP functions
+    -- 'RishabhRD/nvim-lsputils',
+    -- requires = {'RishabhRD/popfix'},
+    -- config = function() require 'plugins.nvim-lsputils' end
+    -- }
     use { -- LSP Completion
         'hrsh7th/nvim-compe',
         config = function() require 'plugins.nvim-compe' end
@@ -126,7 +135,6 @@ return packer.startup(function()
     }
     use { -- Dap integration for telescope
         'nvim-telescope/telescope-dap.nvim',
-        requires = {'mfussenegger/nvim-dap', 'nvim-telescope/telescope.nvim'}
     }
     use {
         'nvim-telescope/telescope-project.nvim',
@@ -142,7 +150,6 @@ return packer.startup(function()
     -- =======================================--
     --    Experimental (testing plugins)     --
     -- =======================================--
-    use 'pwntester/octo.nvim' -- Github integration, with telescope support!
     use {
         'lewis6991/gitsigns.nvim',
         config = function() require 'plugins.gitsigns' end
@@ -156,4 +163,7 @@ return packer.startup(function()
         'folke/trouble.nvim',
         config = function() require'trouble'.setup {} end
     }
+    use 'kevinhwang91/nvim-bqf'
+
+    use '~/Pkg/nvim-lsp-ui'
 end)

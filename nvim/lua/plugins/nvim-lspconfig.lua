@@ -19,7 +19,8 @@ local on_attach = function(client, bufnr)
     buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
     buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>',
                    opts)
-    buf_set_keymap('n', '<space>rm', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+    --buf_set_keymap('n', '<space>rm', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+    buf_set_keymap('n', '<space>rm', '<cmd>lua require\'lsp-ui.rename\'.rename()<CR>', opts)
     buf_set_keymap('n', '<space>rr', '<cmd>lua vim.lsp.buf.references()<CR>',
                    opts)
     buf_set_keymap('n', '<space>d',
@@ -63,7 +64,8 @@ local luadev = require('lua-dev').setup({
         cmd = {
             "/usr/bin/lua-language-server", "-E",
             "/usr/share/lua-language-server/main.lua"
-        }
+        },
+        on_attach = on_attach
     }
 })
 lspconfig.sumneko_lua.setup(luadev)
@@ -176,3 +178,12 @@ if not lspconfig.prisma then
     }
 end
 lspconfig.prisma.setup {on_attach = on_attach}
+
+-- Enable (broadcasting) snippet capability for completion
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+lspconfig.cssls.setup {
+    capabilities = capabilities,
+    root_dir = lspconfig.util.root_pattern("yarn.lock", "lerna.json", ".git")
+}

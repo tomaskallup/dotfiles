@@ -1,17 +1,14 @@
-" Automatically generated packer.nvim plugin loader code
+-- Automatically generated packer.nvim plugin loader code
 
-if !has('nvim-0.5')
-  echohl WarningMsg
-  echom "Invalid Neovim version for packer.nvim!"
-  echohl None
-  finish
-endif
+if vim.api.nvim_call_function('has', {'nvim-0.5'}) ~= 1 then
+  vim.api.nvim_command('echohl WarningMsg | echom "Invalid Neovim version for packer.nvim! | echohl None"')
+  return
+end
 
-packadd packer.nvim
+vim.api.nvim_command('packadd packer.nvim')
 
-try
+local no_errors = pcall(function()
 
-lua << END
   local time
   local profile_info
   local should_profile = false
@@ -46,7 +43,7 @@ local function save_profiles(threshold)
   _G._packer.profile_output = results
 end
 
-time("Luarocks path setup", true)
+time([[Luarocks path setup]], true)
 local package_path_str = "/home/armeeh/.cache/nvim/packer_hererocks/2.0.5/share/lua/5.1/?.lua;/home/armeeh/.cache/nvim/packer_hererocks/2.0.5/share/lua/5.1/?/init.lua;/home/armeeh/.cache/nvim/packer_hererocks/2.0.5/lib/luarocks/rocks-5.1/?.lua;/home/armeeh/.cache/nvim/packer_hererocks/2.0.5/lib/luarocks/rocks-5.1/?/init.lua"
 local install_cpath_pattern = "/home/armeeh/.cache/nvim/packer_hererocks/2.0.5/lib/lua/5.1/?.so"
 if not string.find(package.path, package_path_str, 1, true) then
@@ -57,19 +54,20 @@ if not string.find(package.cpath, install_cpath_pattern, 1, true) then
   package.cpath = package.cpath .. ';' .. install_cpath_pattern
 end
 
-time("Luarocks path setup", false)
-time("try_loadstring definition", true)
+time([[Luarocks path setup]], false)
+time([[try_loadstring definition]], true)
 local function try_loadstring(s, component, name)
   local success, result = pcall(loadstring(s))
   if not success then
-    print('Error running ' .. component .. ' for ' .. name)
-    error(result)
+    vim.schedule(function()
+      vim.api.nvim_notify('packer.nvim: Error running ' .. component .. ' for ' .. name .. ': ' .. result, vim.log.levels.ERROR, {})
+    end)
   end
   return result
 end
 
-time("try_loadstring definition", false)
-time("Defining packer_plugins", true)
+time([[try_loadstring definition]], false)
+time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
   ["auto-pairs"] = {
     loaded = true,
@@ -112,7 +110,7 @@ _G.packer_plugins = {
     path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/lualine.nvim"
   },
   ["material.nvim"] = {
-    config = { "\27LJ\1\2d\0\0\2\0\a\0\n4\0\0\0007\0\1\0%\1\3\0:\1\2\0004\0\4\0%\1\5\0>\0\2\0027\0\6\0>\0\1\1G\0\1\0\bset\rmaterial\frequire\15deep ocean\19material_style\6g\bvim\0" },
+    config = { "\27LJ\1\2†\2\0\0\2\0\n\0\0184\0\0\0007\0\1\0)\1\2\0:\1\2\0004\0\0\0007\0\1\0%\1\4\0:\1\3\0004\0\5\0%\1\6\0>\0\2\0027\0\a\0>\0\1\0014\0\0\0007\0\b\0%\1\t\0>\0\2\1G\0\1\0ä\1              hi DiffAdd guibg=#002500 guifg=None gui=None\n              hi DiffDelete guibg=#250000 guifg=None gui=None\n            \bcmd\bset\rmaterial\frequire\15deep ocean\19material_style\21material_borders\6g\bvim\0" },
     loaded = true,
     path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/material.nvim"
   },
@@ -124,6 +122,10 @@ _G.packer_plugins = {
   nerdcommenter = {
     loaded = true,
     path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/nerdcommenter"
+  },
+  ["nvim-bqf"] = {
+    loaded = true,
+    path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/nvim-bqf"
   },
   ["nvim-colorizer.lua"] = {
     config = { "\27LJ\1\0027\0\0\2\0\3\0\0064\0\0\0%\1\1\0>\0\2\0027\0\2\0>\0\1\1G\0\1\0\nsetup\14colorizer\frequire\0" },
@@ -140,19 +142,23 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/nvim-dap"
   },
+  ["nvim-dap-ui"] = {
+    config = { "\27LJ\1\0023\0\0\2\0\3\0\0064\0\0\0%\1\1\0>\0\2\0027\0\2\0>\0\1\1G\0\1\0\nsetup\ndapui\frequire\0" },
+    loaded = true,
+    path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/nvim-dap-ui"
+  },
   ["nvim-lsp-ts-utils"] = {
     loaded = true,
     path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/nvim-lsp-ts-utils"
+  },
+  ["nvim-lsp-ui"] = {
+    loaded = true,
+    path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/nvim-lsp-ui"
   },
   ["nvim-lspconfig"] = {
     config = { "\27LJ\1\0026\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\27plugins.nvim-lspconfig\frequire\0" },
     loaded = true,
     path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/nvim-lspconfig"
-  },
-  ["nvim-lsputils"] = {
-    config = { "\27LJ\1\0025\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\26plugins.nvim-lsputils\frequire\0" },
-    loaded = true,
-    path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/nvim-lsputils"
   },
   ["nvim-treesitter"] = {
     config = { "\27LJ\1\0022\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\23plugins.treesitter\frequire\0" },
@@ -167,10 +173,6 @@ _G.packer_plugins = {
   ["nvim-web-devicons"] = {
     loaded = true,
     path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/nvim-web-devicons"
-  },
-  ["octo.nvim"] = {
-    loaded = true,
-    path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/octo.nvim"
   },
   ["packer.nvim"] = {
     loaded = true,
@@ -187,10 +189,6 @@ _G.packer_plugins = {
   ["plenary.nvim"] = {
     loaded = true,
     path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/plenary.nvim"
-  },
-  popfix = {
-    loaded = true,
-    path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/popfix"
   },
   ["popup.nvim"] = {
     loaded = true,
@@ -244,7 +242,7 @@ _G.packer_plugins = {
     path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/vim-repeat"
   },
   ["vim-rooter"] = {
-    config = { "\27LJ\1\2G\0\0\2\0\4\0\0054\0\0\0007\0\1\0003\1\3\0:\1\2\0G\0\1\0\1\4\0\0\n.venv\n.git/\n.vim/\20rooter_patterns\6g\bvim\0" },
+    config = { "\27LJ\1\2H\0\0\2\0\4\0\0054\0\0\0007\0\1\0003\1\3\0:\1\2\0G\0\1\0\1\4\0\0\n.venv\n.git/\v.nvim/\20rooter_patterns\6g\bvim\0" },
     loaded = true,
     path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/vim-rooter"
   },
@@ -271,86 +269,83 @@ _G.packer_plugins = {
   }
 }
 
-time("Defining packer_plugins", false)
+time([[Defining packer_plugins]], false)
 -- Config for: nvim-treesitter
-time("Config for nvim-treesitter", true)
+time([[Config for nvim-treesitter]], true)
 try_loadstring("\27LJ\1\0022\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\23plugins.treesitter\frequire\0", "config", "nvim-treesitter")
-time("Config for nvim-treesitter", false)
+time([[Config for nvim-treesitter]], false)
 -- Config for: neogit
-time("Config for neogit", true)
+time([[Config for neogit]], true)
 try_loadstring("\27LJ\1\2.\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\19plugins.neogit\frequire\0", "config", "neogit")
-time("Config for neogit", false)
+time([[Config for neogit]], false)
 -- Config for: vim-rooter
-time("Config for vim-rooter", true)
-try_loadstring("\27LJ\1\2G\0\0\2\0\4\0\0054\0\0\0007\0\1\0003\1\3\0:\1\2\0G\0\1\0\1\4\0\0\n.venv\n.git/\n.vim/\20rooter_patterns\6g\bvim\0", "config", "vim-rooter")
-time("Config for vim-rooter", false)
+time([[Config for vim-rooter]], true)
+try_loadstring("\27LJ\1\2H\0\0\2\0\4\0\0054\0\0\0007\0\1\0003\1\3\0:\1\2\0G\0\1\0\1\4\0\0\n.venv\n.git/\v.nvim/\20rooter_patterns\6g\bvim\0", "config", "vim-rooter")
+time([[Config for vim-rooter]], false)
 -- Config for: trouble.nvim
-time("Config for trouble.nvim", true)
+time([[Config for trouble.nvim]], true)
 try_loadstring("\27LJ\1\0029\0\0\2\0\3\0\a4\0\0\0%\1\1\0>\0\2\0027\0\2\0002\1\0\0>\0\2\1G\0\1\0\nsetup\ftrouble\frequire\0", "config", "trouble.nvim")
-time("Config for trouble.nvim", false)
--- Config for: nvim-dap
-time("Config for nvim-dap", true)
-try_loadstring("\27LJ\1\0020\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\21plugins.nvim-dap\frequire\0", "config", "nvim-dap")
-time("Config for nvim-dap", false)
--- Config for: lsp_extensions.nvim
-time("Config for lsp_extensions.nvim", true)
-try_loadstring("\27LJ\1\0026\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\27plugins.lsp_extensions\frequire\0", "config", "lsp_extensions.nvim")
-time("Config for lsp_extensions.nvim", false)
--- Config for: nvim-ts-autotag
-time("Config for nvim-ts-autotag", true)
-try_loadstring("\27LJ\1\2=\0\0\2\0\3\0\0064\0\0\0%\1\1\0>\0\2\0027\0\2\0>\0\1\1G\0\1\0\nsetup\20nvim-ts-autotag\frequire\0", "config", "nvim-ts-autotag")
-time("Config for nvim-ts-autotag", false)
--- Config for: telescope.nvim
-time("Config for telescope.nvim", true)
-try_loadstring("\27LJ\1\0021\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\22plugins.telescope\frequire\0", "config", "telescope.nvim")
-time("Config for telescope.nvim", false)
--- Config for: material.nvim
-time("Config for material.nvim", true)
-try_loadstring("\27LJ\1\2d\0\0\2\0\a\0\n4\0\0\0007\0\1\0%\1\3\0:\1\2\0004\0\4\0%\1\5\0>\0\2\0027\0\6\0>\0\1\1G\0\1\0\bset\rmaterial\frequire\15deep ocean\19material_style\6g\bvim\0", "config", "material.nvim")
-time("Config for material.nvim", false)
--- Config for: vimwiki
-time("Config for vimwiki", true)
-try_loadstring("\27LJ\1\2ê\1\0\0\3\0\6\0\v4\0\0\0007\0\1\0002\1\3\0003\2\3\0;\2\1\1:\1\2\0004\0\0\0007\0\1\0%\1\5\0:\1\4\0G\0\1\0\14<leader>e\23vimwiki_map_prefix\1\0\2\vsyntax\rmarkdown\tpath\25/home/armeeh/vimwiki\17vimwiki_list\6g\bvim\0", "config", "vimwiki")
-time("Config for vimwiki", false)
--- Config for: nvim-compe
-time("Config for nvim-compe", true)
-try_loadstring("\27LJ\1\0022\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\23plugins.nvim-compe\frequire\0", "config", "nvim-compe")
-time("Config for nvim-compe", false)
--- Config for: lspkind-nvim
-time("Config for lspkind-nvim", true)
-try_loadstring("\27LJ\1\0024\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\25plugins.lspkind-nvim\frequire\0", "config", "lspkind-nvim")
-time("Config for lspkind-nvim", false)
--- Config for: gitsigns.nvim
-time("Config for gitsigns.nvim", true)
-try_loadstring("\27LJ\1\0020\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\21plugins.gitsigns\frequire\0", "config", "gitsigns.nvim")
-time("Config for gitsigns.nvim", false)
--- Config for: nvim-lsputils
-time("Config for nvim-lsputils", true)
-try_loadstring("\27LJ\1\0025\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\26plugins.nvim-lsputils\frequire\0", "config", "nvim-lsputils")
-time("Config for nvim-lsputils", false)
--- Config for: nvim-colorizer.lua
-time("Config for nvim-colorizer.lua", true)
-try_loadstring("\27LJ\1\0027\0\0\2\0\3\0\0064\0\0\0%\1\1\0>\0\2\0027\0\2\0>\0\1\1G\0\1\0\nsetup\14colorizer\frequire\0", "config", "nvim-colorizer.lua")
-time("Config for nvim-colorizer.lua", false)
+time([[Config for trouble.nvim]], false)
 -- Config for: lualine.nvim
-time("Config for lualine.nvim", true)
+time([[Config for lualine.nvim]], true)
 try_loadstring("\27LJ\1\2/\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\20plugins.lualine\frequire\0", "config", "lualine.nvim")
-time("Config for lualine.nvim", false)
+time([[Config for lualine.nvim]], false)
+-- Config for: lsp_extensions.nvim
+time([[Config for lsp_extensions.nvim]], true)
+try_loadstring("\27LJ\1\0026\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\27plugins.lsp_extensions\frequire\0", "config", "lsp_extensions.nvim")
+time([[Config for lsp_extensions.nvim]], false)
+-- Config for: nvim-ts-autotag
+time([[Config for nvim-ts-autotag]], true)
+try_loadstring("\27LJ\1\2=\0\0\2\0\3\0\0064\0\0\0%\1\1\0>\0\2\0027\0\2\0>\0\1\1G\0\1\0\nsetup\20nvim-ts-autotag\frequire\0", "config", "nvim-ts-autotag")
+time([[Config for nvim-ts-autotag]], false)
+-- Config for: nvim-dap-ui
+time([[Config for nvim-dap-ui]], true)
+try_loadstring("\27LJ\1\0023\0\0\2\0\3\0\0064\0\0\0%\1\1\0>\0\2\0027\0\2\0>\0\1\1G\0\1\0\nsetup\ndapui\frequire\0", "config", "nvim-dap-ui")
+time([[Config for nvim-dap-ui]], false)
+-- Config for: material.nvim
+time([[Config for material.nvim]], true)
+try_loadstring("\27LJ\1\2†\2\0\0\2\0\n\0\0184\0\0\0007\0\1\0)\1\2\0:\1\2\0004\0\0\0007\0\1\0%\1\4\0:\1\3\0004\0\5\0%\1\6\0>\0\2\0027\0\a\0>\0\1\0014\0\0\0007\0\b\0%\1\t\0>\0\2\1G\0\1\0ä\1              hi DiffAdd guibg=#002500 guifg=None gui=None\n              hi DiffDelete guibg=#250000 guifg=None gui=None\n            \bcmd\bset\rmaterial\frequire\15deep ocean\19material_style\21material_borders\6g\bvim\0", "config", "material.nvim")
+time([[Config for material.nvim]], false)
+-- Config for: vimwiki
+time([[Config for vimwiki]], true)
+try_loadstring("\27LJ\1\2ê\1\0\0\3\0\6\0\v4\0\0\0007\0\1\0002\1\3\0003\2\3\0;\2\1\1:\1\2\0004\0\0\0007\0\1\0%\1\5\0:\1\4\0G\0\1\0\14<leader>e\23vimwiki_map_prefix\1\0\2\vsyntax\rmarkdown\tpath\25/home/armeeh/vimwiki\17vimwiki_list\6g\bvim\0", "config", "vimwiki")
+time([[Config for vimwiki]], false)
+-- Config for: nvim-compe
+time([[Config for nvim-compe]], true)
+try_loadstring("\27LJ\1\0022\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\23plugins.nvim-compe\frequire\0", "config", "nvim-compe")
+time([[Config for nvim-compe]], false)
+-- Config for: lspkind-nvim
+time([[Config for lspkind-nvim]], true)
+try_loadstring("\27LJ\1\0024\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\25plugins.lspkind-nvim\frequire\0", "config", "lspkind-nvim")
+time([[Config for lspkind-nvim]], false)
+-- Config for: gitsigns.nvim
+time([[Config for gitsigns.nvim]], true)
+try_loadstring("\27LJ\1\0020\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\21plugins.gitsigns\frequire\0", "config", "gitsigns.nvim")
+time([[Config for gitsigns.nvim]], false)
+-- Config for: telescope.nvim
+time([[Config for telescope.nvim]], true)
+try_loadstring("\27LJ\1\0021\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\22plugins.telescope\frequire\0", "config", "telescope.nvim")
+time([[Config for telescope.nvim]], false)
+-- Config for: nvim-colorizer.lua
+time([[Config for nvim-colorizer.lua]], true)
+try_loadstring("\27LJ\1\0027\0\0\2\0\3\0\0064\0\0\0%\1\1\0>\0\2\0027\0\2\0>\0\1\1G\0\1\0\nsetup\14colorizer\frequire\0", "config", "nvim-colorizer.lua")
+time([[Config for nvim-colorizer.lua]], false)
 -- Config for: nvim-lspconfig
-time("Config for nvim-lspconfig", true)
+time([[Config for nvim-lspconfig]], true)
 try_loadstring("\27LJ\1\0026\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\27plugins.nvim-lspconfig\frequire\0", "config", "nvim-lspconfig")
-time("Config for nvim-lspconfig", false)
+time([[Config for nvim-lspconfig]], false)
+-- Config for: nvim-dap
+time([[Config for nvim-dap]], true)
+try_loadstring("\27LJ\1\0020\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\21plugins.nvim-dap\frequire\0", "config", "nvim-dap")
+time([[Config for nvim-dap]], false)
 -- Config for: vim-plugin-AnsiEsc
-time("Config for vim-plugin-AnsiEsc", true)
+time([[Config for vim-plugin-AnsiEsc]], true)
 try_loadstring("\27LJ\1\0021\0\0\2\0\3\0\0054\0\0\0007\0\1\0'\1\1\0:\1\2\0G\0\1\0\20no_cecutil_maps\6g\bvim\0", "config", "vim-plugin-AnsiEsc")
-time("Config for vim-plugin-AnsiEsc", false)
+time([[Config for vim-plugin-AnsiEsc]], false)
 if should_profile then save_profiles() end
 
-END
+end)
 
-catch
-  echohl ErrorMsg
-  echom "Error in packer_compiled: " .. v:exception
-  echom "Please check your config for correctness"
-  echohl None
-endtry
+if not no_errors then
+  vim.api.nvim_command('echohl ErrorMsg | echom "Error in packer_compiled: ".v:exception | echom "Please check your config for correctness" | echohl None')
+end
