@@ -123,6 +123,10 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/nerdcommenter"
   },
+  ["null-ls.nvim"] = {
+    loaded = true,
+    path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/null-ls.nvim"
+  },
   ["nvim-bqf"] = {
     loaded = true,
     path = "/home/armeeh/.local/share/nvim/site/pack/packer/start/nvim-bqf"

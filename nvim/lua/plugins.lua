@@ -55,7 +55,7 @@ return packer.startup(function()
         config = function() require 'plugins.treesitter' end
     }
     use 'nvim-treesitter/playground'
-    use { 'aklt/plantuml-syntax' } -- Plant uml syntax
+    use {'aklt/plantuml-syntax'} -- Plant uml syntax
     use { -- Show colors in neovim (Red, Green, Blue, etc.)
         'norcalli/nvim-colorizer.lua',
         config = function() require'colorizer'.setup() end
@@ -67,11 +67,11 @@ return packer.startup(function()
     -- =======================================--
     use { -- Debugging, not yet ready
         'mfussenegger/nvim-dap',
-        config = function() require 'plugins.nvim-dap' end,
+        config = function() require 'plugins.nvim-dap' end
     }
     use { -- UI for DAP
         'rcarriga/nvim-dap-ui',
-        config = function() require 'dapui'.setup() end
+        config = function() require'dapui'.setup() end
     }
     use 'plytophogy/vim-virtualenv' -- Virtual env
 
@@ -99,6 +99,10 @@ return packer.startup(function()
     use "hrsh7th/vim-vsnip" -- Snippets framework
     use { -- Typescript LSP enhancements (configured in LSP)
         'jose-elias-alvarez/nvim-lsp-ts-utils',
+        branch = 'main'
+    }
+    use { -- Support for non-LSP stuff via LSP (configured in LSP)
+        'jose-elias-alvarez/null-ls.nvim',
         branch = 'main'
     }
     use { -- Show signature help when typing
@@ -134,7 +138,7 @@ return packer.startup(function()
         config = function() require 'plugins.telescope' end
     }
     use { -- Dap integration for telescope
-        'nvim-telescope/telescope-dap.nvim',
+        'nvim-telescope/telescope-dap.nvim'
     }
     use {
         'nvim-telescope/telescope-project.nvim',

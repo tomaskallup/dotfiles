@@ -1,5 +1,8 @@
 local lspconfig = require 'lspconfig'
 local configs = require("lspconfig/configs") -- Make sure this is a slash (as theres some metamagic happening behind the scenes)
+local null_ls = require("null-ls")
+
+null_ls.setup {}
 
 -- vim.cmd [[autocmd CursorHoldI * silent! lua vim.lsp.buf.signature_help()]]
 
@@ -19,8 +22,9 @@ local on_attach = function(client, bufnr)
     buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
     buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>',
                    opts)
-    --buf_set_keymap('n', '<space>rm', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-    buf_set_keymap('n', '<space>rm', '<cmd>lua require\'lsp-ui.rename\'.rename()<CR>', opts)
+    -- buf_set_keymap('n', '<space>rm', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+    buf_set_keymap('n', '<space>rm',
+                   '<cmd>lua require\'lsp-ui.rename\'.rename()<CR>', opts)
     buf_set_keymap('n', '<space>rr', '<cmd>lua vim.lsp.buf.references()<CR>',
                    opts)
     buf_set_keymap('n', '<space>d',
@@ -35,10 +39,9 @@ local on_attach = function(client, bufnr)
                    opts)
 
     -- Set some keybinds conditional on server capabilities
-    if client.resolved_capabilities.document_formatting then
-        buf_set_keymap("n", "<space>=", "<cmd>lua vim.lsp.buf.formatting()<CR>",
-                       opts)
-    elseif client.resolved_capabilities.document_range_formatting then
+    buf_set_keymap("n", "<space>=", "<cmd>lua vim.lsp.buf.formatting()<CR>",
+                   opts)
+    if client.resolved_capabilities.document_range_formatting then
         buf_set_keymap("v", "<space>=", "<cmd>lua vim.lsp.buf.formatting()<CR>",
                        opts)
     end
@@ -121,17 +124,17 @@ lspconfig.jsonls.setup {
 
 -- Formatting via efm
 local prettier = require "efm/prettier"
-local eslint = require "efm/eslint"
+-- local eslint = require "efm/eslint"
 local luafmt = require "efm/luafmt"
 local rustfmt = require "efm/rustfmt"
 -- local autopep = require "efm/autopep8"
 
 local languages = {
     lua = {luafmt},
-    typescript = {prettier, eslint},
-    javascript = {prettier, eslint},
-    typescriptreact = {prettier, eslint},
-    javascriptreact = {prettier, eslint},
+    -- typescript = {prettier, eslint},
+    -- javascript = {prettier, eslint},
+    -- typescriptreact = {prettier, eslint},
+    -- javascriptreact = {prettier, eslint},
     yaml = {prettier},
     json = {prettier},
     html = {prettier},
@@ -159,11 +162,6 @@ lspconfig.rls.setup {
             all_features = true
         }
     },
-    on_attach = on_attach
-}
-
-lspconfig.pyls.setup {
-    root_dir = lspconfig.util.root_pattern(".git", ".venv", "requirements.txt"),
     on_attach = on_attach
 }
 

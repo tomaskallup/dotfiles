@@ -93,3 +93,5 @@
   cmd = "nvim -d \"$LOCAL\" \"$REMOTE\" \"$MERGED\" -c 'wincmd w' -c 'wincmd w' -c 'wincmd J'"
 [mergetool]
 	keepBackup = false
+[credential]
+	helper = store
