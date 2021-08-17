@@ -41,6 +41,12 @@ return packer.startup(function()
         'onsails/lspkind-nvim',
         config = function() require 'plugins.lspkind-nvim' end
     }
+    use { -- Show git changes in signcolumn
+        'lewis6991/gitsigns.nvim',
+        branch = 'main',
+        config = function() require 'plugins.gitsigns' end
+    }
+    use 'kevinhwang91/nvim-bqf' -- Enhanced quickfix
 
     -- =======================================--
     --             Syntax plugins            --
@@ -86,12 +92,7 @@ return packer.startup(function()
         'neovim/nvim-lspconfig',
         config = function() require 'plugins.nvim-lspconfig' end
     }
-    -- use { -- Enhance built in LSP functions
-    -- 'RishabhRD/nvim-lsputils',
-    -- requires = {'RishabhRD/popfix'},
-    -- config = function() require 'plugins.nvim-lsputils' end
-    -- }
-    use { -- LSP Completion
+    use { -- Completion
         'hrsh7th/nvim-compe',
         config = function() require 'plugins.nvim-compe' end
     }
@@ -129,8 +130,6 @@ return packer.startup(function()
             vim.g.vimwiki_map_prefix = '<leader>e'
         end
     }
-    use 'blindFS/vim-taskwarrior' -- Task management
-    use 'tools-life/taskwiki'
 
     use { -- Better than fzf, amazing search
         'nvim-telescope/telescope.nvim',
@@ -154,20 +153,17 @@ return packer.startup(function()
     -- =======================================--
     --    Experimental (testing plugins)     --
     -- =======================================--
-    use {
-        'lewis6991/gitsigns.nvim',
-        config = function() require 'plugins.gitsigns' end
-    }
-    use {
-        'TimUntersberger/neogit',
-        config = function() require 'plugins.neogit' end
-    }
     use {'folke/lua-dev.nvim'}
     use {
         'folke/trouble.nvim',
         config = function() require'trouble'.setup {} end
     }
-    use 'kevinhwang91/nvim-bqf'
+
+    use {
+        "vhyrro/neorg",
+        config = function() require 'plugins.neorg' end,
+        requires = "nvim-lua/plenary.nvim"
+    }
 
     use '~/Pkg/nvim-lsp-ui'
 end)
