@@ -45,6 +45,7 @@ set wildmenu
 set wildmode=longest:full,full
 set diffopt+=internal,algorithm:patience
 set grepprg=ag\ --vimgrep
+set spelllang=en,cs
 
 " Set completeopt to have a better completion experience
 "set completeopt=menuone,noinsert,noselect,preview

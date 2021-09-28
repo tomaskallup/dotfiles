@@ -27,13 +27,26 @@ return packer.startup(function()
         'marko-cerovac/material.nvim',
         branch = 'main',
         config = function()
-            vim.g.material_borders = true
             vim.g.material_style = 'deep ocean'
-            require'material'.set()
-            vim.cmd([[
-              hi DiffAdd guibg=#002500 guifg=None gui=None
-              hi DiffDelete guibg=#250000 guifg=None gui=None
-            ]])
+            require'material'.setup({
+                contrast = true,
+                borders = true,
+
+                contrast_windows = {
+                    "terminal", -- Darker terminal background
+                    "term", -- Darker terminal background
+                    "packer", -- Darker packer background
+                    "qf", -- Darker qf list background
+                },
+
+                disable = {term_colors = true},
+
+                custom_highlights = {
+                    DiffAdd = '#002500',
+                    DiffDelete = '#250000'
+                }
+            })
+            vim.cmd [[colorscheme material]]
         end
     }
     use 'kyazdani42/nvim-web-devicons' -- Icons
@@ -67,6 +80,7 @@ return packer.startup(function()
         config = function() require'colorizer'.setup() end
     }
     use 'pantharshit00/vim-prisma'
+    use 'chr4/nginx.vim'
 
     -- =======================================--
     --      IDE (completion, debugging)      --
@@ -92,11 +106,18 @@ return packer.startup(function()
         'neovim/nvim-lspconfig',
         config = function() require 'plugins.nvim-lspconfig' end
     }
-    use { -- Completion
-        'hrsh7th/nvim-compe',
-        config = function() require 'plugins.nvim-compe' end
-    }
+    -- use { -- Completion
+    -- 'hrsh7th/nvim-compe',
+    -- config = function() require 'plugins.nvim-compe' end
+    -- }
     use "rafamadriz/friendly-snippets" -- Some nice snippets
+    use { -- Completion
+        'hrsh7th/nvim-cmp',
+        config = function() require 'plugins.nvim-cmp' end,
+        requires = {
+            'hrsh7th/vim-vsnip', 'hrsh7th/cmp-buffer', 'hrsh7th/cmp-nvim-lsp'
+        }
+    }
     use "hrsh7th/vim-vsnip" -- Snippets framework
     use { -- Typescript LSP enhancements (configured in LSP)
         'jose-elias-alvarez/nvim-lsp-ts-utils',
@@ -112,9 +133,6 @@ return packer.startup(function()
     use { -- Simple lsp enhancements
         'nvim-lua/lsp_extensions.nvim',
         config = function() require 'plugins.lsp_extensions' end
-    }
-    use { -- Spell checking!
-        'kamykn/spelunker.vim'
     }
 
     -- =======================================--
@@ -154,15 +172,16 @@ return packer.startup(function()
     --    Experimental (testing plugins)     --
     -- =======================================--
     use {'folke/lua-dev.nvim'}
-    use {
-        'folke/trouble.nvim',
-        config = function() require'trouble'.setup {} end
-    }
 
     use {
-        "vhyrro/neorg",
+        'vhyrro/neorg',
         config = function() require 'plugins.neorg' end,
         requires = "nvim-lua/plenary.nvim"
+    }
+
+    use { -- Terminal enhancements
+        'akinsho/toggleterm.nvim',
+        config = function() require'plugins.toggleterm' end
     }
 
     use '~/Pkg/nvim-lsp-ui'

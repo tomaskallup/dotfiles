@@ -2,7 +2,7 @@ local lspconfig = require 'lspconfig'
 local configs = require("lspconfig/configs") -- Make sure this is a slash (as theres some metamagic happening behind the scenes)
 local null_ls = require("null-ls")
 
-null_ls.setup {}
+null_ls.setup {debug = false}
 
 -- vim.cmd [[autocmd CursorHoldI * silent! lua vim.lsp.buf.signature_help()]]
 
@@ -12,7 +12,7 @@ local on_attach = function(client, bufnr)
         vim.api.nvim_buf_set_keymap(bufnr, ...)
     end
 
-    require'lsp_signature'.on_attach()
+    -- require'lsp_signature'.on_attach()
 
     -- Mappings.
     local opts = {noremap = true, silent = true}
@@ -47,10 +47,14 @@ local on_attach = function(client, bufnr)
     end
 end
 
+local handle_lsp = function(opts) return opts end
+
 local ts_utils_attach = require 'plugins.lsp-ts-utils'
 
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+
 -- Tsserver setup
-lspconfig.tsserver.setup {
+lspconfig.tsserver.setup(handle_lsp({
     root_dir = lspconfig.util.root_pattern("yarn.lock", "lerna.json", ".git"),
     on_attach = function(client, bufnr)
         -- This makes sure tsserver is not used for formatting (I prefer prettier)
@@ -59,8 +63,10 @@ lspconfig.tsserver.setup {
         ts_utils_attach(client)
         on_attach(client, bufnr)
     end,
-    settings = {documentFormatting = false}
-}
+    settings = {documentFormatting = false},
+    init_options = {hostInfo = "neovim"},
+    capabilities = capabilities
+}))
 
 local luadev = require('lua-dev').setup({
     lspconfig = {
@@ -68,16 +74,21 @@ local luadev = require('lua-dev').setup({
             "/usr/bin/lua-language-server", "-E",
             "/usr/share/lua-language-server/main.lua"
         },
-        on_attach = on_attach
+        on_attach = on_attach,
+        capabilities = capabilities
     }
 })
-lspconfig.sumneko_lua.setup(luadev)
+lspconfig.sumneko_lua.setup(handle_lsp(luadev))
 
 -- Vim lsp
-lspconfig.vimls.setup {on_attach = on_attach}
+lspconfig.vimls.setup(handle_lsp({
+    on_attach = on_attach,
+    capabilities = capabilities
+}))
 
 -- JSON lsp
-lspconfig.jsonls.setup {
+lspconfig.jsonls.setup(handle_lsp({
+    cmd = {'vscode-json-languageserver', '--stdio'},
     on_attach = on_attach,
     settings = {
         json = {
@@ -119,8 +130,9 @@ lspconfig.jsonls.setup {
                 }
             }
         }
-    }
-}
+    },
+    capabilities = capabilities
+}))
 
 -- Formatting via efm
 local prettier = require "efm/prettier"
@@ -153,35 +165,19 @@ lspconfig.efm.setup {
     on_attach = on_attach
 }
 
-lspconfig.rls.setup {
-    root_dir = lspconfig.util.root_pattern("Cargo.toml", ".git"),
-    settings = {
-        rust = {
-            unstable_features = true,
-            build_on_save = false,
-            all_features = true
-        }
-    },
-    on_attach = on_attach
-}
-
 if not lspconfig.prisma then
-    configs.prisma = {
+    configs.prisma = (handle_lsp({
         default_config = {
             cmd = {"prisma-language-server", "--stdio"},
             filetypes = {"prisma"},
             root_dir = lspconfig.util.root_pattern("prisma", ".git"),
             settings = {}
         }
-    }
+    }))
 end
-lspconfig.prisma.setup {on_attach = on_attach}
+lspconfig.prisma.setup(handle_lsp({on_attach = on_attach}))
 
--- Enable (broadcasting) snippet capability for completion
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.completion.completionItem.snippetSupport = true
-
-lspconfig.cssls.setup {
+lspconfig.cssls.setup(handle_lsp({
     capabilities = capabilities,
     root_dir = lspconfig.util.root_pattern("yarn.lock", "lerna.json", ".git")
-}
+}))

@@ -3,32 +3,42 @@ return function(client)
 
     -- defaults
     ts_utils.setup {
-        disable_commands = false,
         debug = false,
+        disable_commands = false,
         enable_import_on_completion = false,
-        import_on_completion_timeout = 5000,
+
+        -- import all
+        import_all_timeout = 5000, -- ms
+        import_all_priorities = {
+            buffers = 4, -- loaded buffer names
+            buffer_content = 3, -- loaded buffer content
+            local_files = 2, -- git files or files with relative path markers
+            same_file = 1 -- add to existing import statement
+        },
+        import_all_scan_buffers = 100,
+        import_all_select_source = false,
+
         -- eslint
         eslint_enable_code_actions = true,
         eslint_enable_disable_comments = true,
         eslint_bin = "eslint_d",
         eslint_config_fallback = nil,
-
-        -- experimental settings!
-        -- eslint diagnostics
         eslint_enable_diagnostics = true,
-        eslint_diagnostics_debounce = 250,
+        eslint_show_rule_id = true,
+
         -- formatting
         enable_formatting = true,
         formatter = "prettierd",
-        formatter_args = {"--stdin-filepath", "$FILENAME"},
-        format_on_save = false,
-        no_save_after_format = false,
-        -- parentheses completion
-        complete_parens = false,
-        signature_help_in_parens = false,
+        formatter_config_fallback = nil,
 
+        -- update imports on file move
         update_imports_on_move = true,
-        require_confirmation_on_move = true
+        require_confirmation_on_move = true,
+        watch_dir = '.',
+
+        -- filter diagnostics
+        filter_out_diagnostics_by_severity = {},
+        filter_out_diagnostics_by_code = {}
     }
 
     -- required to enable ESLint code actions and formatting
