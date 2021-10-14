@@ -30,4 +30,14 @@ vim.api.nvim_set_keymap("n", "[DAP]r", "<cmd>lua require'dap'.repl.open()<CR>",
                         {})
 vim.api
     .nvim_set_keymap("n", "[DAP]R", "<cmd>lua require'dap'.restart()<CR>", {})
-vim.api.nvim_set_keymap("n", "[DAP]e", "<cmd>lua require'dap'.stop()<CR>", {})
+vim.api.nvim_set_keymap("n", "[DAP]e",
+                        "<cmd>lua require'dap'.disconnect({ terminateDebuggee = true })<CR><cmd>lua require'dap'.close()<CR>",
+                        {})
+
+vim.api.nvim_set_keymap("n", "[DAP]h",
+
+                        "<cmd>lua require'dap.ui.widgets'.hover()<CR>", {})
+
+vim.api.nvim_set_keymap("n", "[DAP]U", "<cmd>lua require'dapui'.toggle()<CR>",
+
+                        {})

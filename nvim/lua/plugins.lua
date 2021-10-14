@@ -36,14 +36,14 @@ return packer.startup(function()
                     "terminal", -- Darker terminal background
                     "term", -- Darker terminal background
                     "packer", -- Darker packer background
-                    "qf", -- Darker qf list background
+                    "qf" -- Darker qf list background
                 },
 
                 disable = {term_colors = true},
 
                 custom_highlights = {
-                    DiffAdd = '#002500',
-                    DiffDelete = '#250000'
+                    DiffAdd = {bg = '#002500'},
+                    DiffDelete = {bg = '#250000'}
                 }
             })
             vim.cmd [[colorscheme material]]
@@ -106,19 +106,13 @@ return packer.startup(function()
         'neovim/nvim-lspconfig',
         config = function() require 'plugins.nvim-lspconfig' end
     }
-    -- use { -- Completion
-    -- 'hrsh7th/nvim-compe',
-    -- config = function() require 'plugins.nvim-compe' end
-    -- }
-    use "rafamadriz/friendly-snippets" -- Some nice snippets
     use { -- Completion
         'hrsh7th/nvim-cmp',
         config = function() require 'plugins.nvim-cmp' end,
         requires = {
-            'hrsh7th/vim-vsnip', 'hrsh7th/cmp-buffer', 'hrsh7th/cmp-nvim-lsp'
+            'hrsh7th/cmp-buffer', 'hrsh7th/cmp-nvim-lsp'
         }
     }
-    use "hrsh7th/vim-vsnip" -- Snippets framework
     use { -- Typescript LSP enhancements (configured in LSP)
         'jose-elias-alvarez/nvim-lsp-ts-utils',
         branch = 'main'
@@ -181,7 +175,12 @@ return packer.startup(function()
 
     use { -- Terminal enhancements
         'akinsho/toggleterm.nvim',
-        config = function() require'plugins.toggleterm' end
+        config = function() require 'plugins.toggleterm' end
+    }
+
+    use {
+        'theHamsta/nvim-dap-virtual-text',
+        config = function() vim.g.dap_virtual_text = true end
     }
 
     use '~/Pkg/nvim-lsp-ui'
