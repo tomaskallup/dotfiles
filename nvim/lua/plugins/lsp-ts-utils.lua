@@ -19,11 +19,11 @@ return function(client)
         import_all_select_source = false,
 
         -- eslint
-        eslint_enable_code_actions = true,
-        eslint_enable_disable_comments = true,
+        eslint_enable_code_actions = false,
+        eslint_enable_disable_comments = false,
         eslint_bin = "eslint_d",
         eslint_config_fallback = nil,
-        eslint_enable_diagnostics = true,
+        eslint_enable_diagnostics = false,
         eslint_show_rule_id = true,
 
         -- formatting

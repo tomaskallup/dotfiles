@@ -88,7 +88,6 @@ lspconfig.vimls.setup(handle_lsp({
 
 -- JSON lsp
 lspconfig.jsonls.setup(handle_lsp({
-    cmd = {'vscode-json-languageserver', '--stdio'},
     on_attach = on_attach,
     settings = {
         json = {
@@ -164,6 +163,11 @@ lspconfig.efm.setup {
     settings = {languages = languages, log_level = 1, log_file = '~/efm.log'},
     on_attach = on_attach
 }
+
+lspconfig.eslint.setup(handle_lsp({
+    root_dir = lspconfig.util.root_pattern("yarn.lock", "lerna.json", ".git"),
+    on_attach = on_attach
+}))
 
 if not lspconfig.prisma then
     configs.prisma = (handle_lsp({

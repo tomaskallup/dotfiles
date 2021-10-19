@@ -106,11 +106,13 @@ return packer.startup(function()
         'neovim/nvim-lspconfig',
         config = function() require 'plugins.nvim-lspconfig' end
     }
+    use 'L3MON4D3/LuaSnip' -- Snippets plugin
     use { -- Completion
         'hrsh7th/nvim-cmp',
         config = function() require 'plugins.nvim-cmp' end,
         requires = {
-            'hrsh7th/cmp-buffer', 'hrsh7th/cmp-nvim-lsp'
+            'hrsh7th/cmp-buffer', 'hrsh7th/cmp-nvim-lsp',
+            'saadparwaiz1/cmp_luasnip'
         }
     }
     use { -- Typescript LSP enhancements (configured in LSP)
@@ -132,15 +134,9 @@ return packer.startup(function()
     -- =======================================--
     --           Workflow plugins            --
     -- =======================================--
-    use {'ms-jpq/chadtree', branch = 'chad', run = 'python3 -m chadtree deps'}
     use {
-        'vimwiki/vimwiki',
-        config = function()
-            vim.g.vimwiki_list = {
-                {path = '/home/armeeh/vimwiki', syntax = 'markdown'}
-            }
-            vim.g.vimwiki_map_prefix = '<leader>e'
-        end
+        'kyazdani42/nvim-tree.lua',
+        config = function() require'plugins.nvim-tree' end
     }
 
     use { -- Better than fzf, amazing search
