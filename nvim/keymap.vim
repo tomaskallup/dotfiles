@@ -55,20 +55,7 @@ map <silent> [buffer]n :bn<CR>
 map <silent> [buffer]p :bp<CR>
 "}}}
 
-"{{{ Execution
-nmap <Leader>R [run]
-vmap <Leader>R [run]
-
-nnoremap <silent> [run]t :TerminatorOpenTerminal <CR>
-nnoremap <silent> [run]r :TerminatorStartREPL <CR>
-nnoremap <silent> [run]f :TerminatorRunFileInTerminal <CR>
-nnoremap <silent> [run]F :TerminatorRunFileInOutputBuffer <CR>
-nnoremap <silent> [run]s :TerminatorStopRun <CR>
-
-nnoremap <silent> [run]d :call terminator#send_delimiter_to_terminal()<CR>
-vnoremap <silent> [run]t :<C-U> call terminator#send_to_terminal(terminator#get_visual_selection())<CR>
-
-vnoremap <silent> [run]f :<C-U> call terminator#run_part_of_file("output_buffer", terminator#get_visual_selection())<CR>
-vnoremap <silent> [run]F :<C-U> call terminator#run_part_of_file("terminal", terminator#get_visual_selection())<CR>
-"}}}
+map <Leader>c [cf]
+map [cf]n :cnext<CR>
+map [cf]p :cprevious<CR>
 

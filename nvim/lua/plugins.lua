@@ -43,7 +43,8 @@ return packer.startup(function()
 
                 custom_highlights = {
                     DiffAdd = {bg = '#002500'},
-                    DiffDelete = {bg = '#250000'}
+                    DiffDelete = {bg = '#250000'},
+                    NvimTreeNormal = {fg = '#A6ACCD'}
                 }
             })
             vim.cmd [[colorscheme material]]
@@ -111,7 +112,7 @@ return packer.startup(function()
         'hrsh7th/nvim-cmp',
         config = function() require 'plugins.nvim-cmp' end,
         requires = {
-            'hrsh7th/cmp-buffer', 'hrsh7th/cmp-nvim-lsp',
+            'hrsh7th/cmp-buffer', 'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-path',
             'saadparwaiz1/cmp_luasnip'
         }
     }
@@ -136,7 +137,7 @@ return packer.startup(function()
     -- =======================================--
     use {
         'kyazdani42/nvim-tree.lua',
-        config = function() require'plugins.nvim-tree' end
+        config = function() require 'plugins.nvim-tree' end
     }
 
     use { -- Better than fzf, amazing search
@@ -176,8 +177,18 @@ return packer.startup(function()
 
     use {
         'theHamsta/nvim-dap-virtual-text',
-        config = function() vim.g.dap_virtual_text = true end
+        config = function() require'nvim-dap-virtual-text'.setup() end
     }
 
     use '~/Pkg/nvim-lsp-ui'
+
+    use {
+        'beauwilliams/focus.nvim',
+        config = function() require 'plugins.focus' end
+    }
+
+    use {
+        'NTBBloodbath/rest.nvim',
+        config = function() require'plugins.rest-nvim'.setup() end
+    }
 end)

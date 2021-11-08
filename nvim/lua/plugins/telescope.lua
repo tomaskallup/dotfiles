@@ -54,7 +54,7 @@ vim.api.nvim_set_keymap("n", "[tele]f",
 vim.api.nvim_set_keymap("n", "[tele]g",
                         "<cmd>Telescope live_grep theme=get_dropdown<CR>", {})
 vim.api.nvim_set_keymap("n", "[tele]G",
-                        "<cmd>Telescope git_status theme=get_dropdown<CR>", {})
+                        "<cmd>Telescope live_grep theme=get_dropdown vimgrep_arguments=rg,--no-heading,--with-filename,--line-number,--column<CR>", {})
 vim.api.nvim_set_keymap("n", "[tele]b",
                         "<cmd>Telescope buffers theme=get_dropdown<CR>", {})
 vim.api.nvim_set_keymap("n", "[tele]r",
@@ -64,4 +64,10 @@ vim.api.nvim_set_keymap("n", "[tele]q",
                         "<cmd>Telescope quickfix theme=get_dropdown<CR>", {})
 vim.api.nvim_set_keymap("n", "[tele]d",
                         "<cmd>Telescope lsp_definitions theme=get_dropdown<CR>",
+                        {})
+vim.api.nvim_set_keymap("n", "[tele]D",
+                        "<cmd>Telescope file_browser theme=get_dropdown cwd=~/Documents<CR>",
+                        {})
+vim.api.nvim_set_keymap("n", "[tele]b",
+                        "<cmd>Telescope file_browser theme=get_dropdown",
                         {})

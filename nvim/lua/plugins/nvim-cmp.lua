@@ -31,5 +31,11 @@ cmp.setup({
             end
         end
     },
-    sources = {{name = 'nvim_lsp'}, {name = 'luanip'}, {name = 'buffer'}}
+    sources = {
+        {name = 'nvim_lsp'}, {name = 'luanip'}, {name = 'buffer'},
+        {name = 'path'}
+    }
 })
+
+
+cmp.setup.cmdline('/', {sources = {{name = 'buffer'}}})

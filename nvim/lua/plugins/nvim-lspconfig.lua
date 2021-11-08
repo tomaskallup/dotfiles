@@ -2,8 +2,6 @@ local lspconfig = require 'lspconfig'
 local configs = require("lspconfig/configs") -- Make sure this is a slash (as theres some metamagic happening behind the scenes)
 local null_ls = require("null-ls")
 
-null_ls.setup {debug = false}
-
 -- vim.cmd [[autocmd CursorHoldI * silent! lua vim.lsp.buf.signature_help()]]
 
 -- Setup everything on lsp attach
@@ -50,6 +48,10 @@ end
 local handle_lsp = function(opts) return opts end
 
 local ts_utils_attach = require 'plugins.lsp-ts-utils'
+
+null_ls.config {debug = false}
+
+lspconfig['null-ls'].setup(handle_lsp({}))
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 
@@ -169,17 +171,7 @@ lspconfig.eslint.setup(handle_lsp({
     on_attach = on_attach
 }))
 
-if not lspconfig.prisma then
-    configs.prisma = (handle_lsp({
-        default_config = {
-            cmd = {"prisma-language-server", "--stdio"},
-            filetypes = {"prisma"},
-            root_dir = lspconfig.util.root_pattern("prisma", ".git"),
-            settings = {}
-        }
-    }))
-end
-lspconfig.prisma.setup(handle_lsp({on_attach = on_attach}))
+lspconfig.prismals.setup(handle_lsp({on_attach = on_attach}))
 
 lspconfig.cssls.setup(handle_lsp({
     capabilities = capabilities,
