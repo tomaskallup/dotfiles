@@ -68,6 +68,6 @@ vim.api.nvim_set_keymap("n", "[tele]d",
 vim.api.nvim_set_keymap("n", "[tele]D",
                         "<cmd>Telescope file_browser theme=get_dropdown cwd=~/Documents<CR>",
                         {})
-vim.api.nvim_set_keymap("n", "[tele]b",
-                        "<cmd>Telescope file_browser theme=get_dropdown",
+vim.api.nvim_set_keymap("n", "[tele]B",
+                        "<cmd>Telescope file_browser theme=get_dropdown<CR>",
                         {})

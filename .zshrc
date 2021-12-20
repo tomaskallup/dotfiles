@@ -30,7 +30,6 @@ if ! zgen saved; then
   # zgen oh-my-zsh plugins/vi-mode
 
   zgen load ~/.config/zsh/themes/custom
-  zgen load owenstranathan/pipenv.zsh
   zgen load zdharma-continuum/fast-syntax-highlighting
   zgen load MichaelAquilina/zsh-autoswitch-virtualenv
   zgen load buonomo/yarn-completion
