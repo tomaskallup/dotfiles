@@ -19,9 +19,9 @@ local on_attach = function(client, bufnr)
     buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
     buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>',
                    opts)
-    -- buf_set_keymap('n', '<space>rm', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-    buf_set_keymap('n', '<space>rm',
-                   '<cmd>lua require\'lsp-ui.rename\'.rename()<CR>', opts)
+     buf_set_keymap('n', '<space>rm', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+    --buf_set_keymap('n', '<space>rm',
+                   --'<cmd>lua require\'lsp-ui.rename\'.rename()<CR>', opts)
     buf_set_keymap('n', '<space>rr', '<cmd>lua vim.lsp.buf.references()<CR>',
                    opts)
     buf_set_keymap('n', '<space>d', '<cmd>lua vim.diagnostic.open_float()<CR>',
@@ -47,7 +47,16 @@ local ts_utils_attach = require 'plugins.lsp-ts-utils'
 
 null_ls.setup {
     on_attach = on_attach,
-    sources = {null_ls.builtins.formatting.prettierd}
+    sources = {
+        null_ls.builtins.formatting.prettierd,
+        --null_ls.builtins.formatting.prettier.with(
+            --{
+                --command = lspconfig.util.root_has_file("node_modules/.bin/prettier") and
+                    --"node_modules/.bin/prettier" or "prettier"
+            --})
+    },
+    root_dir = lspconfig.util.root_pattern("yarn.lock", "lerna.json", ".git"),
+    --log = {enabled = true, level = "trace"}
 }
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -153,8 +162,8 @@ local languages = {
     yaml = {prettier},
     json = {prettier},
     html = {prettier},
-    scss = {prettier},
-    css = {prettier},
+    -- scss = {prettier},
+    -- css = {prettier},
     markdown = {prettier},
     rust = {rustfmt}
     -- python = {autopep}

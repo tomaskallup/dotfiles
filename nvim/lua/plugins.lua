@@ -29,17 +29,24 @@ return packer.startup(function()
         config = function()
             vim.g.material_style = 'deep ocean'
             require'material'.setup({
-                contrast = true,
-                borders = true,
+                contrast = {
+                    sidebars = true, -- Enable contrast for sidebar-like windows ( for example Nvim-Tree )
+                    floating_windows = true, -- Enable contrast for floating windows
+                    line_numbers = true, -- Enable contrast background for line numbers
+                    sign_column = true, -- Enable contrast background the sign column
+                    cursor_line = false, -- Enable darker background for the cursor line
+                    non_current_windows = false, -- Enable darker background for non-current windows
+                    popup_menu = true -- Enable lighter background for the popup menu
+                },
 
-                contrast_windows = {
+                contrast_filetypes = {
                     "terminal", -- Darker terminal background
                     "term", -- Darker terminal background
                     "packer", -- Darker packer background
                     "qf" -- Darker qf list background
                 },
 
-                disable = {term_colors = true},
+                disable = {term_colors = true, borders = false},
 
                 custom_highlights = {
                     DiffAdd = {bg = '#002500'},
@@ -127,10 +134,10 @@ return packer.startup(function()
     use { -- Show signature help when typing
         'ray-x/lsp_signature.nvim'
     }
-    use { -- Simple lsp enhancements
-        'nvim-lua/lsp_extensions.nvim',
-        config = function() require 'plugins.lsp_extensions' end
-    }
+    -- use { -- Simple lsp enhancements
+    -- 'nvim-lua/lsp_extensions.nvim',
+    -- config = function() require 'plugins.lsp_extensions' end
+    -- }
 
     -- =======================================--
     --           Workflow plugins            --
@@ -180,15 +187,29 @@ return packer.startup(function()
         config = function() require'nvim-dap-virtual-text'.setup() end
     }
 
-    use '~/Pkg/nvim-lsp-ui'
+    --use '~/Pkg/nvim-lsp-ui'
 
     use {
         'beauwilliams/focus.nvim',
         config = function() require 'plugins.focus' end
     }
 
+    --use {
+        --'NTBBloodbath/rest.nvim',
+        --config = function() require'plugins.rest-nvim'.setup() end
+    --}
+
+    --use {'phaazon/hop.nvim', config = function() require'hop'.setup() end}
+
     use {
-        'NTBBloodbath/rest.nvim',
-        config = function() require'plugins.rest-nvim'.setup() end
+        'simrat39/rust-tools.nvim',
+        config = function() require('rust-tools').setup({}) end
+    }
+
+    use {
+      'stevearc/dressing.nvim',
+      config = function ()
+        require 'plugins.dressing'
+      end
     }
 end)

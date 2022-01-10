@@ -12,7 +12,7 @@ lualine.setup {
 
     sections = {
         lualine_a = {'mode'},
-        lualine_b = {'branch'},
+        lualine_b = {'branch', 'nvim_diagnostics'},
         lualine_c = {'filename', 'diff'},
         lualine_x = {'encoding', 'fileformat', 'filetype'},
         lualine_y = {'progress'},
