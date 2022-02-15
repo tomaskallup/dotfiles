@@ -9,15 +9,17 @@ parser_configs.norg = {
 }
 
 parser_configs.http = {
-  install_info = {
-    url = "https://github.com/NTBBloodbath/tree-sitter-http",
-    files = { "src/parser.c" },
-    branch = "main",
-  },
+    install_info = {
+        url = "https://github.com/NTBBloodbath/tree-sitter-http",
+        files = {"src/parser.c"},
+        branch = "main"
+    }
 }
 
 require'nvim-treesitter.configs'.setup {
-    ensure_installed = {"typescript", "tsx", "javascript", "python", "norg", "http"},
-    indent = {enable = true},
+    ensure_installed = {
+        "typescript", "tsx", "javascript", "python", "norg", "http"
+    },
+    indent = {enable = true, disable = {"python"}},
     highlight = {enable = true}
 }

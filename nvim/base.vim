@@ -79,4 +79,7 @@ augroup LocalConfig
   autocmd VimEnter,BufEnter * lua require'localconfig'.check()
 augroup END
 
+" Make sure python uses 4 spaces for tab
+autocmd Filetype python setlocal ts=4 sw=4 expandtab
+
 let g:vimsyn_embed = "lPr"

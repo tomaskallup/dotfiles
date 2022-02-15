@@ -151,7 +151,7 @@ local prettier = require "efm/prettier"
 -- local eslint = require "efm/eslint"
 local luafmt = require "efm/luafmt"
 local rustfmt = require "efm/rustfmt"
--- local autopep = require "efm/autopep8"
+local autopep = require "efm/autopep8"
 
 local languages = {
     lua = {luafmt},
@@ -165,8 +165,8 @@ local languages = {
     -- scss = {prettier},
     -- css = {prettier},
     markdown = {prettier},
-    rust = {rustfmt}
-    -- python = {autopep}
+    rust = {rustfmt},
+    python = {autopep}
 }
 
 lspconfig.efm.setup {
@@ -187,4 +187,14 @@ lspconfig.prismals.setup(handle_lsp({on_attach = on_attach}))
 lspconfig.cssls.setup(handle_lsp({
     capabilities = capabilities,
     root_dir = lspconfig.util.root_pattern("yarn.lock", "lerna.json", ".git")
+}))
+
+lspconfig.pyright.setup(handle_lsp({
+    root_dir = lspconfig.util.root_pattern(".venv", ".git"),
+    on_attach = on_attach,
+    settings = {
+      python = {
+        venvPath = "/home/armeeh/.virtualenvs"
+      }
+    }
 }))
