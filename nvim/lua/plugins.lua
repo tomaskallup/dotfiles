@@ -20,7 +20,7 @@ return packer.startup(function()
     -- =======================================--
     use { -- Nice bar
         'hoob3rt/lualine.nvim',
-        config = function() require 'plugins.lualine' end
+        config = function() require 'plugins.nvim-lualine' end
     }
     -- use 'tomaskallup/arcolors' -- Colorscheme
     use { -- Colorscheme
@@ -51,7 +51,8 @@ return packer.startup(function()
                 custom_highlights = {
                     DiffAdd = {bg = '#002500'},
                     DiffDelete = {bg = '#250000'},
-                    NvimTreeNormal = {fg = '#A6ACCD'}
+                    NvimTreeNormal = {fg = '#A6ACCD'},
+                    NeomakeVirtualtextErrorDefault = { fg = '#AF111A' }
                 }
             })
             vim.cmd [[colorscheme material]]
@@ -171,11 +172,11 @@ return packer.startup(function()
     -- =======================================--
     use {'folke/lua-dev.nvim'}
 
-    use {
-        'vhyrro/neorg',
-        config = function() require 'plugins.neorg' end,
-        requires = "nvim-lua/plenary.nvim"
-    }
+    -- use {
+    -- 'vhyrro/neorg',
+    -- config = function() require 'plugins.neorg' end,
+    -- requires = "nvim-lua/plenary.nvim"
+    -- }
 
     use { -- Terminal enhancements
         'akinsho/toggleterm.nvim',
@@ -187,19 +188,19 @@ return packer.startup(function()
         config = function() require'nvim-dap-virtual-text'.setup() end
     }
 
-    --use '~/Pkg/nvim-lsp-ui'
+    -- use '~/Pkg/nvim-lsp-ui'
 
     use {
         'beauwilliams/focus.nvim',
         config = function() require 'plugins.focus' end
     }
 
-    --use {
-        --'NTBBloodbath/rest.nvim',
-        --config = function() require'plugins.rest-nvim'.setup() end
-    --}
+    -- use {
+    -- 'NTBBloodbath/rest.nvim',
+    -- config = function() require'plugins.rest-nvim'.setup() end
+    -- }
 
-    --use {'phaazon/hop.nvim', config = function() require'hop'.setup() end}
+    -- use {'phaazon/hop.nvim', config = function() require'hop'.setup() end}
 
     use {
         'simrat39/rust-tools.nvim',
@@ -207,9 +208,9 @@ return packer.startup(function()
     }
 
     use {
-      'stevearc/dressing.nvim',
-      config = function ()
-        require 'plugins.dressing'
-      end
+        'stevearc/dressing.nvim',
+        config = function() require 'plugins.dressing' end
     }
+
+    use {'neomake/neomake', config = function() require 'plugins.neomake' end}
 end)

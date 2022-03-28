@@ -6,16 +6,16 @@ lualine.setup {
         icons_enabled = true,
         component_separators = {'', ''},
         section_separators = {'', ''},
-        disabled_filetypes = {}
+        disabled_filetypes = {},
+        globalstatus = true
     },
-    extensions = {'nvim-tree'},
+    --extensions = {'nvim-tree'},
 
     sections = {
         lualine_a = {'mode'},
-        lualine_b = {'branch', 'nvim_diagnostics'},
-        lualine_c = {'filename', 'diff'},
+        --lualine_b = {'branch', 'nvim_diagnostics'},
+        lualine_c = {'filename'},
         lualine_x = {'encoding', 'fileformat', 'filetype'},
-        lualine_y = {'progress'},
         lualine_z = {'location'}
     },
 

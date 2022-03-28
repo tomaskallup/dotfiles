@@ -1,2 +1,2 @@
 -- Setup completion labels
-require('lspkind').init({with_text = true})
+require('lspkind').init({mode = 'symbol_text'})

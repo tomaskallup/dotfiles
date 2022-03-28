@@ -8,8 +8,6 @@ require('dressing').setup({
             -- These are passed to nvim_open_win
             anchor = "NW",
             relative = "cursor",
-            row = 0,
-            col = 0,
             border = "rounded",
 
             -- Window transparency (0-100)
