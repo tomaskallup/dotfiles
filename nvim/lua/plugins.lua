@@ -12,7 +12,8 @@ return packer.startup(function()
     use 'jiangmiao/auto-pairs' -- Matching parens, quotes etc.
     use { -- Add matching HTML tag
         'windwp/nvim-ts-autotag',
-        config = function() require'nvim-ts-autotag'.setup() end
+        config = function() require'nvim-ts-autotag'.setup() end,
+        ft = {'javascript', 'javascriptreact', 'typescript', 'typescriptreact'}
     }
 
     -- =======================================--
@@ -46,13 +47,19 @@ return packer.startup(function()
                     "qf" -- Darker qf list background
                 },
 
-                disable = {term_colors = true, borders = false},
+                disable = {
+                    term_colors = true,
+                    borders = false,
+                    colored_cursor = true
+                },
 
                 custom_highlights = {
                     DiffAdd = {bg = '#002500'},
                     DiffDelete = {bg = '#250000'},
+                    DiffChange = {bg = 'None'},
+                    DiffText = {bg = 'None', fg = '#999900'},
                     NvimTreeNormal = {fg = '#A6ACCD'},
-                    NeomakeVirtualtextErrorDefault = { fg = '#AF111A' }
+                    NeomakeVirtualtextErrorDefault = {fg = '#AF111A'}
                 }
             })
             vim.cmd [[colorscheme material]]
@@ -60,8 +67,9 @@ return packer.startup(function()
     }
     use 'kyazdani42/nvim-web-devicons' -- Icons
     use { -- For icons in completion
-        'onsails/lspkind-nvim',
-        config = function() require 'plugins.lspkind-nvim' end
+        'onsails/lspkind-nvim'
+        -- Config is done in cmp configuration
+        -- config = function() require 'plugins.lspkind-nvim' end
     }
     use { -- Show git changes in signcolumn
         'lewis6991/gitsigns.nvim',
@@ -69,6 +77,22 @@ return packer.startup(function()
         config = function() require 'plugins.gitsigns' end
     }
     use 'kevinhwang91/nvim-bqf' -- Enhanced quickfix
+
+    use { -- Terminal enhancements
+        'akinsho/toggleterm.nvim',
+        branch = 'main',
+        config = function() require 'plugins.toggleterm' end
+    }
+
+    use { -- Overall UI enhancements
+        'stevearc/dressing.nvim',
+        config = function() require 'plugins.dressing' end
+    }
+
+    use { -- Notifications
+        'rcarriga/nvim-notify',
+        config = function() vim.notify = require('notify') end
+    }
 
     -- =======================================--
     --             Syntax plugins            --
@@ -82,7 +106,7 @@ return packer.startup(function()
         run = ':TSUpdate',
         config = function() require 'plugins.treesitter' end
     }
-    use 'nvim-treesitter/playground'
+    -- use 'nvim-treesitter/playground'
     use {'aklt/plantuml-syntax'} -- Plant uml syntax
     use { -- Show colors in neovim (Red, Green, Blue, etc.)
         'norcalli/nvim-colorizer.lua',
@@ -121,12 +145,17 @@ return packer.startup(function()
         config = function() require 'plugins.nvim-cmp' end,
         requires = {
             'hrsh7th/cmp-buffer', 'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-path',
-            'saadparwaiz1/cmp_luasnip'
+            'saadparwaiz1/cmp_luasnip', 'hrsh7th/cmp-nvim-lsp-signature-help',
+            'tzachar/cmp-tabnine', 'hrsh7th/cmp-copilot'
         }
     }
+    --use { -- Typescript LSP enhancements (configured in LSP)
+        --'jose-elias-alvarez/nvim-lsp-ts-utils',
+        --branch = 'main'
+    --}
     use { -- Typescript LSP enhancements (configured in LSP)
-        'jose-elias-alvarez/nvim-lsp-ts-utils',
-        branch = 'main'
+      'jose-elias-alvarez/typescript.nvim',
+      branch = 'main'
     }
     use { -- Support for non-LSP stuff via LSP (configured in LSP)
         'jose-elias-alvarez/null-ls.nvim',
@@ -156,61 +185,48 @@ return packer.startup(function()
     use { -- Dap integration for telescope
         'nvim-telescope/telescope-dap.nvim'
     }
-    use {
-        'nvim-telescope/telescope-project.nvim',
-        requires = {'nvim-telescope/telescope.nvim'}
-    }
     use { -- Better sorting in telescope
         'nvim-telescope/telescope-fzf-native.nvim',
         run = 'make'
     }
 
-    use 'moll/vim-bbye' -- Better buffer management
+    use {'moll/vim-bbye', cmd = 'Bdelete'} -- Better buffer management
 
     -- =======================================--
     --    Experimental (testing plugins)     --
     -- =======================================--
     use {'folke/lua-dev.nvim'}
 
-    -- use {
-    -- 'vhyrro/neorg',
-    -- config = function() require 'plugins.neorg' end,
-    -- requires = "nvim-lua/plenary.nvim"
-    -- }
-
-    use { -- Terminal enhancements
-        'akinsho/toggleterm.nvim',
-        config = function() require 'plugins.toggleterm' end
-    }
-
     use {
         'theHamsta/nvim-dap-virtual-text',
         config = function() require'nvim-dap-virtual-text'.setup() end
     }
 
-    -- use '~/Pkg/nvim-lsp-ui'
-
     use {
         'beauwilliams/focus.nvim',
-        config = function() require 'plugins.focus' end
+        config = function() require 'plugins.focus' end,
+        event = 'VimEnter'
     }
 
     -- use {
-    -- 'NTBBloodbath/rest.nvim',
-    -- config = function() require'plugins.rest-nvim'.setup() end
+    -- 'simrat39/rust-tools.nvim',
+    -- config = function() require('rust-tools').setup({}) end
     -- }
 
-    -- use {'phaazon/hop.nvim', config = function() require'hop'.setup() end}
-
     use {
-        'simrat39/rust-tools.nvim',
-        config = function() require('rust-tools').setup({}) end
+        'neomake/neomake',
+        config = function() require 'plugins.neomake' end,
+        cmd = 'Neomake'
     }
 
     use {
-        'stevearc/dressing.nvim',
-        config = function() require 'plugins.dressing' end
+        'iamcco/markdown-preview.nvim',
+        run = 'cd app && yarn install',
+        cmd = 'MarkdownPreview',
+        ft = {'markdown'}
     }
 
-    use {'neomake/neomake', config = function() require 'plugins.neomake' end}
+    -- use 'github/copilot.vim'
+
+    use {'pwntester/octo.nvim', config = function() require"octo".setup() end}
 end)

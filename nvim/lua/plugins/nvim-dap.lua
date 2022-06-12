@@ -26,7 +26,7 @@ vim.api.nvim_set_keymap("n", "[DAP]s", "<cmd>lua require'dap'.step_over()<CR>",
                         {})
 vim.api.nvim_set_keymap("n", "[DAP]S", "<cmd>lua require'dap'.step_into()<CR>",
                         {})
-vim.api.nvim_set_keymap("n", "[DAP]r", "<cmd>lua require'dap'.repl.open()<CR>",
+vim.api.nvim_set_keymap("n", "[DAP]r", "<cmd>lua require'dap'.repl.toggle()<CR>",
                         {})
 vim.api
     .nvim_set_keymap("n", "[DAP]R", "<cmd>lua require'dap'.restart()<CR>", {})

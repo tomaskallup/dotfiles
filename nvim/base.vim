@@ -43,7 +43,6 @@ set wildignore+=**/node_modules/**
 set gdefault
 set wildmenu
 set wildmode=longest:full,full
-set diffopt+=internal,algorithm:patience
 set grepprg=ag\ --vimgrep
 set spelllang=en,cs
 

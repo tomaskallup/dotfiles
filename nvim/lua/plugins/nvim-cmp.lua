@@ -1,11 +1,17 @@
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
 
+local formatting = {}
+
+if packer_plugins['lspkind-nvim'] then
+    formatting['format'] = require 'plugins.lspkind-nvim'
+end
+
 cmp.setup({
     snippet = {
         expand = function(args) require('luasnip').lsp_expand(args.body) end
     },
-    mapping = {
+    mapping = cmp.mapping.preset.insert({
         ['<C-d>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<C-y>'] = cmp.mapping.confirm({
@@ -30,12 +36,16 @@ cmp.setup({
                 fallback()
             end
         end
-    },
+    }),
     sources = {
-        {name = 'nvim_lsp'}, {name = 'luanip'}, {name = 'buffer'},
-        {name = 'path'}
-    }
+        {name = 'nvim_lsp'}, {name = 'luasnip'}, {name = 'buffer'},
+        {name = 'path'}, {name = 'nvim_lsp_signature_help'},
+        --{name = 'copilot'}
+        --{name = 'cmp_tabnine'}
+    },
+    formatting = formatting
 })
 
+--require 'plugins.nvim-cmp-tabnine'
 
 cmp.setup.cmdline('/', {sources = {{name = 'buffer'}}})
