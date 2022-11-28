@@ -1,9 +1,3 @@
-" Disable arrow keys
-map  <up>    :echoerr "What are you doing?"<cr>
-map  <down>  :echoerr "What are you doing?"<cr>
-map  <left>  :echoerr "What are you doing?"<cr>
-map  <right> :echoerr "What are you doing?"<cr>
-
 " Change leader key to "space"
 let mapleader="\<space>"
 

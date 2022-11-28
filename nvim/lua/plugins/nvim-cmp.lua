@@ -41,12 +41,11 @@ cmp.setup({
     sources = {
         {name = 'nvim_lsp'}, {name = 'luasnip'}, {name = 'buffer'},
         {name = 'path'}, {name = 'nvim_lsp_signature_help'},
-        --{name = 'copilot'}
-        {name = 'cmp_tabnine'}
+        --{name = 'cmp_tabnine'}
     },
     formatting = formatting
 })
 
-require 'plugins.nvim-cmp-tabnine'
+--require 'plugins.nvim-cmp-tabnine'
 
 cmp.setup.cmdline('/', {sources = {{name = 'buffer'}}})

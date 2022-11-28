@@ -73,3 +73,21 @@ vim.api.nvim_set_keymap(
     {}
 )
 vim.api.nvim_set_keymap('n', '[tele]B', '<cmd>Telescope file_browser theme=get_dropdown<CR>', {})
+
+-- Grep in specific directory (defaults to current buffer dir)
+vim.keymap.set('n', '[tele]G', function()
+    vim.ui.input({ prompt = 'Enter directory: ', completion = 'dir', default = vim.fn.expand '%:h' }, function(input)
+        if input ~= nil then
+            require('telescope.builtin').live_grep { search_dirs = { input } }
+        end
+    end)
+end, {})
+
+-- Find files in specific directory (defaults to current buffer dir)
+vim.keymap.set('n', '[tele]F', function()
+    vim.ui.input({ prompt = 'Enter directory: ', completion = 'dir', default = vim.fn.expand '%:h' }, function(input)
+        if input ~= nil then
+            require('telescope.builtin').find_files { cwd = input }
+        end
+    end)
+end, {})
