@@ -145,22 +145,12 @@ return packer.startup(function()
   use({
     "microsoft/vscode-js-debug",
     opt = true,
-    run = "npm install --legacy-peer-deps && npm run compile",
+    run = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out",
   })
-  use({ -- Debugging, not yet ready
+  use({
     "mfussenegger/nvim-dap",
     config = function()
       require("plugins.nvim-dap")
-    end,
-  })
-  use({ -- UI for DAP
-    "rcarriga/nvim-dap-ui",
-    config = function()
-      require("dapui").setup({
-        controls = {
-          enabled = false,
-        },
-      })
     end,
   })
   use("plytophogy/vim-virtualenv") -- Virtual env
@@ -193,10 +183,6 @@ return packer.startup(function()
       --"tzachar/cmp-tabnine",
     },
   })
-  --use { -- Typescript LSP enhancements (configured in LSP)
-  --'jose-elias-alvarez/nvim-lsp-ts-utils',
-  --branch = 'main'
-  --}
   use({ -- Typescript LSP enhancements (configured in LSP)
     "jose-elias-alvarez/typescript.nvim",
     branch = "main",
@@ -208,10 +194,6 @@ return packer.startup(function()
   use({ -- Show signature help when typing
     "ray-x/lsp_signature.nvim",
   })
-  -- use { -- Simple lsp enhancements
-  -- 'nvim-lua/lsp_extensions.nvim',
-  -- config = function() require 'plugins.lsp_extensions' end
-  -- }
 
   -- =======================================--
   --           Workflow plugins            --
@@ -264,11 +246,11 @@ return packer.startup(function()
   })
 
   --use({
-    --"neomake/neomake",
-    --config = function()
-      --require("plugins.neomake")
-    --end,
-    --cmd = "Neomake",
+  --"neomake/neomake",
+  --config = function()
+  --require("plugins.neomake")
+  --end,
+  --cmd = "Neomake",
   --})
 
   use({
@@ -276,5 +258,39 @@ return packer.startup(function()
     run = "cd app && yarn install",
     cmd = "MarkdownPreview",
     ft = { "markdown" },
+  })
+
+  use({
+    "kndndrj/nvim-dbee",
+    requires = {
+      "MunifTanjim/nui.nvim",
+    },
+    run = function()
+      -- Install tries to automatically detect the install method.
+      -- if it fails, try calling it with one of these parameters:
+      --    "curl", "wget", "bitsadmin", "go"
+      require("dbee").install()
+    end,
+    config = function()
+      require("dbee").setup(--[[optional config]])
+    end,
+  })
+
+  use({
+    "phaazon/hop.nvim",
+    config = function()
+      require("plugins.hop")
+    end,
+  })
+
+  use({
+    "jcdickinson/codeium.nvim",
+    requires = {
+      "nvim-lua/plenary.nvim",
+      "hrsh7th/nvim-cmp",
+    },
+    config = function()
+      require("codeium").setup({})
+    end,
   })
 end)

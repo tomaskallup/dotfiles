@@ -86,7 +86,7 @@ source /etc/profile.d/autojump.zsh
 #task long
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/armeeh/Pkg/google-cloud-sdk/path.zsh.inc' ]; then . '/home/armeeh/Pkg/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f '/opt/google-cloud-cli/path.zsh.inc' ]; then . '/opt/google-cloud-cli/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/home/armeeh/Pkg/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/armeeh/Pkg/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f '/opt/google-cloud-cli/completion.zsh.inc' ]; then . '/opt/google-cloud-cli/completion.zsh.inc'; fi

@@ -42,6 +42,7 @@ cmp.setup({
         {name = 'nvim_lsp'}, {name = 'luasnip'}, {name = 'buffer'},
         {name = 'path'}, {name = 'nvim_lsp_signature_help'},
         --{name = 'cmp_tabnine'}
+        {name = 'codeium'}
     },
     formatting = formatting
 })

@@ -80,11 +80,27 @@ require("typescript").setup({
       --ts_utils_attach(client)
       on_attach(client, bufnr)
     end,
-    settings = { documentFormatting = false },
+    settings = {
+      documentFormatting = false,
+      typescript = {
+        inlayHints = {
+          includeInlayParameterNameHints = "all",
+          includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+          includeInlayFunctionParameterTypeHints = true,
+          includeInlayVariableTypeHints = true,
+          includeInlayPropertyDeclarationTypeHints = true,
+          includeInlayFunctionLikeReturnTypeHints = true,
+          includeInlayEnumMemberValueHints = true,
+        },
+      },
+    },
     init_options = {
       hostInfo = "neovim",
       maxTsServerMemory = "4096",
       preferences = { quotePreference = "single", allowIncompleteCompletions = false },
+      --tsserver = {
+      --path = "/home/armeeh/.config/yarn/global/node_modules/typescript/lib/tsserver.js",
+      --},
     },
     capabilities = capabilitiesWithoutFomatting,
   }),
@@ -178,7 +194,7 @@ lspconfig.cssls.setup(handle_lsp({
   root_dir = lspconfig.util.root_pattern("yarn.lock", "lerna.json", ".git"),
 }))
 
-lspconfig.pyright.setup(handle_lsp({
+lspconfig.pylsp.setup(handle_lsp({
   root_dir = lspconfig.util.root_pattern(".venv", ".git"),
   on_attach = on_attach,
   settings = { python = { venvPath = "/home/armeeh/.virtualenvs" } },

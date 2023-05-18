@@ -45,6 +45,7 @@ set wildmenu
 set wildmode=longest:full,full
 set grepprg=ag\ --vimgrep
 set spelllang=en,cs
+set diffopt=internal,filler,closeoff,algorithm:histogram,linematch:50
 
 " Set completeopt to have a better completion experience
 "set completeopt=menuone,noinsert,noselect,preview

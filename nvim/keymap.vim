@@ -49,7 +49,7 @@ map <silent> [buffer]n :bn<CR>
 map <silent> [buffer]p :bp<CR>
 "}}}
 
-map <Leader>c [cf]
+map <Leader>C [cf]
 map [cf]n :cnext<CR>
 map [cf]p :cprevious<CR>
 
