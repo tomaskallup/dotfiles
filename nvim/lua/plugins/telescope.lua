@@ -36,6 +36,7 @@ require('telescope').setup {
 
         -- Developer configurations: Not meant for general override
         buffer_previewer_maker = require('telescope.previewers').buffer_previewer_maker,
+        path_display = { 'smart' },
     },
     pickers = { buffers = { mappings = { i = { ['<c-d>'] = 'delete_buffer' } } } },
     extensions = {
@@ -56,14 +57,9 @@ require('telescope').load_extension 'file_browser'
 vim.api.nvim_set_keymap('n', '<Leader>f', '[tele]', {})
 vim.api.nvim_set_keymap('n', '[tele]f', '<cmd>Telescope find_files theme=get_dropdown<CR>', {})
 vim.api.nvim_set_keymap('n', '[tele]g', '<cmd>Telescope live_grep theme=get_dropdown<CR>', {})
-vim.api.nvim_set_keymap(
-    'n',
-    '[tele]G',
-    '<cmd>Telescope live_grep theme=get_dropdown vimgrep_arguments=rg,--no-heading,--with-filename,--line-number,--column<CR>',
-    {}
-)
 vim.api.nvim_set_keymap('n', '[tele]b', '<cmd>Telescope buffers theme=get_dropdown<CR>', {})
 vim.api.nvim_set_keymap('n', '[tele]r', '<cmd>Telescope lsp_references theme=get_dropdown<CR>', {})
+vim.api.nvim_set_keymap('n', '[tele]R', '<cmd>Telescope resume<CR>', {})
 vim.api.nvim_set_keymap('n', '[tele]q', '<cmd>Telescope quickfix theme=get_dropdown<CR>', {})
 vim.api.nvim_set_keymap('n', '[tele]d', '<cmd>Telescope lsp_definitions theme=get_dropdown<CR>', {})
 vim.api.nvim_set_keymap(

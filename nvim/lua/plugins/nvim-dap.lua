@@ -4,6 +4,7 @@ local vscodeJsAdapter = require("dap-vscode-js.adapter")
 local vscodeJsConfig = require("dap-vscode-js.config")
 
 require("dap-vscode-js").setup({
+  node_path = "node",
   adapters = {}, -- which adapters to register in nvim-dap
 })
 

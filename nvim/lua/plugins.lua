@@ -8,7 +8,6 @@ return packer.startup(function()
   -- =======================================--
   use("tpope/vim-repeat") -- Use `.` to repeat surround and other commands
   use("tpope/vim-surround") -- (o_o) -> ca([ -> [o_o]
-  use("scrooloose/nerdcommenter") -- Comments
   use("jiangmiao/auto-pairs") -- Matching parens, quotes etc.
   use({ -- Add matching HTML tag
     "windwp/nvim-ts-autotag",
@@ -16,6 +15,12 @@ return packer.startup(function()
       require("nvim-ts-autotag").setup()
     end,
     ft = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+  })
+  use({
+    "numToStr/Comment.nvim",
+    config = function()
+      require("plugins.comment-nvim")
+    end,
   })
 
   -- =======================================--
@@ -145,7 +150,7 @@ return packer.startup(function()
   use({
     "microsoft/vscode-js-debug",
     opt = true,
-    run = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out",
+    run = "npm ci --legacy-peer-deps && npx gulp vsDebugServerBundle && rm -rf out && mv dist out",
   })
   use({
     "mfussenegger/nvim-dap",

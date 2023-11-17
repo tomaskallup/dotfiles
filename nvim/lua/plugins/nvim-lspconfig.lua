@@ -1,5 +1,6 @@
 local lspconfig = require("lspconfig")
 local null_ls = require("null-ls")
+local typescript = require("typescript")
 
 local function format_buffer()
   vim.lsp.buf.format({
@@ -51,7 +52,15 @@ null_ls.setup({
     -- Spell check
     --null_ls.builtins.diagnostics.cspell,
     -- Python formatting
-    null_ls.builtins.formatting.autopep8,
+    null_ls.builtins.formatting.autopep8.with({
+      extra_args = {
+        "max-line-length",
+        "79",
+        "aggressive",
+        "aggressive",
+        "aggressive",
+      },
+    }),
     -- Lua formatting
     null_ls.builtins.formatting.stylua,
   },
@@ -71,6 +80,9 @@ capabilitiesWithoutFomatting.textDocument.range_formatting = false
 require("typescript").setup({
   disable_commands = false, -- prevent the plugin from creating Vim commands
   debug = false, -- enable debug logging for commands
+  go_to_source_definition = {
+    fallback = true, -- fall back to standard LSP definition on failure
+  },
   server = handle_lsp({
     root_dir = lspconfig.util.root_pattern("yarn.lock", "lerna.json", ".git"),
     on_attach = function(client, bufnr)
@@ -96,7 +108,7 @@ require("typescript").setup({
     },
     init_options = {
       hostInfo = "neovim",
-      maxTsServerMemory = "4096",
+      maxTsServerMemory = "8192",
       preferences = { quotePreference = "single", allowIncompleteCompletions = false },
       --tsserver = {
       --path = "/home/armeeh/.config/yarn/global/node_modules/typescript/lib/tsserver.js",
@@ -192,10 +204,16 @@ lspconfig.prismals.setup(handle_lsp({ on_attach = on_attach }))
 lspconfig.cssls.setup(handle_lsp({
   capabilities = capabilities,
   root_dir = lspconfig.util.root_pattern("yarn.lock", "lerna.json", ".git"),
+  on_attach = on_attach,
 }))
 
 lspconfig.pylsp.setup(handle_lsp({
   root_dir = lspconfig.util.root_pattern(".venv", ".git"),
   on_attach = on_attach,
   settings = { python = { venvPath = "/home/armeeh/.virtualenvs" } },
+}))
+
+lspconfig.ccls.setup(handle_lsp({
+  root_dir = lspconfig.util.root_pattern("yarn.lock", "lerna.json", ".git"),
+  on_attach = on_attach,
 }))

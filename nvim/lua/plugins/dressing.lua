@@ -6,7 +6,6 @@ require("dressing").setup({
     -- Options for built-in selector
     builtin = {
       -- These are passed to nvim_open_win
-      anchor = "NW",
       relative = "cursor",
       border = "rounded",
 

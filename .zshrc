@@ -7,37 +7,32 @@
 # Aliases
 [ -r ~/.config/shell/aliases ] && source ~/.config/shell/aliases
 
-# Nvm
-[ -r /usr/share/nvm/init-nvm.sh ] && source /usr/share/nvm/init-nvm.sh
-
 # LS_COLORS
 [ -r ~/.local/share/lscolors.sh ] && source ~/.local/share/lscolors.sh
 
 autoload -Uz promptinit
 promptinit
 
-autoload -Uz compinit
-compinit
-
-
 # Plugin manager
-source /usr/share/zsh/share/zgen.zsh
+source /usr/share/zsh/scripts/zplug/init.zsh
 
-# if the init script doesn't exist
-if ! zgen saved; then
+zplug "~/.config/zsh/themes/custom", from:local
+zplug "zdharma-continuum/fast-syntax-highlighting", defer:2
+zplug "MichaelAquilina/zsh-autoswitch-virtualenv"
+zplug "buonomo/yarn-completion", defer:2
+zplug "arzzen/calc.plugin.zsh"
+zplug "b4b4r07/enhancd", use:init.sh
 
-  # specify plugins here
-  # zgen oh-my-zsh plugins/vi-mode
-
-  zgen load ~/.config/zsh/themes/custom
-  zgen load zdharma-continuum/fast-syntax-highlighting
-  zgen load MichaelAquilina/zsh-autoswitch-virtualenv
-  zgen load buonomo/yarn-completion
-  zgen load arzzen/calc.plugin.zsh
-
-  # generate the init script from plugins above
-  zgen save
+# Install plugins if there are plugins that have not been installed
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
 fi
+
+# Then, source plugins and add commands to $PATH
+zplug load
 
 ZSH_THEME='custom'
 
@@ -79,8 +74,7 @@ setopt INC_APPEND_HISTORY # save history entries as soon as they are entered
 
 setopt auto_cd # cd by typing directory name if it's not a command
 
-# Autojump
-source /etc/profile.d/autojump.zsh
+zstyle ':completion:*' completer _complete _ignored _files
 
 #alsi
 #task long
@@ -90,3 +84,5 @@ if [ -f '/opt/google-cloud-cli/path.zsh.inc' ]; then . '/opt/google-cloud-cli/pa
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/opt/google-cloud-cli/completion.zsh.inc' ]; then . '/opt/google-cloud-cli/completion.zsh.inc'; fi
+
+eval "$(direnv hook zsh)"

@@ -5,7 +5,7 @@ set showcmd
 set showmode
 set number
 set relativenumber
-set laststatus=2 " Enable the status bar to always show
+set laststatus=3 " Enable the status bar to always show
 set hidden " Set hidden to allow buffers to be browsed
 set breakindent " Make word wrapping behave like it does in every other sane text editor
 set hlsearch " Highlight search results

@@ -53,3 +53,4 @@ map <Leader>C [cf]
 map [cf]n :cnext<CR>
 map [cf]p :cprevious<CR>
 
+imap <S-BS> <DEL>
