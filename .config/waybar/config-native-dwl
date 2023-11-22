@@ -1,0 +1,20 @@
+{
+  "layer": "top", 
+    "position": "top",
+    "height": 30,
+    "spacing": 2,
+    "include": ["~/.config/waybar/shared.json"],
+    "modules-left": ["dwl/tags"],
+    "modules-right": [
+      "idle_inhibitor",
+      "pulseaudio",
+      "network",
+      "cpu",
+      "memory",
+      "temperature",
+      "backlight",
+      "battery",
+      "clock",
+      "tray"
+    ]
+}

@@ -1,0 +1,11 @@
+[Unit]
+Description=Blueman is a GTK+ Bluetooth Manager 
+Documentation=https://github.com/blueman-project/blueman/wiki
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/run/current-system/sw/bin/blueman-applet
+
+[Install]
+WantedBy=dwl-session.target

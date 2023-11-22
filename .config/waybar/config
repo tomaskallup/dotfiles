@@ -1,0 +1,80 @@
+[
+  {
+    "output": "eDP-1",
+    "layer": "top", 
+    "position": "top",
+    "height": 30,
+    "spacing": 2,
+    "include": ["~/.config/waybar/shared.json"],
+    "modules-left": ["custom/dwl#eDP-1"],
+    "modules-right": [
+      "idle_inhibitor",
+      "pulseaudio",
+      "network",
+      "cpu",
+      "memory",
+      "temperature",
+      "backlight",
+      "battery",
+      "clock",
+      "tray"
+    ],
+    "custom/dwl#eDP-1": {
+      "exec":                    "~/Pkg/dwl/scripts/waybar-tags.sh 'eDP-1'",
+      "format":                  "{}",
+      "return-type":             "json"
+    }
+  },
+  {
+    "output": "DP-3",
+    "layer": "top", 
+    "position": "top",
+    "height": 30,
+    "spacing": 2,
+    "include": ["~/.config/waybar/shared.json"],
+    "modules-left": ["custom/dwl#DP-3"],
+    "modules-right": [
+      "idle_inhibitor",
+      "pulseaudio",
+      "network",
+      "cpu",
+      "memory",
+      "temperature",
+      "backlight",
+      "battery",
+      "clock",
+      "tray"
+    ],
+    "custom/dwl#DP-3": {
+      "exec":                    "~/Pkg/dwl/scripts/waybar-tags.sh 'DP-3'",
+      "format":                  "{}",
+      "return-type":             "json"
+    }
+  },
+  {
+    "output": "DP-1",
+    "layer": "top", 
+    "position": "top",
+    "height": 30,
+    "spacing": 2,
+    "include": ["~/.config/waybar/shared.json"],
+    "modules-left": ["custom/dwl#DP-1"],
+    "modules-right": [
+      "idle_inhibitor",
+      "pulseaudio",
+      "network",
+      "cpu",
+      "memory",
+      "temperature",
+      "backlight",
+      "battery",
+      "clock",
+      "tray"
+    ],
+    "custom/dwl#DP-1": {
+      "exec":                    "~/Pkg/dwl/scripts/waybar-tags.sh 'DP-1'",
+      "format":                  "{}",
+      "return-type":             "json"
+    }
+  }
+]

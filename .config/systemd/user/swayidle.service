@@ -1,0 +1,14 @@
+[Unit]
+Description=Idle manager for Wayland
+Documentation=man:swayidle(1)
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/run/current-system/sw/bin/swayidle -w \
+  timeout 600 'lock.sh' \
+  timeout 1200 'systemctl suspend-then-hibernate' \
+  before-sleep 'lock.sh' &
+
+[Install]
+WantedBy=dwl-session.target
