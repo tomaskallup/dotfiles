@@ -5,6 +5,7 @@ PartOf=graphical-session.target
 
 [Service]
 Type=simple
+Environment=PATH=/run/current-system/sw/bin/
 ExecStart=/run/current-system/sw/bin/waybar
 
 [Install]
