@@ -1,11 +1,15 @@
 [Unit]
-Description=Fnott is a keyboard driven and lightweight notification daemon for wlroots-based Wayland compositors.
-Documentation=https://codeberg.org/dnkl/fnott
+Description=Keyboard driven and lightweight Wayland notification daemon
+Documentation=man:fnott(1) man:fnott.ini(5)
 PartOf=graphical-session.target
+# ConditionEnvironment requires systemd v247 to work correctly
+ConditionEnvironment=WAYLAND_DISPLAY
 
 [Service]
-Type=simple
+Type=dbus
+BusName=org.freedesktop.Notifications
 ExecStart=/run/current-system/sw/bin/fnott
+ExecStop=/run/current-system/sw/bin/fnottctl quit
 
 [Install]
-WantedBy=dwl-session.target
+WantedBy=dwl-sessing.target

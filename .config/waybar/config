@@ -1,7 +1,6 @@
 [
   {
     "output": "eDP-1",
-    "layer": "top", 
     "position": "top",
     "height": 30,
     "spacing": 2,
@@ -27,7 +26,6 @@
   },
   {
     "output": "DP-3",
-    "layer": "top", 
     "position": "top",
     "height": 30,
     "spacing": 2,
@@ -53,7 +51,6 @@
   },
   {
     "output": "DP-1",
-    "layer": "top", 
     "position": "top",
     "height": 30,
     "spacing": 2,

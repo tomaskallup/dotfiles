@@ -145,7 +145,7 @@ in {
 
     userName = "Tomas Kallup";
     userEmail = "t.kallup@gmail.com";
-    diff-so-fancy.enable = true;
+    diff-so-fancy.enable = false;
 
     extraConfig = {
       core = { editor = "$EDITOR"; };
