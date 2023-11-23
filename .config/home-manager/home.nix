@@ -162,19 +162,13 @@ in {
       pbcleanup = "!git fetch --prune && git branch -vv | grep ': gone]' | sed \"s/^\\s\\+\\([^ ]\\+\\).*/\\1/\" | grep -E -v \"(^\\*|master|develop|staging)\" > /tmp/git-branch-cleanup && $EDITOR /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git branch -D";
       rbcleanup = "!git fetch --prune && git branch -r --merged | grep -E -v \"(^\\*|master|develop|staging)\" > /tmp/git-branch-cleanup && $EDITOR /tmp/git-branch-cleanup && sed -i \"\" \"s/origin\\///\" /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git push origin --delete";
       a = "add";
-      aa = "add *";
       ac = "!git diff --name-only --diff-filter=U | xargs git add";
       ap = "add -p";
-      b = "branch";
       c = "commit";
       ch = "checkout";
       cm = "commit -m";
-      chp = "cherry-pick";
-      chpc = "cherry-pick --continue";
       d = "diff";
       f = "fetch";
-      fp = "fetch --prune";
-      fc = "!git diff --name-only --diff-filter=U | xargs $EDITOR";
       r = "reset";
       rh = "reset HEAD";
       rb = "rebase";
@@ -187,14 +181,115 @@ in {
       p = "push";
       pf = "push --force-with-lease";
       pl = "pull";
-      psuo = "!git push --set-upstream origin $(git branch --show-current)";
-      psu = "push --set-upstream";
-      dt = "difftool";
       mt = "mergetool";
       fixc = "!$EDITOR `git diff --name-only --diff-filter=U`";
       bi = "!git branch | sed '/HEAD/d' | sed -e 's/*\\?\\s\\+\\(remotes\\/origin\\/\\)\\?//' | fzy | xargs -r git checkout";
       bia = "!git branch -a | sed '/HEAD/d' | sed -e 's/*\\?\\s\\+\\(remotes\\/origin\\/\\)\\?//' | fzy | xargs -r git checkout";
       lg = "log --format='%C(auto) %h %s'";
+    };
+  };
+
+  systemd.user.targets = {
+    dwl-session = {
+      Unit = {
+        Description="dwl compositor session";
+        Documentation="man:systemd.special(7)";
+        BindsTo="graphical-session.target";
+        Wants="graphical-session-pre.target";
+        After="graphical-session-pre.target";
+      };
+    };
+  };
+  systemd.user.services = {
+    ## Notification daemon
+    fnott = {
+      Unit = {
+        Description="Keyboard driven and lightweight Wayland notification daemon";
+        Documentation="man:fnott(1) man:fnott.ini(5)";
+        PartOf="graphical-session.target";
+        After="graphical-session-pre.target";
+      };
+
+      Service = {
+        Type="dbus";
+        BusName="org.freedesktop.Notifications";
+        ExecStart="${pkgs.fnott}/bin/fnott";
+      };
+    };
+
+    ## Automatic display configuration
+    kanshi = {
+      Unit = {
+        Description="This is a Wayland equivalent for tools like autorandr.";
+        Documentation="man:kanshi(1) man:kanshi(5)";
+        PartOf="graphical-session.target";
+      };
+
+      Service = {
+        Type="simple";
+        ExecStart="${pkgs.kanshi}/bin/kanshi";
+      };
+    };
+
+    ## Bluetooth management
+    blueman = {
+      Unit = {
+        Description="Blueman is a GTK+ Bluetooth Manager";
+        Documentation="man:blueman-applet(1)";
+        PartOf="graphical-session.target";
+      };
+
+      Service = {
+        Type="simple";
+        ExecStart="${pkgs.blueman}/bin/blueman-applet";
+      };
+    };
+
+    ## Music/video player controller
+    playerctl = {
+      Unit = {
+        Description="mpris media player command-line controller";
+        Documentation="man:playerctl(1)";
+        PartOf="graphical-session.target";
+      };
+
+      Service = {
+        Type="simple";
+        ExecStart="${pkgs.playerctl}/bin/playerctld daemon";
+      };
+    };
+
+    ## Wayland bar
+    waybar = {
+      Unit = {
+        Description="Highly customizable Wayland bar for Sway and Wlroots based compositors.";
+        Documentation="man:waybar(5)";
+        PartOf="graphical-session.target";
+      };
+
+      Service = {
+        Type="simple";
+        ExecStart="${pkgs.waybar}/bin/waybar";
+      };
+    };
+
+    ## Swayidle for automatic locking
+    swayidle = {
+      Unit = {
+        Description="Idle manager for Wayland";
+        Documentation="man:swayidle(1)";
+        PartOf="graphical-session.target";
+      };
+
+      Service = {
+        Type="simple";
+        ExecStart=''
+          ${pkgs.swayidle}/bin/swayidle -w\
+            timeout 600 'lock.sh' \
+            timeout 1200 'systemctl suspend-then-hibernate' \
+            before-sleep 'lock.sh'
+        '';
+      };
     };
   };
 }
