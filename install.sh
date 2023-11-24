@@ -18,4 +18,3 @@ link_dir nvim
 link_dir fnott
 link_dir waybar
 link_dir home-manager
-link_dir systemd

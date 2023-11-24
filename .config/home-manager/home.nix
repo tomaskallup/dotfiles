@@ -115,6 +115,12 @@ in {
 
       path+=('/home/armeeh/Pkg/dwl/scripts')
       export PATH
+
+      include () {
+        [[ -f "$1" ]] && source "$1"
+      }
+
+      include '/home/armeeh/.env'
     '';
 
     history = {
@@ -215,6 +221,8 @@ in {
         BusName="org.freedesktop.Notifications";
         ExecStart="${pkgs.fnott}/bin/fnott";
       };
+
+      Install.WantedBy = [ "dwl-session.target" ];
     };
 
     ## Automatic display configuration
@@ -229,6 +237,8 @@ in {
         Type="simple";
         ExecStart="${pkgs.kanshi}/bin/kanshi";
       };
+
+      Install.WantedBy = [ "dwl-session.target" ];
     };
 
     ## Bluetooth management
@@ -243,6 +253,8 @@ in {
         Type="simple";
         ExecStart="${pkgs.blueman}/bin/blueman-applet";
       };
+
+      Install.WantedBy = [ "dwl-session.target" ];
     };
 
     ## Music/video player controller
@@ -257,6 +269,8 @@ in {
         Type="simple";
         ExecStart="${pkgs.playerctl}/bin/playerctld daemon";
       };
+
+      Install.WantedBy = [ "dwl-session.target" ];
     };
 
     ## Wayland bar
@@ -271,6 +285,8 @@ in {
         Type="simple";
         ExecStart="${pkgs.waybar}/bin/waybar";
       };
+
+      Install.WantedBy = [ "dwl-session.target" ];
     };
 
     ## Swayidle for automatic locking
@@ -290,6 +306,8 @@ in {
             before-sleep 'lock.sh'
         '';
       };
+
+      Install.WantedBy = [ "dwl-session.target" ];
     };
   };
 }
