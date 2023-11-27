@@ -206,6 +206,12 @@ in {
       };
     };
   };
+  xdg.dataFile."dbus-1/services/fnott.service".text = ''
+      [D-BUS Service]
+      Name=org.freedesktop.Notifications
+      Exec=${pkgs.fnott}/bin/fnott
+      SystemdService=fnott.service
+    '';
   systemd.user.services = {
     ## Notification daemon
     fnott = {
@@ -221,8 +227,6 @@ in {
         BusName="org.freedesktop.Notifications";
         ExecStart="${pkgs.fnott}/bin/fnott";
       };
-
-      Install.WantedBy = [ "dwl-session.target" ];
     };
 
     ## Automatic display configuration
@@ -253,8 +257,6 @@ in {
         Type="simple";
         ExecStart="${pkgs.blueman}/bin/blueman-applet";
       };
-
-      Install.WantedBy = [ "dwl-session.target" ];
     };
 
     ## Music/video player controller
