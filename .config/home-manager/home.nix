@@ -92,7 +92,11 @@ in {
       yS = "jq -r '.scripts | keys | .[]' < package.json | fzy | xargs -r yarn";
       cleanservices = "rm -rf packages/*/dist(N) packages/*/tsconfig.build.tsbuildinfo(N) services/*/build(N) services/*/tsconfig.build.tsbuildinfo(N) functions/*/build(N) functions/*/tsconfig.build.tsbuildinfo(N) && yarn && yarn lerna run build";
       e = "$EDITOR";
+      fzfe = "git ls-files | fzy | xargs $EDITOR";
     };
+    initExtraFirst = ''
+      zmodload zsh/zprof
+    '';
     initExtra = ''
       setopt HIST_IGNORE_ALL_DUPS
       setopt INC_APPEND_HISTORY
@@ -120,6 +124,12 @@ in {
         [[ -f "$1" ]] && source "$1"
       }
 
+      mongo_uri_to_user_and_pass () {
+        user_and_pass=''${''${''${1#*://}%%@*}:/:}
+        parts=(''${(@s/:/)user_and_pass})
+        MONGODB_USERNAME=$parts[1] MONGODB_PASSWORD=$parts[2] ''${@:2}
+      }
+
       include '/home/armeeh/.env'
     '';
 
@@ -144,6 +154,15 @@ in {
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
+  };
+
+  services.gpg-agent = {
+    enable = true;
+    enableSshSupport = true;
+    defaultCacheTtl = 28800;
+    defaultCacheTtlSsh = 28800;
+    maxCacheTtl = 28800;
+    maxCacheTtlSsh = 28800;
   };
 
   programs.git = {
@@ -303,9 +322,9 @@ in {
         Type="simple";
         ExecStart=''
           ${pkgs.swayidle}/bin/swayidle -w\
-            timeout 600 'lock.sh' \
+            timeout 600 '/home/armeeh/Pkg/dwl/scripts/lock.sh' \
             timeout 1200 'systemctl suspend-then-hibernate' \
-            before-sleep 'lock.sh'
+            before-sleep '/home/armeeh/Pkg/dwl/scripts/lock.sh'
         '';
       };
 
