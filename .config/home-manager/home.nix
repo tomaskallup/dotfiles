@@ -330,5 +330,23 @@ in {
 
       Install.WantedBy = [ "dwl-session.target" ];
     };
+
+    ## Udiskie for automounting drives
+    udiskie = {
+      Unit = {
+        Description="Automounter for removable media ";
+        Documentation="https://github.com/coldfix/udiskie/wiki";
+        PartOf="graphical-session.target";
+      };
+
+      Service = {
+        Type="simple";
+        ExecStart=''
+          ${pkgs.udiskie}/bin/udiskie
+        '';
+      };
+
+      Install.WantedBy = [ "dwl-session.target" ];
+    };
   };
 }
