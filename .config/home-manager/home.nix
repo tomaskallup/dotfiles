@@ -86,6 +86,7 @@ in {
     enableVteIntegration = true;
     enableAutosuggestions = true;
     shellAliases = {
+      rm = "rm -i";
       ll = "ls -la";
       y = "yarn";
       g = "git";
@@ -343,6 +344,24 @@ in {
         Type="simple";
         ExecStart=''
           ${pkgs.udiskie}/bin/udiskie
+        '';
+      };
+
+      Install.WantedBy = [ "dwl-session.target" ];
+    };
+
+    ## Sway Audio Idle Inhibit
+    sway-audio-idle-inhibit = {
+      Unit = {
+        Description="Automatically start idle inhibit when audio is playing";
+        Documentation="https://github.com/ErikReider/SwayAudioIdleInhibit";
+        PartOf="graphical-session.target";
+      };
+
+      Service = {
+        Type="simple";
+        ExecStart=''
+          ${pkgs.nur.repos."999eagle".swayaudioidleinhibit}/bin/sway-audio-idle-inhibit
         '';
       };
 
