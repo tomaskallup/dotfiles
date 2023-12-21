@@ -118,9 +118,6 @@ in {
       zle -N edit-command-line
       bindkey '^xe' edit-command-line
 
-      path+=('/home/armeeh/Pkg/dwl/scripts')
-      export PATH
-
       include () {
         [[ -f "$1" ]] && source "$1"
       }
