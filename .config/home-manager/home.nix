@@ -85,6 +85,7 @@ in {
     autocd = true;
     enableVteIntegration = true;
     enableAutosuggestions = true;
+    enableCompletion = true;
     shellAliases = {
       rm = "rm -i";
       ll = "ls -la";
@@ -96,6 +97,9 @@ in {
       fzfe = "git ls-files | fzy | xargs $EDITOR";
     };
     initExtraFirst = ''
+      if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+        source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+          fi
       zmodload zsh/zprof
     '';
     initExtra = ''

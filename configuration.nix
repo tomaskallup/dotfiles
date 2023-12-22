@@ -142,7 +142,10 @@ in {
   };
   programs.git.enable = true;
   programs.htop.enable = true;
-  programs.zsh.enable = true;
+  programs.zsh= {
+    enable = true;
+    enableCompletion = false;
+  };
   services.mongodb = {
     enable = true;
     dbpath = "/data/mongodb";
@@ -203,6 +206,12 @@ in {
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+  };
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = (with pkgs; [
@@ -235,6 +244,7 @@ in {
     pavucontrol
     spotify
     gimp
+    vlc
 
     # CLI Tools
     wl-clipboard
