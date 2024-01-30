@@ -40,11 +40,15 @@ in {
     jq
     unstable.nodejs_20
     unstable.nodePackages.typescript-language-server
+    unstable.nodePackages.peerflix
     unstable.eslint_d
     unstable.prettierd
     unstable.stylua
     unstable.lua-language-server
     unstable.nil
+    unstable.atool
+    unstable.unzip
+    unstable.codeium
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -95,18 +99,18 @@ in {
       cleanservices = "rm -rf packages/*/dist(N) packages/*/tsconfig.build.tsbuildinfo(N) services/*/build(N) services/*/tsconfig.build.tsbuildinfo(N) functions/*/build(N) functions/*/tsconfig.build.tsbuildinfo(N) && yarn && yarn lerna run build";
       e = "$EDITOR";
       fzfe = "git ls-files | fzy | xargs $EDITOR";
+      btcn = "bluetoothctl devices | fzy | sed -e 's/Device //' -e 's/ .*//' | xargs bluetoothctl connect ";
     };
     initExtraFirst = ''
       if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
         source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
-          fi
-      zmodload zsh/zprof
+      fi
+
+      source ~/.p10k.zsh
     '';
     initExtra = ''
       setopt HIST_IGNORE_ALL_DUPS
       setopt INC_APPEND_HISTORY
-
-      source ~/.p10k.zsh
 
       autoload -U up-line-or-beginning-search
       autoload -U down-line-or-beginning-search
@@ -165,6 +169,14 @@ in {
     defaultCacheTtlSsh = 28800;
     maxCacheTtl = 28800;
     maxCacheTtlSsh = 28800;
+  };
+
+  programs.tmux = {
+    enable = true;
+    keyMode = "vi";
+    mouse = true;
+    shortcut = "t";
+    terminal = "screen-256color";
   };
 
   programs.git = {
@@ -344,7 +356,7 @@ in {
       Service = {
         Type="simple";
         ExecStart=''
-          ${pkgs.udiskie}/bin/udiskie
+          ${pkgs.udiskie}/bin/udiskie -At
         '';
       };
 
@@ -364,6 +376,7 @@ in {
         ExecStart=''
           ${pkgs.nur.repos."999eagle".swayaudioidleinhibit}/bin/sway-audio-idle-inhibit
         '';
+        Restart="always";
       };
 
       Install.WantedBy = [ "dwl-session.target" ];

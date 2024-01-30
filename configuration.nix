@@ -47,11 +47,12 @@ let
   dwl-custom-source = pkgs.fetchFromGitHub {
     owner = "tomaskallup";
     repo = "dwl";
-    rev = "master";
-    hash = "sha256-MWXox7QjrbVHuBI7hMk7TV3qNgAHVsgivmyNbmTLMp0=";
+    rev = "main";
+    hash = "sha256-Uf/akqwkjTadgv9mNZobisKoYUBhV8p3B2koMvLsdKw=";
   };
 
   dwl-custom = (pkgs.callPackage "${dwl-custom-source}/dwl-custom.nix" {});
+  unstable = import <unstable> { config = { allowUnfree = true; }; };
 
 in {
   imports =
@@ -198,12 +199,19 @@ in {
   programs.light.enable = true;
   programs.xwayland.enable = true;
   programs.waybar.enable = true;
+  programs.dconf.enable = true;
   services.dbus.enable = true;
   xdg.portal = {
     enable = true;
     wlr.enable = true;
     # gtk portal needed to make gtk apps happy
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    # extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    configPackages = [ pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-wlr ];
+    config = {
+      common = {
+        default = "wlr";
+      };
+    };
   };
 
   programs.steam = {
@@ -225,6 +233,7 @@ in {
     xorg.xcbutilwm
     libva
     wlroots
+    shared-mime-info
 
     # Compilation tools
     gcc
@@ -245,6 +254,7 @@ in {
     spotify
     gimp
     vlc
+    winbox
 
     # CLI Tools
     wl-clipboard
@@ -261,17 +271,31 @@ in {
     fzy
     ripgrep
     grim
+    slurp
     google-cloud-sdk
     mongodb-tools
     mongosh
     playerctl
     kanshi
-    ranger
+    (ranger.overrideAttrs (r: {
+      preConfigure = r.preConfigure + ''
+        # Fix typescript files not being reported correctly
+        substituteInPlace ranger/data/scope.sh \
+          --replace 'text/* | */xml)' \
+                    'text/* | */xml | JavaScript* | */javascript)'
+
+        # Fix typescript files not being opened in editor
+        substituteInPlace ranger/config/rifle.conf \
+          --replace '!mime ^text, label editor, ext xml|json|csv|tex|py|pl|rb|js|sh|php = ''${VISUAL:-$EDITOR} -- "$@"' \
+                    '!mime ^text, label editor, ext xml|json|csv|tex|py|pl|rb|js|sh|php|ts|tsx = ''${VISUAL:-$EDITOR} -- "$@"'
+      '';
+    }))
     kwalletcli # KDE wallet for 1password
     libsForQt5.kwallet
     tmux
     udisks
     nur.repos."999eagle".swayaudioidleinhibit # Make sure idle inhibitor is activated if audio is playing
+    highlight
 
     # GUI Misc (themes, fonts, scripts etc)
     wayland
@@ -282,6 +306,7 @@ in {
     configure-gtk
     font-awesome
     flameshot
+    unstable.satty
     waybar
     neovim
     greetd.tuigreet
@@ -291,8 +316,8 @@ in {
   environment.shells = with pkgs; [ zsh ];
 
   # Fonts
-  fonts.fonts = with pkgs; [
-    (nerdfonts.override { fonts = [ "Iosevka" ]; })
+  fonts.packages = with pkgs; [
+    (nerdfonts.override { fonts = [ "Iosevka" "IosevkaTerm" ]; })
     noto-fonts-emoji
     symbola
     unifont
@@ -300,13 +325,20 @@ in {
   
   fonts.fontconfig = {
     defaultFonts = {
-      monospace = [ "Iosevka Nerd Font" ];
+      monospace = [ "IosevkaTerm Nerd Font" ];
       emoji = [ "Noto Fonts Emoji" ];
     };
   };
 
   # Enable CUPS to print documents.
-  services.printing.enable = true;
+  services.printing = {
+    enable = true;
+    drivers = with pkgs; [hplipWithPlugin];
+  };
+  services.avahi = {
+    enable = true;
+    nssmdns = true;
+  };
 
   # Enable sound.
   sound.enable = true;

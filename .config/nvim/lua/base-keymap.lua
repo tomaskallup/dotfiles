@@ -3,6 +3,9 @@ vim.g.mapleader = ' '
 vim.keymap.set('i', 'jk', '<esc>')
 vim.keymap.set('i', 'kj', '<esc>')
 
+vim.keymap.set('t', 'jk', '<esc>')
+vim.keymap.set('t', 'kj', '<esc>')
+
 vim.keymap.set('v', 'v', '<esc>')
 
 vim.keymap.set('n', '<leader>w', '<cmd>write<cr>', { desc = 'Save' })

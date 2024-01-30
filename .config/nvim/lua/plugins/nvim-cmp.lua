@@ -10,6 +10,20 @@ return {
     'hrsh7th/cmp-nvim-lsp-signature-help',
     'saadparwaiz1/cmp_luasnip',
     'L3MON4D3/LuaSnip',
+    {
+      'Exafunction/codeium.nvim',
+      dependencies = {
+        'nvim-lua/plenary.nvim',
+      },
+      config = function()
+        require('codeium').setup({
+          tools = {
+            language_server = '/home/armeeh/.nix-profile/bin/codeium_language_server',
+          },
+        })
+      end,
+    },
+    'onsails/lspkind.nvim',
   },
   config = function()
     local cmp = require('cmp')
@@ -53,6 +67,7 @@ return {
         { name = 'luasnip' },
         { name = 'nvim_lsp_signature_help' },
         { name = 'path' },
+        { name = 'codeium' },
         {
           name = 'buffer',
           option = {
@@ -68,15 +83,26 @@ return {
         },
       }),
       sorting = {
+        priority_weight = 1,
         comparators = {
+          compare.exact,
           function(...)
             return cmp_buffer:compare_locality(...)
           end,
           compare.offset,
-          compare.exact,
           compare.score,
           compare.recently_used,
         },
+      },
+      formatting = {
+        expandable_indicator = true,
+        fields = { 'abbr', 'kind', 'menu' },
+        format = require('lspkind').cmp_format({
+          mode = 'symbol',
+          maxwidth = 50,
+          ellipsis_char = '...',
+          symbol_map = { Codeium = '' },
+        }),
       },
     })
 
