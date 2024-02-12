@@ -49,6 +49,9 @@ in {
     unstable.atool
     unstable.unzip
     unstable.codeium
+    unstable.cmake-language-server
+    unstable.ccls
+    unstable.clang-tools
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -375,6 +378,25 @@ in {
         Type="simple";
         ExecStart=''
           ${pkgs.nur.repos."999eagle".swayaudioidleinhibit}/bin/sway-audio-idle-inhibit
+        '';
+        Restart="always";
+      };
+
+      Install.WantedBy = [ "dwl-session.target" ];
+    };
+
+    ## Persist clip board after app closes
+    wl-clip-persist = {
+      Unit = {
+        Description="Automatically preserve clipboard when app closes";
+        Documentation="https://github.com/Linus789/wl-clip-persist";
+        PartOf="graphical-session.target";
+      };
+
+      Service = {
+        Type="simple";
+        ExecStart=''
+          ${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard both
         '';
         Restart="always";
       };

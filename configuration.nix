@@ -143,7 +143,7 @@ in {
   };
   programs.git.enable = true;
   programs.htop.enable = true;
-  programs.zsh= {
+  programs.zsh = {
     enable = true;
     enableCompletion = false;
   };
@@ -258,6 +258,7 @@ in {
 
     # CLI Tools
     wl-clipboard
+    wl-clip-persist
     wlr-randr
     curl
     which
