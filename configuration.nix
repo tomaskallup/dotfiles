@@ -65,9 +65,14 @@ in {
     nur = import (builtins.fetchTarball "https://github.com/nix-community/NUR/archive/master.tar.gz") {
       inherit pkgs;
     };
+    frozenMongo = import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/fd04bea4cbf76f86f244b9e2549fca066db8ddff.tar.gz") {
+      inherit pkgs;
+      config.allowUnfree = true;
+    };
   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.cores = 8;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -94,6 +99,19 @@ in {
     daemon = {
       settings = {
         data-root = "/data/docker";
+      };
+    };
+  };
+  # Run mongodb in docker as systemd service
+  virtualisation.oci-containers = {
+    backend = "docker";
+    containers = {
+      mongodb = {
+        image = "mongo:6.0.13";
+        autoStart = true;
+        ports = [ "27017:27017" ];
+        user = "995:994";
+        volumes = [ "/data/mongodb:/data/db" "/tmp:/tmp" ];
       };
     };
   };
@@ -148,9 +166,9 @@ in {
     enableCompletion = false;
   };
   services.mongodb = {
-    enable = true;
+    enable = false;
     dbpath = "/data/mongodb";
-    package = pkgs.mongodb-6_0;
+    package = pkgs.frozenMongo.mongodb-6_0;
     bind_ip = "127.0.0.1, 172.17.0.1, ::1";
   };
   services.postgresql = {
@@ -362,6 +380,15 @@ in {
   users.users.armeeh = {
     isNormalUser = true;
     extraGroups = [ "wheel" "audio" "video" "input" "network" "networkmanager" "docker" ]; # Enable ‘sudo’ for the user.
+  };
+  users.groups.mongodb = {
+    gid = 994;
+  };
+  users.users.mongodb = {
+    isSystemUser = true;
+    uid = 995;
+    group = "mongodb";
+    home = "/data/mongodb";
   };
   home-manager.users.armeeh = 
     (import /home/armeeh/.config/home-manager/home.nix) pkgs;

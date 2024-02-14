@@ -339,9 +339,9 @@ in {
         Type="simple";
         ExecStart=''
           ${pkgs.swayidle}/bin/swayidle -w\
-            timeout 600 '/home/armeeh/Pkg/dwl/scripts/lock.sh' \
+            timeout 600 'lock.sh' \
             timeout 1200 'systemctl suspend-then-hibernate' \
-            before-sleep '/home/armeeh/Pkg/dwl/scripts/lock.sh'
+            before-sleep 'lock.sh'
         '';
       };
 
