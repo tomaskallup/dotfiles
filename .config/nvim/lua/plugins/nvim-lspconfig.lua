@@ -61,6 +61,8 @@ return {
       javascript = { eslint, eslint_format, prettier },
       lua = { stylua },
       json = { jq },
+      css = { prettier },
+      scss = { prettier },
     }
 
     lspconfig['efm'].setup({
@@ -122,6 +124,10 @@ return {
     })
 
     lspconfig.nil_ls.setup({
+      capabilities = capabilities,
+    })
+
+    lspconfig.cssls.setup({
       capabilities = capabilities,
     })
   end,

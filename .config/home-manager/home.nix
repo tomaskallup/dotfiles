@@ -52,6 +52,7 @@ in {
     unstable.cmake-language-server
     unstable.ccls
     unstable.clang-tools
+    unstable.vscode-langservers-extracted
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage

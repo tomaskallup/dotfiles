@@ -48,7 +48,7 @@ let
     owner = "tomaskallup";
     repo = "dwl";
     rev = "main";
-    hash = "sha256-Uf/akqwkjTadgv9mNZobisKoYUBhV8p3B2koMvLsdKw=";
+    hash = "sha256-WCAAGpGIW1p1UhIWJTQ/WuM+XpCslW7TEHxibI4B8sc=";
   };
 
   dwl-custom = (pkgs.callPackage "${dwl-custom-source}/dwl-custom.nix" {});
@@ -68,6 +68,13 @@ in {
     frozenMongo = import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/fd04bea4cbf76f86f244b9e2549fca066db8ddff.tar.gz") {
       inherit pkgs;
       config.allowUnfree = true;
+    };
+    my-firefox-dev = pkgs.stdenv.mkDerivation {
+      name = "firefox-esr";
+      buildCommand = ''
+        mkdir -p $out/bin
+        ln -s ${pkgs.firefox-devedition}/bin/firefox $out/bin/firefox-devedition
+      '';
     };
   };
 
@@ -112,6 +119,7 @@ in {
         ports = [ "27017:27017" ];
         user = "995:994";
         volumes = [ "/data/mongodb:/data/db" "/tmp:/tmp" ];
+        extraOptions = [ "--ulimit=nofile=26677:46677" "--ulimit=nproc=65535" ];
       };
     };
   };
@@ -265,7 +273,7 @@ in {
     fnott
     wdisplays
     libsForQt5.kwalletmanager
-    firefox-devedition-bin
+    my-firefox-dev
     alacritty
     slack
     pavucontrol
