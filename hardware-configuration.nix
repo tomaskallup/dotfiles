@@ -12,7 +12,7 @@
   boot.initrd.kernelModules = [ "dm-snapshot" ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
-  boot.kernelParams = [ "mem_sleep_default=deep" ];
+  boot.kernelParams = [ "mem_sleep_default=deep" "psi=1" ];
   boot.extraModprobeConfig = ''
     blacklist nouveau
     options nouveau modeset=0

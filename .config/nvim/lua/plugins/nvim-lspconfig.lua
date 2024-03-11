@@ -130,6 +130,10 @@ return {
     lspconfig.cssls.setup({
       capabilities = capabilities,
     })
+
+    lspconfig.prismals.setup({
+      capabilities = capabilities,
+    })
   end,
   dependencies = { 'creativenull/efmls-configs-nvim', 'folke/neodev.nvim' },
 }

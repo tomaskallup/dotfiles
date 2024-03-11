@@ -38,21 +38,25 @@ let
       datadir = "${schema}/share/gsettings-schemas/${schema.name}";
     in ''
       export XDG_DATA_DIRS=${datadir}:$XDG_DATA_DIRS
+      dconf write /org/gnome/desktop/interface/gtk-theme "'Adwaita-dark'"
       gnome_schema=org.gnome.desktop.interface
-      gsettings set $gnome_schema gtk-theme 'Dracula'
+      gsettings set $gnome_schema gtk-theme 'Adwaita-dark'
     '';
   };
+
+  unstable = import <unstable> { config = { allowUnfree = true; }; };
 
   # Use nix-prefetch-github tomaskallup dwl to get new sha
   dwl-custom-source = pkgs.fetchFromGitHub {
     owner = "tomaskallup";
     repo = "dwl";
-    rev = "main";
-    hash = "sha256-WCAAGpGIW1p1UhIWJTQ/WuM+XpCslW7TEHxibI4B8sc=";
+    # rev = "main";
+    # hash = "sha256-7qdNIt5AT8k0FSF0y+Pj2wakCTR3jUHpuGHvr0u29U4=";
+    rev = "4367e70fe3fe4dfa2ec1eca4d1a87349cfe17fc9";
+    hash = "sha256-3uRXP4lJwUwfKtqxlLZhve0DzLwGSGx4z5VaPbV7H6M=";
   };
 
-  dwl-custom = (pkgs.callPackage "${dwl-custom-source}/dwl-custom.nix" {});
-  unstable = import <unstable> { config = { allowUnfree = true; }; };
+  dwl-custom = (pkgs.callPackage "${dwl-custom-source}/dwl-custom.nix" { wlroots_0_17 = unstable.wlroots_0_17; });
 
 in {
   imports =
@@ -61,6 +65,7 @@ in {
       <home-manager/nixos>
     ];
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.android_sdk.accept_license = true;
   nixpkgs.config.packageOverrides = pkgs: {
     nur = import (builtins.fetchTarball "https://github.com/nix-community/NUR/archive/master.tar.gz") {
       inherit pkgs;
@@ -70,7 +75,7 @@ in {
       config.allowUnfree = true;
     };
     my-firefox-dev = pkgs.stdenv.mkDerivation {
-      name = "firefox-esr";
+      name = "firefox-devedition";
       buildCommand = ''
         mkdir -p $out/bin
         ln -s ${pkgs.firefox-devedition}/bin/firefox $out/bin/firefox-devedition
@@ -99,6 +104,8 @@ in {
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 
+  # Enable waydroid
+  virtualisation.waydroid.enable = true;
   # Enable docker
   virtualisation.docker = {
     enable = true;
@@ -173,6 +180,8 @@ in {
     enable = true;
     enableCompletion = false;
   };
+  programs.adb.enable = true;
+
   services.mongodb = {
     enable = false;
     dbpath = "/data/mongodb";
@@ -201,6 +210,7 @@ in {
     XDG_CURRENT_DESKTOP = "sway"; 
     EDITOR = "nvim";
     NIXOS_OZONE_WL = "1";
+    GTK_THEME = "Adwaita-dark";
   };
   environment.etc = {
     "wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
@@ -279,6 +289,7 @@ in {
     pavucontrol
     spotify
     gimp
+    inkscape
     vlc
     winbox
 
@@ -304,6 +315,7 @@ in {
     mongosh
     playerctl
     kanshi
+    pciutils
     (ranger.overrideAttrs (r: {
       preConfigure = r.preConfigure + ''
         # Fix typescript files not being reported correctly
@@ -327,8 +339,9 @@ in {
     # GUI Misc (themes, fonts, scripts etc)
     wayland
     dwl-custom
-    dracula-theme # gtk theme
+    gnome.gnome-themes-extra # gtk theme
     gnome3.adwaita-icon-theme  # default gnome cursors 
+    gnome.adwaita-icon-theme  # default gnome cursors 
     dbus-sway-environment
     configure-gtk
     font-awesome
@@ -387,7 +400,7 @@ in {
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.armeeh = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "audio" "video" "input" "network" "networkmanager" "docker" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "audio" "video" "input" "network" "networkmanager" "docker" "adbusers" ];
   };
   users.groups.mongodb = {
     gid = 994;
@@ -458,4 +471,7 @@ in {
   ];
 
   services.udev.extraRules = '''';
+  services.udev.packages = with pkgs; [
+    android-udev-rules
+  ];
 }

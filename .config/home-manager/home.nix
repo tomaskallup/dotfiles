@@ -41,6 +41,7 @@ in {
     unstable.nodejs_20
     unstable.nodePackages.typescript-language-server
     unstable.nodePackages.peerflix
+    unstable.nodePackages."@prisma/language-server"
     unstable.eslint_d
     unstable.prettierd
     unstable.stylua
