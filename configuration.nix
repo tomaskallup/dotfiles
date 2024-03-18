@@ -316,25 +316,15 @@ in {
     playerctl
     kanshi
     pciutils
-    (ranger.overrideAttrs (r: {
-      preConfigure = r.preConfigure + ''
-        # Fix typescript files not being reported correctly
-        substituteInPlace ranger/data/scope.sh \
-          --replace 'text/* | */xml)' \
-                    'text/* | */xml | JavaScript* | */javascript)'
-
-        # Fix typescript files not being opened in editor
-        substituteInPlace ranger/config/rifle.conf \
-          --replace '!mime ^text, label editor, ext xml|json|csv|tex|py|pl|rb|js|sh|php = ''${VISUAL:-$EDITOR} -- "$@"' \
-                    '!mime ^text, label editor, ext xml|json|csv|tex|py|pl|rb|js|sh|php|ts|tsx = ''${VISUAL:-$EDITOR} -- "$@"'
-      '';
-    }))
+    ranger
     kwalletcli # KDE wallet for 1password
     libsForQt5.kwallet
     tmux
     udisks
     nur.repos."999eagle".swayaudioidleinhibit # Make sure idle inhibitor is activated if audio is playing
     highlight
+    imagemagick_light
+    file
 
     # GUI Misc (themes, fonts, scripts etc)
     wayland
@@ -357,7 +347,8 @@ in {
 
   # Fonts
   fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "Iosevka" "IosevkaTerm" ]; })
+    (nerdfonts.override { fonts = [ "Iosevka" "IosevkaTerm" "NerdFontsSymbolsOnly" ]; })
+    iosevka
     noto-fonts-emoji
     symbola
     unifont
