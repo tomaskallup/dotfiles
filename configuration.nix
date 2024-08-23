@@ -52,11 +52,11 @@ let
     repo = "dwl";
     # rev = "main";
     # hash = "sha256-7qdNIt5AT8k0FSF0y+Pj2wakCTR3jUHpuGHvr0u29U4=";
-    rev = "4367e70fe3fe4dfa2ec1eca4d1a87349cfe17fc9";
-    hash = "sha256-3uRXP4lJwUwfKtqxlLZhve0DzLwGSGx4z5VaPbV7H6M=";
+    rev = "clean";
+    hash = "sha256-MNAgTzjmBtdp5VYUb1+zQfrjax0qH1iwR07pdGYTJMI=";
   };
 
-  dwl-custom = (pkgs.callPackage "${dwl-custom-source}/dwl-custom.nix" { wlroots_0_17 = unstable.wlroots_0_17; });
+  dwl-custom = (unstable.callPackage "${dwl-custom-source}/dwl-custom.nix" {});
 
 in {
   imports =
@@ -74,13 +74,6 @@ in {
       inherit pkgs;
       config.allowUnfree = true;
     };
-    my-firefox-dev = pkgs.stdenv.mkDerivation {
-      name = "firefox-devedition";
-      buildCommand = ''
-        mkdir -p $out/bin
-        ln -s ${pkgs.firefox-devedition}/bin/firefox $out/bin/firefox-devedition
-      '';
-    };
   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -97,7 +90,7 @@ in {
       allowDiscards = true;
     };
   };
-  boot.kernelPackages = pkgs.linuxPackages_lqx;
+  # boot.kernelPackages = pkgs.linuxPackages_lqx;
 
   networking.hostName = "malus-nixus"; # Define your hostname.
   # Pick only one of the below networking options.
@@ -181,6 +174,10 @@ in {
     enableCompletion = false;
   };
   programs.adb.enable = true;
+  programs.winbox = {
+    enable = true;
+    openFirewall = true;
+  };
 
   services.mongodb = {
     enable = false;
@@ -256,6 +253,9 @@ in {
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   };
 
+  # Enable manpages for libs
+  documentation.dev.enable = true;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = (with pkgs; [
@@ -269,7 +269,13 @@ in {
     xorg.xcbutilwm
     libva
     wlroots
+    hunspell
+    hunspellDicts.cs_CZ
+    hunspellDicts.en_US
     shared-mime-info
+    lsof
+    man-pages
+    man-pages-posix
 
     # Compilation tools
     gcc
@@ -283,7 +289,7 @@ in {
     fnott
     wdisplays
     libsForQt5.kwalletmanager
-    my-firefox-dev
+    firefox-devedition
     alacritty
     slack
     pavucontrol
@@ -291,11 +297,13 @@ in {
     gimp
     inkscape
     vlc
-    winbox
+    libreoffice-qt
+    ungoogled-chromium
 
     # CLI Tools
     wl-clipboard
     wl-clip-persist
+    wl-clipboard-x11
     wlr-randr
     curl
     which
@@ -325,6 +333,7 @@ in {
     highlight
     imagemagick_light
     file
+    httpie
 
     # GUI Misc (themes, fonts, scripts etc)
     wayland
@@ -341,6 +350,7 @@ in {
     neovim
     greetd.tuigreet
     udiskie
+    wineWowPackages.waylandFull
   ]);
   environment.pathsToLink = [ "/share/zsh" ];
   environment.shells = with pkgs; [ zsh ];
@@ -368,7 +378,7 @@ in {
   };
   services.avahi = {
     enable = true;
-    nssmdns = true;
+    nssmdns4 = true;
   };
 
   # Enable sound.
@@ -459,6 +469,45 @@ in {
         }
       ];
     }
+  ];
+
+  security.pki.certificates = [
+    ''
+Brightdata/Luminati
+-----BEGIN CERTIFICATE-----
+MIIFozCCA4ugAwIBAgIJAPnnIqmvvTArMA0GCSqGSIb3DQEBBQUAMD8xCzAJBgNV
+BAYTAklMMQswCQYDVQQIEwJJTDENMAsGA1UEChMESG9sYTEUMBIGA1UEAxMLbHVt
+aW5hdGkuaW8wHhcNMTYwOTI3MTQyODM4WhcNMjYwOTI1MTQyODM4WjA/MQswCQYD
+VQQGEwJJTDELMAkGA1UECBMCSUwxDTALBgNVBAoTBEhvbGExFDASBgNVBAMTC2x1
+bWluYXRpLmlvMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAtiqw0DuX
+g5g7BC+Cr7mZvgXB7CsJ10YFb2xwoDZlHHJ8G0KEMUeNiY9EjPR8ZIHlnjGJehsW
+PUvJeSAoDnT+fh4udWyUJ3VSqDTyGpu4DpfLBwaaZP/fq45UeR0oLs3ZJd6joDss
+AjJdQbdBPJj/57MjwbF+jddP6qm9XbCWjYzl1uxdMVjloetyRUgkhkh2ALp/VtK8
+hUj/XgvD/Y1souKYs5DKayJTn+GM6MlSOUBQ0+b8yUbDb/9vjbHlX4pZ8gbgSEFf
+xUV49Sxd6EhRXzFw4TERQVut0cgojmRmrgXXwc4kJi0Uvtc6tV/hJeH2yRS84Ehg
+feY5dcJVc69ILYfGrNmwbFvf5aHZPWFG0kIcy9iMMk+3wSUaBP+FAYyd0i+PJTxy
+5Jfmhs6BHowuEr0zgL+xge+/RCEbVUPvA6w9DWYbpqckZUh9sPga3JcHjaHGs6Cz
+dnjEShgmlBm0DL6JMumLWFJrjztsm56Huuai0F5pwyrsyq8fbK6Sp18sq5/vH3Vy
+t2XAj4EIFvpWHZjuocCe5/5vAbkSXjQ5HEIS+SyVhlFriCy5Mf3fTyMFqwm3tbZv
+jEooumi0/9F2WvisUgheC1uatZ8M+Pzi+Kp3x2SSS992KWs0M35GEstiB09RkNHe
+GItI6qxqY/Npw5u6lBE6Z28ISwvuet1a4vMCAwEAAaOBoTCBnjAdBgNVHQ4EFgQU
+Wq7PsMnq2tuDhTV0oUW4jjzvLTcwbwYDVR0jBGgwZoAUWq7PsMnq2tuDhTV0oUW4
+jjzvLTehQ6RBMD8xCzAJBgNVBAYTAklMMQswCQYDVQQIEwJJTDENMAsGA1UEChME
+SG9sYTEUMBIGA1UEAxMLbHVtaW5hdGkuaW+CCQD55yKpr70wKzAMBgNVHRMEBTAD
+AQH/MA0GCSqGSIb3DQEBBQUAA4ICAQA3oT4lrUErSqXjQtDUINo62KcJWs4kjEd8
+qXZdl/HVim06nOG6DFZCSh8JngFi4MFmSzGlBGxe1pXaYArtekfLWmhwoVoJiiaA
+DAAPItcZNlA9zIORyLZlrXlIuP5xzsb9PbnNWhd9xJHksHGoHDPHAW/KI/GJdjQv
+uuCyObvv1IgGvfHbv4lXGCwQuU0OBGXv1kfZtAqUS+ei5zkK+nY0qc3L3Ce+Ow6h
+/haDe0FDoT7zkwnEHu/ExCGSR3lNnyBAewlPVMzbJznuPMU3FFA3MHT7IcHxJWff
+r8jOXo3qXWqd+T2oDO02KUR2ZVolI8FGx6yIKfLwWnj+eR2dfdMx0tUX4F6mRi4N
+zGmhhIIHtViAMf59tBL7az26C8DGfX0p4oECpKtc86u5bYTbRZ1xrf6t/wFqqgB/
+RVqn9IhSfXNZtxBn8G0odR8sPIiBxJKvkLMDKoAEeErwd0yqnr8FplskFuPn0FY5
+N7n7dj5cHoSUtSAkM6bHCFY+XVtUoy6xisTAobajHvU3e2cDVKizC/ocUbHbTJgh
+nevnzyTtKL2w820PDmI7plFN3wR3epd4kTAP5KT196Pjwjg+Dqgt2OnGAafKr+Qr
+o2cdIF5MbULVkux4RKzpNKaoDtrnvC1jROM5s1R0Lb96dQcS/VwmyX22lKdbbY9F
+ij5GZar9JA==
+-----END CERTIFICATE-----
+    ''
   ];
 
   services.udev.extraRules = '''';

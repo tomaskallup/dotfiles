@@ -36,7 +36,7 @@ in {
     # (pkgs.writeShellScriptBin "my-hello" ''
     #   echo "Hello, ${config.home.username}!"
     # '')
-    efm-langserver
+    unstable.efm-langserver
     jq
     unstable.nodejs_20
     unstable.nodePackages.typescript-language-server
@@ -49,11 +49,12 @@ in {
     unstable.nil
     unstable.atool
     unstable.unzip
-    unstable.codeium
+    unstable.zip
+    # unstable.codeium
     unstable.cmake-language-server
     unstable.ccls
     unstable.clang-tools
-    unstable.vscode-langservers-extracted
+    vscode-langservers-extracted
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -88,12 +89,25 @@ in {
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  gtk.cursorTheme = {
+    package = pkgs.gnome.adwaita-icon-theme;
+    name = "Adwaita-dark";
+  };
+
+  home.pointerCursor = {
+    package = pkgs.gnome.adwaita-icon-theme;
+    name = "Adwaita-dark";
+
+    gtk.enable = true;
+    x11.enable = true;
+  };
+
   # Setup ZSH
   programs.zsh = {
     enable = true;
     autocd = true;
     enableVteIntegration = true;
-    enableAutosuggestions = true;
+    autosuggestion.enable = true;
     enableCompletion = true;
     shellAliases = {
       rm = "rm -i";
@@ -101,10 +115,11 @@ in {
       y = "yarn";
       g = "git";
       yS = "jq -r '.scripts | keys | .[]' < package.json | fzy | xargs -r yarn";
-      cleanservices = "rm -rf packages/*/dist(N) packages/*/tsconfig.build.tsbuildinfo(N) services/*/build(N) services/*/tsconfig.build.tsbuildinfo(N) functions/*/build(N) functions/*/tsconfig.build.tsbuildinfo(N) && yarn && yarn lerna run build --concurrency 8";
+      cleanservices = "rm -rf packages/*/dist(N) packages/*/tsconfig.build.tsbuildinfo(N) services/*/build(N) services/*/tsconfig.build.tsbuildinfo(N) functions/*/build(N) functions/*/tsconfig.build.tsbuildinfo(N) && yarn && yarn lerna run build --concurrency 2";
       e = "$EDITOR";
-      fzfe = "git ls-files | fzy | xargs $EDITOR";
+      fzfe = "git ls-files --cached --modified --other --exclude-standard | fzy | xargs $EDITOR";
       btcn = "bluetoothctl devices | fzy | sed -e 's/Device //' -e 's/ .*//' | xargs bluetoothctl connect ";
+      repo = "cd `realpath ~/Projects/*/*(/) | fzy`";
     };
     initExtraFirst = ''
       (( ''${+commands[direnv]} )) && emulate zsh -c "$(direnv export zsh)"
@@ -130,6 +145,8 @@ in {
       bindkey "^[OA" up-line-or-beginning-search # Up
       bindkey "^[[B" down-line-or-beginning-search # Down
       bindkey "^[OB" down-line-or-beginning-search # Down
+      bindkey "^[[1;5C" forward-word
+      bindkey "^[[1;5D" backward-word
 
       autoload -U edit-command-line
       zle -N edit-command-line
@@ -198,6 +215,7 @@ in {
     defaultCacheTtlSsh = 28800;
     maxCacheTtl = 28800;
     maxCacheTtlSsh = 28800;
+    pinentryPackage = pkgs.pinentry-gtk2;
   };
 
   programs.tmux = {
@@ -223,12 +241,13 @@ in {
       "mergetool \"nvimdiff\"" = { cmd = "nvim -d \"$LOCAL\" \"$REMOTE\" \"$MERGED\" -c 'wincmd w' -c 'wincmd w' -c 'wincmd J'"; };
       push = { autoSetupRemote = true; };
       diff = { algorithm = "patience"; };
+      init = { defaultBranch = "master"; };
     };
 
     aliases = {
-      bcleanup = "!git fetch --prune && git branch --merged | grep -E -v \"(^\\*|master|develop|staging)\" > /tmp/git-branch-cleanup && $EDITOR /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git branch -d";
+      bcleanup = "!git fetch --prune && git branch --merged | grep -E -v \"(^\\*|\\+|master|develop|staging)\" > /tmp/git-branch-cleanup && $EDITOR /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git branch -d";
       pbcleanup = "!git fetch --prune && git branch -vv | grep ': gone]' | sed \"s/^\\s\\+\\([^ ]\\+\\).*/\\1/\" | grep -E -v \"(^\\*|master|develop|staging)\" > /tmp/git-branch-cleanup && $EDITOR /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git branch -D";
-      rbcleanup = "!git fetch --prune && git branch -r --merged | grep -E -v \"(^\\*|master|develop|staging)\" > /tmp/git-branch-cleanup && $EDITOR /tmp/git-branch-cleanup && sed -i \"\" \"s/origin\\///\" /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git push origin --delete";
+      rbcleanup = "!git fetch --prune && git branch -r --merged | grep -E -v \"(^\\*|\\+|master|develop|staging)\" > /tmp/git-branch-cleanup && $EDITOR /tmp/git-branch-cleanup && sed -i \"\" \"s/origin\\///\" /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git push origin --delete";
       a = "add";
       ac = "!git diff --name-only --diff-filter=U | xargs git add";
       ap = "add -p";

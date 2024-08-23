@@ -53,6 +53,11 @@ return {
           '--smart-case',
           '--hidden',
         },
+        mappings = {
+          i = {
+            ['<c-s>'] = 'select_vertical'
+          }
+        }
       },
       pickers = { buffers = { mappings = { i = { ['<c-d>'] = 'delete_buffer' } } } },
     })

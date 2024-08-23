@@ -12,6 +12,7 @@ return {
     'L3MON4D3/LuaSnip',
     {
       'Exafunction/codeium.nvim',
+      enabled = false,
       dependencies = {
         'nvim-lua/plenary.nvim',
       },
@@ -24,12 +25,14 @@ return {
       end,
     },
     'onsails/lspkind.nvim',
+    --[[ { 'supermaven-inc/supermaven-nvim', opts = {
+      disable_keymaps = true,
+      disable_inline_completion = true
+    } }, ]]
   },
   config = function()
     local cmp = require('cmp')
     local luasnip = require('luasnip')
-    local compare = require('cmp.config.compare')
-    local cmp_buffer = require('cmp_buffer')
 
     cmp.setup({
       snippet = {
@@ -63,11 +66,11 @@ return {
         end, { 'i', 's' }),
       }),
       sources = cmp.config.sources({
-        { name = 'nvim_lsp' },
         { name = 'luasnip' },
         { name = 'nvim_lsp_signature_help' },
         { name = 'path' },
-        { name = 'codeium' },
+        -- { name = 'codeium' },
+        -- { name = 'supermaven' },
         {
           name = 'buffer',
           option = {
@@ -80,9 +83,11 @@ return {
               return vim.tbl_keys(bufs)
             end,
           },
+          group_index = 2,
         },
+        { name = 'nvim_lsp', group_index = 1 },
       }),
-      sorting = {
+      --[[ sorting = {
         priority_weight = 1,
         comparators = {
           compare.exact,
@@ -93,7 +98,7 @@ return {
           compare.score,
           compare.recently_used,
         },
-      },
+      }, ]]
       formatting = {
         expandable_indicator = true,
         fields = { 'abbr', 'kind', 'menu' },
@@ -101,7 +106,7 @@ return {
           mode = 'symbol',
           maxwidth = 50,
           ellipsis_char = '...',
-          symbol_map = { Codeium = '' },
+          symbol_map = { Codeium = '', Supermaven = '' },
         }),
       },
     })
