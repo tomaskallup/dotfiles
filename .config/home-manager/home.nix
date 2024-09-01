@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }: session:
 
 let
   unstable = import <unstable> { config = { allowUnfree = true; }; };
@@ -70,7 +70,20 @@ in {
     #   org.gradle.console=verbose
     #   org.gradle.daemon.idletimeout=3600000
     # '';
-  };
+    ".gtkrc-2.0".text = ''
+      gtk-cursor-theme-name="Adwaita"
+    '';
+    ".config/gtk-3.0/settings.ini".text = ''
+      [Settings]
+      gtk-cursor-theme-name=Adwaita
+    '';
+  } // (if session == "dwm" then {
+    ".xinitrc".text = ''
+      xrandr --auto
+      [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
+      exec dwm
+    '';
+  } else {});
 
   # You can also manage environment variables but you will have to manually
   # source
@@ -82,21 +95,19 @@ in {
   #  /etc/profiles/per-user/armeeh/etc/profile.d/hm-session-vars.sh
   #
   # if you don't want to manage your shell through Home Manager.
-  home.sessionVariables = {
+  home.sessionVariables = if session == "dwm" then {
     # EDITOR = "emacs";
-  };
+    XCURSOR_THEME="Adwaita";
+    XCURSOR_SIZE="16";
+  } else {};
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  gtk.cursorTheme = {
-    package = pkgs.gnome.adwaita-icon-theme;
-    name = "Adwaita-dark";
-  };
-
   home.pointerCursor = {
     package = pkgs.gnome.adwaita-icon-theme;
-    name = "Adwaita-dark";
+    name = "Adwaita";
+    size = 16;
 
     gtk.enable = true;
     x11.enable = true;
@@ -160,6 +171,17 @@ in {
         user_and_pass=''${''${''${1#*://}%%@*}:/:}
         parts=(''${(@s/:/)user_and_pass})
         MONGODB_USERNAME=$parts[1] MONGODB_PASSWORD=$parts[2] ''${@:2}
+      }
+
+      local term_title () { print -n "\e]0;''${(j: :q)@}\a" }
+      precmd () {
+        local DIR="''$(print -P '[%c]')"
+        term_title "$DIR" "zsh"
+      }
+      preexec () {
+        local DIR="''$(print -P '[%c]')"
+        local CMD="''${(j:\n:)''${(f)1}}"
+        term_title "''$DIR" "''$CMD"
       }
 
       include '/home/armeeh/.env'
@@ -226,6 +248,11 @@ in {
     terminal = "screen-256color";
   };
 
+  services.autorandr.enable = false;
+  programs.autorandr = {
+    enable = false;
+  };
+
   programs.git = {
     enable = true;
 
@@ -286,14 +313,85 @@ in {
         After="graphical-session-pre.target";
       };
     };
+    dwm-session = {
+      Unit = {
+        Description="dwm session";
+        Documentation="man:systemd.special(7)";
+        BindsTo="graphical-session.target";
+        Wants="graphical-session-pre.target";
+        After="graphical-session-pre.target";
+      };
+    };
   };
-  xdg.dataFile."dbus-1/services/fnott.service".text = ''
+  xdg.dataFile."dbus-1/services/fnott.service" = lib.mkIf (session == "dwl") { text = ''
       [D-BUS Service]
       Name=org.freedesktop.Notifications
       Exec=${pkgs.fnott}/bin/fnott
       SystemdService=fnott.service
     '';
+  };
+  xdg.dataFile."dbus-1/services/dunst.service" = lib.mkIf (session == "dwm") { text = ''
+      [D-BUS Service]
+      Name=org.freedesktop.Notifications
+      Exec=${pkgs.dunst}/bin/dunst
+      SystemdService=dunst.service
+    '';
+  };
   systemd.user.services = {
+    ### Generic
+    ## Bluetooth management
+    blueman = {
+      Unit = {
+        Description="Blueman is a GTK+ Bluetooth Manager";
+        Documentation="man:blueman-applet(1)";
+        PartOf="graphical-session.target";
+      };
+
+      Service = {
+        Type="simple";
+        ExecStart="${pkgs.blueman}/bin/blueman-applet";
+      };
+
+      Install.WantedBy = [ "dwl-session.target" "dwm-session.target" ];
+    };
+
+    ## Music/video player controller
+    playerctl = {
+      Unit = {
+        Description="mpris media player command-line controller";
+        Documentation="man:playerctl(1)";
+        PartOf="graphical-session.target";
+      };
+
+      Service = {
+        Type="simple";
+        ExecStart="${pkgs.playerctl}/bin/playerctld daemon";
+      };
+
+      Install.WantedBy = [ "dwl-session.target" "dwm-session.target" ];
+    };
+
+    ## Udiskie for automounting drives
+    udiskie = {
+      Unit = {
+        Description="Automounter for removable media ";
+        Documentation="https://github.com/coldfix/udiskie/wiki";
+        PartOf="graphical-session.target";
+      };
+
+      Service = {
+        Type="simple";
+        ExecStart=''
+          ${pkgs.udiskie}/bin/udiskie -At
+        '';
+      };
+
+      Install.WantedBy = [ "dwl-session.target" "dwm-session.target"];
+    };
+  } // (if session == "dwl" then 
+      {
+
+    ### Wayland
     ## Notification daemon
     fnott = {
       Unit = {
@@ -326,36 +424,6 @@ in {
       Install.WantedBy = [ "dwl-session.target" ];
     };
 
-    ## Bluetooth management
-    blueman = {
-      Unit = {
-        Description="Blueman is a GTK+ Bluetooth Manager";
-        Documentation="man:blueman-applet(1)";
-        PartOf="graphical-session.target";
-      };
-
-      Service = {
-        Type="simple";
-        ExecStart="${pkgs.blueman}/bin/blueman-applet";
-      };
-    };
-
-    ## Music/video player controller
-    playerctl = {
-      Unit = {
-        Description="mpris media player command-line controller";
-        Documentation="man:playerctl(1)";
-        PartOf="graphical-session.target";
-      };
-
-      Service = {
-        Type="simple";
-        ExecStart="${pkgs.playerctl}/bin/playerctld daemon";
-      };
-
-      Install.WantedBy = [ "dwl-session.target" ];
-    };
-
     ## Wayland bar
     waybar = {
       Unit = {
@@ -366,6 +434,9 @@ in {
 
       Service = {
         Type="simple";
+        Environment = {
+          PATH="$PATH:${lib.makeBinPath [ pkgs.gawk pkgs.bash pkgs.inotifytools ]}";
+        };
         ExecStart="${pkgs.waybar}/bin/waybar";
       };
 
@@ -387,24 +458,6 @@ in {
             timeout 600 'lock.sh' \
             timeout 1200 'systemctl suspend-then-hibernate' \
             before-sleep 'lock.sh'
-        '';
-      };
-
-      Install.WantedBy = [ "dwl-session.target" ];
-    };
-
-    ## Udiskie for automounting drives
-    udiskie = {
-      Unit = {
-        Description="Automounter for removable media ";
-        Documentation="https://github.com/coldfix/udiskie/wiki";
-        PartOf="graphical-session.target";
-      };
-
-      Service = {
-        Type="simple";
-        ExecStart=''
-          ${pkgs.udiskie}/bin/udiskie -At
         '';
       };
 
@@ -448,5 +501,58 @@ in {
 
       Install.WantedBy = [ "dwl-session.target" ];
     };
-  };
+
+    } else {
+
+      ### Xorg
+      ## Xidlehook for automatic locking
+      xidlehook = {
+        Unit = {
+          Description="Idle manager for X11";
+          Documentation="man:xidlehook(1)";
+          PartOf="graphical-session.target";
+        };
+
+        Service = {
+          Type="simple";
+          Environment = [
+            "DISPLAY=:0"
+            "XIDLEHOOK_SOCK=%t/xidlehook.socket"
+          ];
+          ExecStart=''
+            ${pkgs.xidlehook}/bin/xidlehook \
+            --not-when-fullscreen \
+            --not-when-audio \
+            --timer 600 \
+              "xrandr --output $(xrandr | grep primary | awk '{print $1}') --brightness .1" \
+              "xrandr --output $(xrandr | grep primary | awk '{print $1}') --brightness --brightness 1" \
+            --timer 15 \
+              "xrandr --output $(xrandr | grep primary | awk '{print $1}') --brightness --brightness 1; lock-xorg.sh" \
+              "" \
+            --timer 3600 \
+              "systemctl suspend-then-hibernate" \
+              ""
+          '';
+        };
+
+        Install.WantedBy = [ "dwm-session.target" ];
+      };
+
+      ## Notification daemon
+      dunst = {
+        Unit = {
+          Description="Dunst notification daemon";
+          Documentation="man:dunst(1)";
+          PartOf="graphical-session.target";
+          After="graphical-session-pre.target";
+        };
+
+        Service = {
+          Type="dbus";
+          BusName="org.freedesktop.Notifications";
+          ExecStart="${pkgs.dunst}/bin/dunst";
+        };
+      };
+
+    });
 }

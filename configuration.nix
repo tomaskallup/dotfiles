@@ -2,9 +2,10 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running `nixos-help`).
 
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 let
+  session = "dwm";
   # bash script to let dbus know about important env variables and
   # propagate them to relevent services run at the end of sway config
   # see
@@ -55,6 +56,10 @@ let
     rev = "clean";
     hash = "sha256-MNAgTzjmBtdp5VYUb1+zQfrjax0qH1iwR07pdGYTJMI=";
   };
+
+  dwm-custom = builtins.getFlake ("github:tomaskallup/dwm/clean");
+
+  dmenu-custom = builtins.getFlake ("github:tomaskallup/dmenu/clean");
 
   dwl-custom = (unstable.callPackage "${dwl-custom-source}/dwl-custom.nix" {});
 
@@ -123,6 +128,33 @@ in {
       };
     };
   };
+  systemd.services = {
+    "lock-before-sleep@armeeh" = {
+      unitConfig = {
+        Description="Lock before sleep";
+        Before="sleep.target";
+      };
+
+      path = with pkgs; [
+        xorg.xrandr
+        i3lock-fancy-rapid
+        gawk
+      ];
+
+      serviceConfig = {
+        User="%I";
+        Type="forking";
+        Environment = [
+          "DISPLAY=:0"
+        ];
+        ExecStart=''
+          ${dwm-custom.outputs.packages.${pkgs.system}.default}/bin/lock-xorg.sh
+        '';
+      };
+
+      wantedBy = ["sleep.target"];
+    };
+  };
 
   # Set your time zone.
   time.timeZone = "Europe/Prague";
@@ -146,7 +178,7 @@ in {
 
   # Greeter/DM
   services.greetd = {
-    enable = true;
+    enable = session == "dwl";
     settings = {
       default_session = {
         command = "${pkgs.greetd.tuigreet}/bin/tuigreet -c ${dwl-custom}/bin/start-dwl.sh";
@@ -173,7 +205,7 @@ in {
     enable = true;
     enableCompletion = false;
   };
-  programs.adb.enable = true;
+  programs.adb.enable = false;
   programs.winbox = {
     enable = true;
     openFirewall = true;
@@ -201,23 +233,17 @@ in {
 
   # Window server & related
   environment.sessionVariables = {
+    EDITOR = "nvim";
+    GTK_THEME = "Adwaita-dark";
+  } // (if session == "dwl" then {
     MOZ_ENABLE_WAYLAND = "1";
     QT_QPA_PLATFORM = "wayland";
-    # only needed for Sway
     XDG_CURRENT_DESKTOP = "sway"; 
-    EDITOR = "nvim";
     NIXOS_OZONE_WL = "1";
-    GTK_THEME = "Adwaita-dark";
-  };
+  } else {
+    VDPAU_DRIVER = "va_gl";
+  });
   environment.etc = {
-    "wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
-      bluez_monitor.properties = {
-        ["bluez5.enable-sbc-xq"] = true,
-        ["bluez5.enable-msbc"] = true,
-        ["bluez5.enable-hw-volume"] = true,
-        ["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
-      }
-    '';
     "firefox-test/policies/policies.json".text = ''
     {
       "policies": {
@@ -226,23 +252,32 @@ in {
       }
     }
     '';
-  };
-
+  } // ( if session == "dwl" then { "wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
+      bluez_monitor.properties = {
+        ["bluez5.enable-sbc-xq"] = true,
+        ["bluez5.enable-msbc"] = true,
+        ["bluez5.enable-hw-volume"] = true,
+        ["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
+      }
+    '';
+    } else {} );
 
   programs.light.enable = true;
-  programs.xwayland.enable = true;
-  programs.waybar.enable = true;
-  programs.dconf.enable = true;
+  programs.xwayland.enable = session == "dwl";
+  programs.waybar.enable = session == "dwl";
+  programs.dconf = {
+    enable = true;
+  };
   services.dbus.enable = true;
-  xdg.portal = {
+  xdg.portal = lib.mkIf (session == "dwl") {
     enable = true;
     wlr.enable = true;
     # gtk portal needed to make gtk apps happy
-    # extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    configPackages = [ pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-wlr ];
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    configPackages = [ pkgs.xdg-desktop-portal-gtk ] ++ (if session == "dwl" then [ pkgs.xdg-desktop-portal-wlr ] else []);
     config = {
       common = {
-        default = "wlr";
+        default = if session == "dwl" then "wlr" else "gtk";
       };
     };
   };
@@ -268,7 +303,6 @@ in {
     xorg.libxcb
     xorg.xcbutilwm
     libva
-    wlroots
     hunspell
     hunspellDicts.cs_CZ
     hunspellDicts.en_US
@@ -284,10 +318,6 @@ in {
     nix-prefetch-github
 
     # GUI Applications
-    bemenu
-    swaylock
-    fnott
-    wdisplays
     libsForQt5.kwalletmanager
     firefox-devedition
     alacritty
@@ -301,15 +331,10 @@ in {
     ungoogled-chromium
 
     # CLI Tools
-    wl-clipboard
-    wl-clip-persist
-    wl-clipboard-x11
-    wlr-randr
     curl
     which
     inotify-tools
     xdg-utils # for opening default programs when clicking links
-    swayidle
     cz-cli
     light
     diffutils
@@ -322,36 +347,55 @@ in {
     mongodb-tools
     mongosh
     playerctl
-    kanshi
     pciutils
     ranger
     kwalletcli # KDE wallet for 1password
     libsForQt5.kwallet
     tmux
     udisks
-    nur.repos."999eagle".swayaudioidleinhibit # Make sure idle inhibitor is activated if audio is playing
     highlight
     imagemagick_light
     file
     httpie
+    lm_sensors
 
     # GUI Misc (themes, fonts, scripts etc)
-    wayland
-    dwl-custom
     gnome.gnome-themes-extra # gtk theme
     gnome3.adwaita-icon-theme  # default gnome cursors 
     gnome.adwaita-icon-theme  # default gnome cursors 
-    dbus-sway-environment
-    configure-gtk
     font-awesome
     flameshot
     unstable.satty
-    waybar
     neovim
-    greetd.tuigreet
     udiskie
+    configure-gtk
+  ] ++ (if session == "dwl" then [
+    bemenu
+    dbus-sway-environment
+    dwl-custom
+    fnott
+    greetd.tuigreet
+    kanshi
+    nur.repos."999eagle".swayaudioidleinhibit # Make sure idle inhibitor is activated if audio is playing
+    swayidle
+    swaylock
+    wayland
+    wdisplays
     wineWowPackages.waylandFull
-  ]);
+    wl-clip-persist
+    wl-clipboard
+    wl-clipboard-x11
+    wlr-randr
+    wlroots
+  ] else [
+    dwm-custom.outputs.packages.${system}.default
+    dmenu-custom.outputs.packages.${system}.default
+    i3lock-fancy-rapid
+    xclip
+    xidlehook
+    xorg.xinit
+    wineWowPackages.full
+  ]));
   environment.pathsToLink = [ "/share/zsh" ];
   environment.shells = with pkgs; [ zsh ];
 
@@ -365,6 +409,8 @@ in {
   ];
   
   fonts.fontconfig = {
+    antialias = true;
+    hinting.enable = true;
     defaultFonts = {
       monospace = [ "IosevkaTerm Nerd Font" ];
       emoji = [ "Noto Fonts Emoji" ];
@@ -383,10 +429,24 @@ in {
 
   # Enable sound.
   sound.enable = true;
+  hardware.pulseaudio = {
+    enable = session == "dwm";
+    package = pkgs.pulseaudioFull;
+    /* configFile = pkgs.writeText "default.pa" ''
+      load-module module-bluetooth-policy
+      load-module module-bluetooth-discover
+      ## module fails to load with 
+      ##   module-bluez5-device.c: Failed to get device path from module arguments
+      ##   module.c: Failed to load module "module-bluez5-device" (argument: ""): initialization failed.
+      # load-module module-bluez5-device
+      # load-module module-bluez5-discover
+    ''; */
+
+  };
   services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    pulse.enable = true;
+    enable = session == "dwl";
+    alsa.enable = session == "dwl";
+    pulse.enable = session == "dwl";
   };
   # And bluetooth
   hardware.bluetooth = {
@@ -395,13 +455,123 @@ in {
   };
   services.blueman.enable = true;
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+  services.libinput = {
+    enable = session == "dwm";
+
+    # disabling touchpad acceleration
+    touchpad = {
+      accelProfile = "adaptive";
+      tapping = true;
+      clickMethod = "clickfinger";
+    };
+  };
+
+  services.xserver = {
+    enable = session == "dwm";
+    videoDrivers = ["modesetting"];
+    /* deviceSection = ''
+      Option "DRI" "2"
+      Option "TearFree" "true"
+    ''; */
+    excludePackages = with pkgs; [
+      xterm
+    ];
+    xkb.options = "compose:ralt";
+    displayManager.startx.enable = true;
+  };
+  services.autorandr = {
+    enable = session == "dwm";
+    profiles = {
+      laptop-only = {
+        config = {
+          eDP1 = {
+            enable = true;
+            primary = true;
+            mode = "1920x1080";
+          };
+          DP1 = {
+            enable = false;
+          };
+          VIRTUAL1 = {
+            enable = false;
+          };
+        };
+        fingerprint = {
+          eDP1="00ffffffffffff004d10ba1400000000161d0104a52213780ede50a3544c99260f505400000001010101010101010101010101010101ac3780a070383e403020350058c210000018000000000000000000000000000000000000000000fe004d57503154804c513135364d31000000000002410332001200000a010a202000d3";
+        };
+      };
+      work = {
+        config = {
+          eDP1 = {
+            enable = true;
+            primary = true;
+            mode = "1920x1080";
+            crtc = 0;
+            position = "0x0";
+            rate = "60";
+          };
+          DP1 = {
+            enable = true;
+            primary = false;
+            mode = "2560x1440";
+            crtc = 1;
+            position = "1920x0";
+            rate = "60";
+          };
+          DP2 = {
+            enable = false;
+          };
+          DP3 = {
+            enable = false;
+          };
+        };
+        fingerprint = {
+          DP1="00ffffffffffff00410c8fc1a10f00001d1d0103803c22782a67a1a5554da2270e5054bfef00d1c0b30095008180814081c0010101014dd000a0f0703e803020350055502100001aa36600a0f0701f803020350055502100001a000000fc0050484c203237364538560a2020000000fd0017501ea03c000a2020202020200171020333f14c9004031f1301125d5e5f606123090707830100006d030c001000387820006001020367d85dc401788003e30f000c565e00a0a0a029503020350055502100001e023a801871382d40582c450055502100001e011d007251d01e206e28550055502100001e4d6c80a070703e8030203a0055502100001a000000004e";
+          eDP1="00ffffffffffff004d10ba1400000000161d0104a52213780ede50a3544c99260f505400000001010101010101010101010101010101ac3780a070383e403020350058c210000018000000000000000000000000000000000000000000fe004d57503154804c513135364d31000000000002410332001200000a010a202000d3";
+        };
+      };
+      home = {
+        config = {
+          eDP1 = {
+            enable = true;
+            primary = true;
+            mode = "1920x1080";
+            crtc = 0;
+            position = "0x0";
+            rate = "60";
+          };
+          DP3 = {
+            enable = true;
+            primary = false;
+            mode = "2560x1440";
+            scale = {
+              method = "pixel";
+              x = 1920;
+              y = 1080;
+            };
+            crtc = 1;
+            position = "1920x0";
+            rate = "60";
+          };
+          DP1 = {
+            enable = false;
+          };
+          DP2 = {
+            enable = false;
+          };
+        };
+        fingerprint = {
+          DP3="00ffffffffffff0005e37928d0040000181d0103803e22782a08a5a2574fa2280f5054bfef00d1c0b30095008180814081c0010101014dd000a0f0703e80302035006d552100001aa36600a0f0701f80302035006d552100001a000000fc00553238373947360a2020202020000000fd0017501e8c3c000a2020202020200100020333f14c9004031f1301125d5e5f606123090707830100006d030c001000397820006001020367d85dc401788003e30f000c011d007251d01e206e2855006d552100001e8c0ad08a20e02d10103e96006d55210000184d6c80a070703e8030203a006d552100001aa36600a0f0701f80302035006d552100001a00000000ea";
+          eDP1="00ffffffffffff004d10ba1400000000161d0104a52213780ede50a3544c99260f505400000001010101010101010101010101010101ac3780a070383e403020350058c210000018000000000000000000000000000000000000000000fe004d57503154804c513135364d31000000000002410332001200000a010a202000d3";
+        };
+      };
+    };
+  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.armeeh = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "audio" "video" "input" "network" "networkmanager" "docker" "adbusers" ];
+    extraGroups = [ "wheel" "audio" "video" "input" "network" "networkmanager" "docker" "adbusers" "tty" "lp" ];
   };
   users.groups.mongodb = {
     gid = 994;
@@ -413,7 +583,7 @@ in {
     home = "/data/mongodb";
   };
   home-manager.users.armeeh = 
-    (import /home/armeeh/.config/home-manager/home.nix) pkgs;
+    (import /home/armeeh/.config/home-manager/home.nix) pkgs session;
   users.defaultUserShell = pkgs.zsh;
 
   # Some programs need SUID wrappers, can be configured further or are

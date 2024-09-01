@@ -1,0 +1,30 @@
+[colors.primary]
+background = "#1d1f21"
+foreground = "#c5c8c6"
+
+[font]
+builtin_box_drawing = true
+size = 12.0
+
+[font.normal]
+family = "monospace"
+
+[[keyboard.bindings]]
+action = "IncreaseFontSize"
+key = "Plus"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "DecreaseFontSize"
+key = "Minus"
+mods = "Control"
+
+[[keyboard.bindings]]
+Mods = "Control|Shift"
+action = "SpawnNewInstance"
+key = "Return"
+
+[window]
+decorations = "none"
+dynamic_title = true
+opacity = 0.9

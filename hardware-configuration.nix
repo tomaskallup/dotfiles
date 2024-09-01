@@ -10,7 +10,7 @@
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" "i915" ];
   boot.initrd.kernelModules = [ "dm-snapshot" ];
-  boot.kernelModules = [ "kvm-intel" ];
+  boot.kernelModules = [ "kvm-intel" "i915" ];
   boot.extraModulePackages = [ ];
   boot.kernelParams = [ "mem_sleep_default=deep" "psi=1" ];
   # suspend-then-hibernate
@@ -82,6 +82,11 @@
   services.thermald.enable = lib.mkDefault true;
   hardware.opengl.enable = true;
   hardware.opengl.extraPackages = with pkgs; [
+    vaapiIntel
+    libvdpau-va-gl
+    intel-media-driver
+  ];
+  hardware.opengl.extraPackages32 = with pkgs; [
     vaapiIntel
     libvdpau-va-gl
     intel-media-driver
