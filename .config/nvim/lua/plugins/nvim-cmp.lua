@@ -33,6 +33,7 @@ return {
   config = function()
     local cmp = require('cmp')
     local luasnip = require('luasnip')
+    local compare = cmp.config.compare;
 
     cmp.setup({
       snippet = {
@@ -66,9 +67,9 @@ return {
         end, { 'i', 's' }),
       }),
       sources = cmp.config.sources({
-        { name = 'luasnip' },
-        { name = 'nvim_lsp_signature_help' },
-        { name = 'path' },
+        { name = 'luasnip', priority = 3 },
+        { name = 'nvim_lsp_signature_help' , priority = 1},
+        { name = 'path',    priority = 4 },
         -- { name = 'codeium' },
         -- { name = 'supermaven' },
         {
@@ -83,22 +84,26 @@ return {
               return vim.tbl_keys(bufs)
             end,
           },
-          group_index = 2,
+          priority = 9,
         },
-        { name = 'nvim_lsp', group_index = 1 },
+        { name = 'nvim_lsp', priority = 10 },
       }),
-      --[[ sorting = {
-        priority_weight = 1,
+      sorting = {
+        priority_weight = 1.0,
         comparators = {
-          compare.exact,
-          function(...)
-            return cmp_buffer:compare_locality(...)
-          end,
-          compare.offset,
-          compare.score,
+          -- compare.score_offset, -- not good at all
+          compare.locality,
           compare.recently_used,
-        },
-      }, ]]
+          compare.score, -- based on :  score = score + ((#sources - (source_index - 1)) * sorting.priority_weight)
+          compare.offset,
+          compare.order,
+          -- compare.scopes, -- what?
+          -- compare.sort_text,
+          -- compare.exact,
+          -- compare.kind,
+          -- compare.length, -- useless
+        }
+      },
       formatting = {
         expandable_indicator = true,
         fields = { 'abbr', 'kind', 'menu' },

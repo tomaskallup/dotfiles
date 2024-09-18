@@ -81,6 +81,7 @@ in {
     };
   };
 
+  nix.settings.trusted-users = [ "armeeh" ];
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nix.settings.cores = 8;
 
@@ -349,7 +350,8 @@ in {
     playerctl
     pciutils
     ranger
-    kwalletcli # KDE wallet for 1password
+    kwallet-pam
+    kwalletcli
     libsForQt5.kwallet
     tmux
     udisks
@@ -367,6 +369,7 @@ in {
     flameshot
     unstable.satty
     neovim
+    helix
     udiskie
     configure-gtk
   ] ++ (if session == "dwl" then [
@@ -395,6 +398,9 @@ in {
     xidlehook
     xorg.xinit
     wineWowPackages.full
+    glxinfo
+    upower
+    dunst
   ]));
   environment.pathsToLink = [ "/share/zsh" ];
   environment.shells = with pkgs; [ zsh ];
@@ -469,10 +475,10 @@ in {
   services.xserver = {
     enable = session == "dwm";
     videoDrivers = ["modesetting"];
-    /* deviceSection = ''
-      Option "DRI" "2"
+    # videoDrivers = ["intel"];
+    deviceSection = ''
       Option "TearFree" "true"
-    ''; */
+    '';
     excludePackages = with pkgs; [
       xterm
     ];
@@ -484,12 +490,18 @@ in {
     profiles = {
       laptop-only = {
         config = {
-          eDP1 = {
+          eDP-1 = {
             enable = true;
             primary = true;
             mode = "1920x1080";
           };
-          DP1 = {
+          DP-1 = {
+            enable = false;
+          };
+          DP-2 = {
+            enable = false;
+          };
+          DP-3 = {
             enable = false;
           };
           VIRTUAL1 = {
@@ -497,12 +509,12 @@ in {
           };
         };
         fingerprint = {
-          eDP1="00ffffffffffff004d10ba1400000000161d0104a52213780ede50a3544c99260f505400000001010101010101010101010101010101ac3780a070383e403020350058c210000018000000000000000000000000000000000000000000fe004d57503154804c513135364d31000000000002410332001200000a010a202000d3";
+          eDP-1="00ffffffffffff004d10ba1400000000161d0104a52213780ede50a3544c99260f505400000001010101010101010101010101010101ac3780a070383e403020350058c210000018000000000000000000000000000000000000000000fe004d57503154804c513135364d31000000000002410332001200000a010a202000d3";
         };
       };
       work = {
         config = {
-          eDP1 = {
+          eDP-1 = {
             enable = true;
             primary = true;
             mode = "1920x1080";
@@ -510,7 +522,7 @@ in {
             position = "0x0";
             rate = "60";
           };
-          DP1 = {
+          DP-1 = {
             enable = true;
             primary = false;
             mode = "2560x1440";
@@ -518,21 +530,21 @@ in {
             position = "1920x0";
             rate = "60";
           };
-          DP2 = {
+          DP-2 = {
             enable = false;
           };
-          DP3 = {
+          DP-3 = {
             enable = false;
           };
         };
         fingerprint = {
-          DP1="00ffffffffffff00410c8fc1a10f00001d1d0103803c22782a67a1a5554da2270e5054bfef00d1c0b30095008180814081c0010101014dd000a0f0703e803020350055502100001aa36600a0f0701f803020350055502100001a000000fc0050484c203237364538560a2020000000fd0017501ea03c000a2020202020200171020333f14c9004031f1301125d5e5f606123090707830100006d030c001000387820006001020367d85dc401788003e30f000c565e00a0a0a029503020350055502100001e023a801871382d40582c450055502100001e011d007251d01e206e28550055502100001e4d6c80a070703e8030203a0055502100001a000000004e";
-          eDP1="00ffffffffffff004d10ba1400000000161d0104a52213780ede50a3544c99260f505400000001010101010101010101010101010101ac3780a070383e403020350058c210000018000000000000000000000000000000000000000000fe004d57503154804c513135364d31000000000002410332001200000a010a202000d3";
+          DP-1="00ffffffffffff00410c8fc1a10f00001d1d0103803c22782a67a1a5554da2270e5054bfef00d1c0b30095008180814081c0010101014dd000a0f0703e803020350055502100001aa36600a0f0701f803020350055502100001a000000fc0050484c203237364538560a2020000000fd0017501ea03c000a2020202020200171020333f14c9004031f1301125d5e5f606123090707830100006d030c001000387820006001020367d85dc401788003e30f000c565e00a0a0a029503020350055502100001e023a801871382d40582c450055502100001e011d007251d01e206e28550055502100001e4d6c80a070703e8030203a0055502100001a000000004e";
+          eDP-1="00ffffffffffff004d10ba1400000000161d0104a52213780ede50a3544c99260f505400000001010101010101010101010101010101ac3780a070383e403020350058c210000018000000000000000000000000000000000000000000fe004d57503154804c513135364d31000000000002410332001200000a010a202000d3";
         };
       };
       home = {
         config = {
-          eDP1 = {
+          eDP-1 = {
             enable = true;
             primary = true;
             mode = "1920x1080";
@@ -540,29 +552,24 @@ in {
             position = "0x0";
             rate = "60";
           };
-          DP3 = {
+          DP-3 = {
             enable = true;
             primary = false;
             mode = "2560x1440";
-            scale = {
-              method = "pixel";
-              x = 1920;
-              y = 1080;
-            };
             crtc = 1;
             position = "1920x0";
             rate = "60";
           };
-          DP1 = {
+          DP-1 = {
             enable = false;
           };
-          DP2 = {
+          DP-2 = {
             enable = false;
           };
         };
         fingerprint = {
-          DP3="00ffffffffffff0005e37928d0040000181d0103803e22782a08a5a2574fa2280f5054bfef00d1c0b30095008180814081c0010101014dd000a0f0703e80302035006d552100001aa36600a0f0701f80302035006d552100001a000000fc00553238373947360a2020202020000000fd0017501e8c3c000a2020202020200100020333f14c9004031f1301125d5e5f606123090707830100006d030c001000397820006001020367d85dc401788003e30f000c011d007251d01e206e2855006d552100001e8c0ad08a20e02d10103e96006d55210000184d6c80a070703e8030203a006d552100001aa36600a0f0701f80302035006d552100001a00000000ea";
-          eDP1="00ffffffffffff004d10ba1400000000161d0104a52213780ede50a3544c99260f505400000001010101010101010101010101010101ac3780a070383e403020350058c210000018000000000000000000000000000000000000000000fe004d57503154804c513135364d31000000000002410332001200000a010a202000d3";
+          DP-3="00ffffffffffff0005e37928d0040000181d0103803e22782a08a5a2574fa2280f5054bfef00d1c0b30095008180814081c0010101014dd000a0f0703e80302035006d552100001aa36600a0f0701f80302035006d552100001a000000fc00553238373947360a2020202020000000fd0017501e8c3c000a2020202020200100020333f14c9004031f1301125d5e5f606123090707830100006d030c001000397820006001020367d85dc401788003e30f000c011d007251d01e206e2855006d552100001e8c0ad08a20e02d10103e96006d55210000184d6c80a070703e8030203a006d552100001aa36600a0f0701f80302035006d552100001a00000000ea";
+          eDP-1="00ffffffffffff004d10ba1400000000161d0104a52213780ede50a3544c99260f505400000001010101010101010101010101010101ac3780a070383e403020350058c210000018000000000000000000000000000000000000000000fe004d57503154804c513135364d31000000000002410332001200000a010a202000d3";
         };
       };
     };
@@ -621,6 +628,10 @@ in {
   # Allow swaylock in PAM
   security.pam.services.swaylock = {};
   security.pam.services.greetd = {
+    name = "kwallet";
+    enableKwallet = true;
+  };
+  security.pam.services.startx = {
     name = "kwallet";
     enableKwallet = true;
   };
@@ -683,5 +694,6 @@ ij5GZar9JA==
   services.udev.extraRules = '''';
   services.udev.packages = with pkgs; [
     android-udev-rules
+    qmk-udev-rules
   ];
 }

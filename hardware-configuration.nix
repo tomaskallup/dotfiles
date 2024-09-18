@@ -12,10 +12,10 @@
   boot.initrd.kernelModules = [ "dm-snapshot" ];
   boot.kernelModules = [ "kvm-intel" "i915" ];
   boot.extraModulePackages = [ ];
-  boot.kernelParams = [ "mem_sleep_default=deep" "psi=1" ];
+  boot.kernelParams = [ "mem_sleep_default=deep" "psi=1" "i915.enable_psr=0" ];
   # suspend-then-hibernate
   systemd.sleep.extraConfig = ''
-    HibernateDelaySec=30m
+    HibernateDelaySec=60m
     SuspendState=mem
   '';
   boot.extraModprobeConfig = ''

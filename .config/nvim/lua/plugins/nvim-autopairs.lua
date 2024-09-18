@@ -3,9 +3,9 @@ return {
   event = 'InsertEnter',
   config = function()
     local npairs = require('nvim-autopairs')
-    local rule = require('nvim-autopairs.rule')
+    --[[ local rule = require('nvim-autopairs.rule')
     local cond = require('nvim-autopairs.conds')
-    local utils = require('nvim-autopairs.utils')
+    local utils = require('nvim-autopairs.utils') ]]
 
     npairs.setup({
       check_ts = true,
@@ -15,7 +15,7 @@ return {
       },
     })
 
-    local function multiline_close_jump(open, close)
+    --[[ local function multiline_close_jump(open, close)
       return rule(close, '')
           :with_pair(function()
             local row, col = utils.get_cursor(0)
@@ -62,6 +62,6 @@ return {
       multiline_close_jump('(',')'),
       multiline_close_jump('[',']'),
       multiline_close_jump('{','}'),
-    })
+    }) ]]
   end,
 }

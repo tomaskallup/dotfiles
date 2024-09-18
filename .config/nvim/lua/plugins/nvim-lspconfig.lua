@@ -22,7 +22,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
       vim.lsp.buf.format({
         async = true,
         filter = function(client)
-          return client.name ~= 'tsserver' and client.name ~= 'pyright'
+          return client.name ~= 'ts_ls' and client.name ~= 'pyright'
         end,
       })
     end, opts)
@@ -50,6 +50,8 @@ return {
       },
     })
     local lspconfig = require('lspconfig')
+    local configs = require('lspconfig.configs')
+    local util = require('lspconfig.util')
     local eslint = require('efmls-configs.linters.eslint_d')
     local eslint_format = require('efmls-configs.formatters.eslint_d')
     local prettier = require('efmls-configs.formatters.prettier_d')
@@ -63,6 +65,9 @@ return {
       json = { jq },
       css = { prettier },
       scss = { prettier },
+      nix = {
+        { formatCommand = 'nixfmt', formatStdin = true },
+      },
     }
 
     lspconfig['efm'].setup({
@@ -87,7 +92,7 @@ return {
       end,
     })
 
-    lspconfig.tsserver.setup({
+    lspconfig.ts_ls.setup({
       capabilities = capabilitiesWithoutFomatting,
       root_dir = lspconfig.util.root_pattern('yarn.lock', 'lerna.json', '.git'),
       settings = {
@@ -119,12 +124,23 @@ return {
       capabilities = capabilities,
     })
 
-    lspconfig.ccls.setup({
+    --[[ lspconfig.ccls.setup({
+      capabilities = capabilities,
+    }) ]]
+
+    lspconfig.clangd.setup({
       capabilities = capabilities,
     })
 
     lspconfig.nil_ls.setup({
       capabilities = capabilities,
+      settings = {
+        ['nil'] = {
+          formatting = {
+            command = { 'nixfmt' },
+          },
+        },
+      },
     })
 
     lspconfig.cssls.setup({
@@ -134,6 +150,23 @@ return {
     lspconfig.prismals.setup({
       capabilities = capabilities,
     })
+
+    -- Register c3-lsp
+    if not configs.c3_lsp then
+      configs.c3_lsp = {
+        default_config = {
+          -- cmd = { 'c3-lsp' },
+          cmd = { '/home/armeeh/Pkg/c3-lsp/result/bin/c3-lsp' },
+          filetypes = { 'c3', 'c3i' },
+          root_dir = function(fname)
+            return util.find_git_ancestor(fname)
+          end,
+          settings = {},
+          name = 'c3_lsp',
+        },
+      }
+    end
+    lspconfig.c3_lsp.setup({})
   end,
   dependencies = { 'creativenull/efmls-configs-nvim', 'folke/neodev.nvim' },
 }

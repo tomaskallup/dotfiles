@@ -2,6 +2,10 @@
 background = "#1d1f21"
 foreground = "#c5c8c6"
 
+[colors.cursor]
+text = "CellBackground"
+cursor = "CellForeground"
+
 [font]
 builtin_box_drawing = true
 size = 12.0
