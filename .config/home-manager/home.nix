@@ -642,6 +642,27 @@ in
               '';
               Restart = "always";
             };
+
+            Install.WantedBy = [ "dwm-session.target" ];
+          };
+
+          "1password" = {
+            Unit = {
+              Description = "Run 1password in silent mode";
+              Documentation = "https://1password.com/";
+              PartOf = "graphical-session.target";
+              After = "graphical-session-pre.target";
+            };
+
+            Service = {
+              Type = "simple";
+              ExecStart = ''
+                ${pkgs._1password-gui}/bin/1password --silent
+              '';
+              Restart = "always";
+            };
+
+            Install.WantedBy = [ "dwm-session.target" ];
           };
 
         }
