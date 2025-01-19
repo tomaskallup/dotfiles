@@ -61,10 +61,11 @@ in
     unstable.cmake-language-server
     unstable.ccls
     unstable.clang-tools
+    unstable.yaml-language-server
     vscode-langservers-extracted
     nixfmt-rfc-style
     delta
-    unstable.devenv
+    frozenDevenv.devenv
     c3-lsp.outputs.packages.${system}.default
   ];
 
@@ -124,6 +125,9 @@ in
       }
     else
       { };
+  home.sessionPath = [
+    "$HOME/Pkg/c3c/bin"
+  ];
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -152,9 +156,10 @@ in
       yS = "jq -r '.scripts | keys | .[]' < package.json | fzy | xargs -r yarn";
       cleanservices = "rm -rf packages/*/dist(N) packages/*/tsconfig.build.tsbuildinfo(N) services/*/build(N) services/*/tsconfig.build.tsbuildinfo(N) functions/*/build(N) functions/*/tsconfig.build.tsbuildinfo(N) && yarn && yarn lerna run build --concurrency 2";
       e = "$EDITOR";
-      fzfe = "git ls-files --cached --modified --other --exclude-standard | fzy | xargs $EDITOR";
+      fzfe = "git ls-files --cached --modified --other --exclude-standard --deduplicate | fzy | xargs $EDITOR";
       btcn = "bluetoothctl devices | fzy | sed -e 's/Device //' -e 's/ .*//' | xargs bluetoothctl connect ";
       repo = "cd `realpath ~/Projects/*/*(/) | fzy`";
+      gse = "git ls-files --modified --exclude-standard | fzy | xargs $EDITOR";
     };
     initExtraFirst = ''
       (( ''${+commands[direnv]} )) && emulate zsh -c "$(direnv export zsh)"
@@ -319,6 +324,9 @@ in
       };
       interactive = {
         diffFilter = "delta --color-only";
+      };
+      branch = {
+        autoSetupMerge = "simple";
       };
     };
 
@@ -598,9 +606,9 @@ in
                 --not-when-audio \
                 --timer 600 \
                   "xrandr --output $(xrandr | grep primary | awk '{print $1}') --brightness .1" \
-                  "xrandr --output $(xrandr | grep primary | awk '{print $1}') --brightness --brightness 1" \
+                  "xrandr --output $(xrandr | grep primary | awk '{print $1}') --brightness 1" \
                 --timer 15 \
-                  "xrandr --output $(xrandr | grep primary | awk '{print $1}') --brightness --brightness 1; lock-xorg.sh" \
+                  "xrandr --output $(xrandr | grep primary | awk '{print $1}') --brightness 1; lock-xorg.sh" \
                   "" \
                 --timer 3600 \
                   "systemctl suspend-then-hibernate" \

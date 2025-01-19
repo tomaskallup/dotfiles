@@ -3,8 +3,7 @@ vim.g.mapleader = ' '
 vim.keymap.set('i', 'jk', '<esc>')
 vim.keymap.set('i', 'kj', '<esc>')
 
-vim.keymap.set('t', 'jk', '<esc>')
-vim.keymap.set('t', 'kj', '<esc>')
+vim.keymap.set('t', '<C-.>', '<C-\\><C-n>')
 
 vim.keymap.set('v', 'v', '<esc>')
 
@@ -24,3 +23,7 @@ vim.keymap.set('n', '<leader>bD', '<cmd>bd<cr>')
 
 vim.keymap.set('n', '<leader>cp', '<cmd>cp<cr>')
 vim.keymap.set('n', '<leader>cn', '<cmd>cn<cr>')
+
+if vim.opt.diff:get() then
+  vim.keymap.set('n', '<leader>q', '<cmd>qa<cr>')
+end

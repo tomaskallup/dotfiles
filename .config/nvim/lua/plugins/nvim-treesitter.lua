@@ -9,7 +9,7 @@ return {
     tree_sitter.setup({
       ensure_installed = { 'c', 'javascript', 'typescript', 'lua' },
       sync_install = false,
-      auto_install = true,
+      auto_install = false,
       ignore_install = {},
       modules = {},
       highlight = {
@@ -30,7 +30,8 @@ return {
     local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
     parser_config.c3 = {
       install_info = {
-        url = 'https://github.com/c3lang/tree-sitter-c3',
+        -- url = 'https://github.com/c3lang/tree-sitter-c3',
+        url = '~/Pkg/tree-sitter-c3',
         files = { 'src/parser.c', 'src/scanner.c' },
         branch = 'main',
       },

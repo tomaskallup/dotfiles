@@ -38,6 +38,13 @@ return {
       end,
       { desc = 'Telescope find files in directory' },
     },
+    {
+      '<leader>fn',
+      function()
+        require('telescope.builtin').find_files({ cwd = '~/Notes' })
+      end,
+      { desc = 'Telescope find files in directory' },
+    },
   },
   config = function()
     local telescope = require('telescope')
@@ -55,9 +62,12 @@ return {
         },
         mappings = {
           i = {
-            ['<c-s>'] = 'select_vertical'
-          }
-        }
+            ['<c-s>'] = 'select_vertical',
+          },
+        },
+        path_display = {
+          'truncate',
+        },
       },
       pickers = { buffers = { mappings = { i = { ['<c-d>'] = 'delete_buffer' } } } },
     })

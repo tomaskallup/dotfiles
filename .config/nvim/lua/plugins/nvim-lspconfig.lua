@@ -65,6 +65,7 @@ return {
       json = { jq },
       css = { prettier },
       scss = { prettier },
+      yaml = { prettier },
       nix = {
         { formatCommand = 'nixfmt', formatStdin = true },
       },
@@ -87,8 +88,7 @@ return {
         if string.find(filename, 'node_modules/') then
           return nil
         end
-        return require('lspconfig.server_configurations.efm').default_config.root_dir(filename)
-            or lspconfig.util.path.dirname(filename)
+        return configs.efm.config_def.default_config.root_dir(filename) or lspconfig.util.path.dirname(filename)
       end,
     })
 
@@ -159,6 +159,10 @@ return {
           cmd = { '/home/armeeh/Pkg/c3-lsp/result/bin/c3-lsp' },
           filetypes = { 'c3', 'c3i' },
           root_dir = function(fname)
+            -- Do not run the LSP in c3c std lib, it just eats resources
+            if string.find(fname, 'c3c/lib/') then
+              return nil
+            end
             return util.find_git_ancestor(fname)
           end,
           settings = {},
@@ -166,7 +170,26 @@ return {
         },
       }
     end
-    lspconfig.c3_lsp.setup({})
+    -- lspconfig.c3_lsp.setup({})
+
+    --Enable (broadcasting) snippet capability for completion
+    capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+    require'lspconfig'.jsonls.setup {
+      capabilities = capabilities,
+    }
+
+    lspconfig.yamlls.setup({
+      capabilities = capabilities,
+      settings = {
+        yaml = {
+          schemas = {
+            ['https://json.schemastore.org/github-workflow.json'] = '/.github/workflows/*',
+            ['https://json.schemastore.org/workflows.json'] = '/gc-workflows/*.json',
+          },
+        },
+      },
+    })
   end,
   dependencies = { 'creativenull/efmls-configs-nvim', 'folke/neodev.nvim' },
 }
