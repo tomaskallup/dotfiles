@@ -21,7 +21,7 @@
     # "i915"
     "thinkpad_acpi"
   ];
-  boot.initrd.kernelModules = [ "dm-snapshot" "rtw89_8852ce" ];
+  boot.initrd.kernelModules = [ "dm-snapshot" /* "rtw89_8852ce" */ ];
   /*
     boot.kernelModules = [
       "kvm-intel"
@@ -44,10 +44,10 @@
     HibernateDelaySec=60m
     SuspendState=mem
   '';
-  boot.extraModprobeConfig = ''
+  /* boot.extraModprobeConfig = ''
     options rtw89pci disable_aspm_l1=y
     options rtw89pci disable_aspm_l1ss=y
-  '';
+  ''; */
   /*
     services.udev.extraRules = ''
       # Remove NVIDIA USB xHCI Host Controller devices, if present
@@ -114,10 +114,10 @@
 
   services.fwupd.enable = true;
   services.thermald.enable = true;
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
+    # driSupport = true;
+    # driSupport32Bit = true;
     extraPackages = with pkgs; [
       # vaapiIntel
       libvdpau-va-gl

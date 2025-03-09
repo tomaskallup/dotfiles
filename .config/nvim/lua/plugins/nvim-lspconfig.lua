@@ -66,6 +66,7 @@ return {
       css = { prettier },
       scss = { prettier },
       yaml = { prettier },
+      html = { prettier },
       nix = {
         { formatCommand = 'nixfmt', formatStdin = true },
       },
@@ -88,7 +89,7 @@ return {
         if string.find(filename, 'node_modules/') then
           return nil
         end
-        return configs.efm.config_def.default_config.root_dir(filename) or lspconfig.util.path.dirname(filename)
+        return configs.efm.config_def.default_config.root_dir(filename) or vim.fs.dirname(filename)
       end,
     })
 
@@ -152,25 +153,25 @@ return {
     })
 
     -- Register c3-lsp
-    if not configs.c3_lsp then
-      configs.c3_lsp = {
+    if not configs.c3lsp then
+      configs.c3lsp = {
         default_config = {
           -- cmd = { 'c3-lsp' },
-          cmd = { '/home/armeeh/Pkg/c3-lsp/result/bin/c3-lsp' },
+          cmd = { '/home/armeeh/Pkg/c3-lsp/result/bin/c3lsp' },
           filetypes = { 'c3', 'c3i' },
           root_dir = function(fname)
             -- Do not run the LSP in c3c std lib, it just eats resources
             if string.find(fname, 'c3c/lib/') then
               return nil
             end
-            return util.find_git_ancestor(fname)
+            return vim.fs.dirname(vim.fs.find('.git', { path = fname, upward = true })[1]);
           end,
           settings = {},
-          name = 'c3_lsp',
+          name = 'c3lsp',
         },
       }
     end
-    -- lspconfig.c3_lsp.setup({})
+    lspconfig.c3lsp.setup({})
 
     --Enable (broadcasting) snippet capability for completion
     capabilities.textDocument.completion.completionItem.snippetSupport = true

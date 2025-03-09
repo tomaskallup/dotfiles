@@ -1,5 +1,6 @@
 return {
   'nvim-treesitter/nvim-treesitter',
+  -- commit = 'df0f8cb58e0c38408d50bd18f6004408f04252eb',
   build = function()
     vim.cmd('TSUpdate')
   end,

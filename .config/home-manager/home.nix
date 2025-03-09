@@ -43,30 +43,29 @@ in
     # (pkgs.writeShellScriptBin "my-hello" ''
     #   echo "Hello, ${config.home.username}!"
     # '')
-    unstable.efm-langserver
+    efm-langserver
     jq
-    unstable.nodejs_20
-    unstable.nodePackages.typescript-language-server
-    unstable.nodePackages.peerflix
-    unstable.nodePackages."@prisma/language-server"
-    unstable.eslint_d
-    unstable.prettierd
-    unstable.stylua
-    unstable.lua-language-server
-    unstable.nil
-    unstable.atool
-    unstable.unzip
-    unstable.zip
-    # unstable.codeium
-    unstable.cmake-language-server
-    unstable.ccls
-    unstable.clang-tools
-    unstable.yaml-language-server
+    nodejs_20
+    nodePackages.typescript-language-server
+    nodePackages.peerflix
+    nodePackages."@prisma/language-server"
+    eslint_d
+    prettierd
+    stylua
+    lua-language-server
+    nil
+    atool
+    unzip
+    zip
+    cmake-language-server
+    ccls
+    clang-tools
+    yaml-language-server
     vscode-langservers-extracted
     nixfmt-rfc-style
     delta
     frozenDevenv.devenv
-    c3-lsp.outputs.packages.${system}.default
+    lldb # Debugging for C3
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -133,7 +132,7 @@ in
   programs.home-manager.enable = true;
 
   home.pointerCursor = {
-    package = pkgs.gnome.adwaita-icon-theme;
+    package = pkgs.adwaita-icon-theme;
     name = "Adwaita";
     size = 16;
 
@@ -153,7 +152,7 @@ in
       ll = "ls -la";
       y = "yarn";
       g = "git";
-      yS = "jq -r '.scripts | keys | .[]' < package.json | fzy | xargs -r yarn";
+      yS = "yarn $(jq -r '.scripts | keys | .[]' < package.json | fzy)";
       cleanservices = "rm -rf packages/*/dist(N) packages/*/tsconfig.build.tsbuildinfo(N) services/*/build(N) services/*/tsconfig.build.tsbuildinfo(N) functions/*/build(N) functions/*/tsconfig.build.tsbuildinfo(N) && yarn && yarn lerna run build --concurrency 2";
       e = "$EDITOR";
       fzfe = "git ls-files --cached --modified --other --exclude-standard --deduplicate | fzy | xargs $EDITOR";
@@ -273,6 +272,27 @@ in
     maxCacheTtl = 28800;
     maxCacheTtlSsh = 28800;
     pinentryPackage = pkgs.pinentry-gtk2;
+  };
+
+  services.fusuma = {
+    enable = session == "dwm";
+    package = unstable.fusuma;
+    settings = {
+      threshold = {
+        pinch = 0.4;
+      };
+      interval = {
+        pinch = 0.1;
+      };
+      pinch = {
+        "out" = {
+          command = "xdotool keydown ctrl click 4 && xdotool keyup ctrl";
+        };
+        "in" = {
+          command = "xdotool keydown ctrl click 5 && xdotool keyup ctrl";
+        };
+      };
+    };
   };
 
   programs.tmux = {

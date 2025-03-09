@@ -47,12 +47,6 @@ let
       '';
   };
 
-  unstable = import <unstable> {
-    config = {
-      allowUnfree = true;
-    };
-  };
-
   # Use nix-prefetch-github tomaskallup dwl to get new sha
   dwl-custom-source = pkgs.fetchFromGitHub {
     owner = "tomaskallup";
@@ -67,7 +61,7 @@ let
 
   dmenu-custom = builtins.getFlake ("github:tomaskallup/dmenu/clean");
 
-  dwl-custom = (unstable.callPackage "${dwl-custom-source}/dwl-custom.nix" { });
+  dwl-custom = (pkgs.callPackage "${dwl-custom-source}/dwl-custom.nix" { });
 
   # conc = builtins.getFlake("github:prixladi/conc");
 
@@ -106,7 +100,7 @@ in
     "flakes"
   ];
   nix.settings.cores = 8;
-  nix.package = pkgs.nixVersions.nix_2_20;
+  nix.package = pkgs.nixVersions.latest;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -120,7 +114,8 @@ in
     };
   };
   # boot.kernelPackages = pkgs.linuxPackages_lqx;
-  boot.kernelPackages = pkgs.linuxPackages_6_11;
+  # boot.kernelPackages = pkgs.linuxPackages_6_11;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   networking.hostName = "malus-nixus"; # Define your hostname.
   # Pick only one of the below networking options.
@@ -164,6 +159,7 @@ in
       };
     };
   };
+  # systemd.packages = with pkgs; [libinput-gestures];
   systemd.services = {
     "lock-before-sleep@armeeh" = {
       unitConfig = {
@@ -247,7 +243,7 @@ in
     openFirewall = true;
   };
   # Enable thinkfan & coolercontrol
-  services.thinkfan.enable = true;
+  services.thinkfan.enable = false;
   services.thinkfan.levels = [
     [
       0
@@ -297,10 +293,11 @@ in
     enable = true;
     dataDir = "/data/postgres";
     package = pkgs.postgresql_14;
-    enableTCPIP = false;
+    enableTCPIP = true;
     authentication = pkgs.lib.mkOverride 10 ''
-      #type database  DBuser  auth-method
-      local all       all     trust
+      local all all              trust
+      host  all all 127.0.0.1/32 trust
+      host  all all ::1/128      trust
     '';
     ensureDatabases = [ "distributor" ];
   };
@@ -414,6 +411,7 @@ in
       # GUI Applications
       libsForQt5.kwalletmanager
       firefox-devedition
+      floorp
       alacritty
       slack
       pavucontrol
@@ -421,6 +419,7 @@ in
       gimp
       inkscape
       vlc
+      mpv
       libreoffice-qt
       ungoogled-chromium
       gf
@@ -456,17 +455,18 @@ in
       httpie
       lm_sensors
       tree
+      tree-sitter
       neovim
+      valgrind
       # helix
       # conc.outputs.packages.${pkgs.system}.cli
 
       # GUI Misc (themes, fonts, scripts etc)
-      gnome.gnome-themes-extra # gtk theme
-      gnome3.adwaita-icon-theme # default gnome cursors
-      gnome.adwaita-icon-theme # default gnome cursors
+      gnome-themes-extra # gtk theme
+      adwaita-icon-theme # default gnome cursors
       font-awesome
       flameshot
-      unstable.satty
+      satty
       udiskie
       configure-gtk
     ]
@@ -503,6 +503,7 @@ in
           glxinfo
           upower
           dunst
+          xdotool
         ]
     )
   );
@@ -511,13 +512,15 @@ in
 
   # Fonts
   fonts.packages = with pkgs; [
-    (nerdfonts.override {
+    /* (nerdfonts.override {
       fonts = [
         "Iosevka"
         "IosevkaTerm"
         "NerdFontsSymbolsOnly"
       ];
-    })
+    }) */
+    nerd-fonts.iosevka-term
+    nerd-fonts.comic-shanns-mono
     iosevka
     noto-fonts-emoji
     symbola
@@ -528,7 +531,8 @@ in
     antialias = true;
     hinting.enable = true;
     defaultFonts = {
-      monospace = [ "IosevkaTerm Nerd Font" ];
+      # monospace = [ "IosevkaTerm Nerd Font" ];
+      monospace = [ "ComicShannsMono Nerd Font" ];
       emoji = [ "Noto Fonts Emoji" ];
     };
   };
@@ -544,8 +548,8 @@ in
   };
 
   # Enable sound.
-  sound.enable = true;
-  hardware.pulseaudio = {
+  # sound.enable = true;
+  services.pulseaudio = {
     enable = session == "dwm";
     package = pkgs.pulseaudioFull;
     /*
@@ -572,6 +576,10 @@ in
     powerOnBoot = true;
   };
   services.blueman.enable = true;
+  services.deluge = {
+    enable = true;
+    web.enable = true;
+  };
 
   services.libinput = {
     enable = session == "dwm";
@@ -630,7 +638,7 @@ in
           };
         };
         fingerprint = {
-          eDP-1 = "00ffffffffffff0006af9bfa00000000001f0104a51e137803aeac93585991281d505400000001010101010101010101010101010101fa3c80b870b0244010103e002dbc100000180000000f0000000000000000000000000020000000fe0041554f0a202020202020202020000000fe004231343055414e30332e32200a00dc";
+          eDP-1 = "00ffffffffffff0030ae3d4000000000001f0104a51e1378e3aeac93585991281d505400000001010101010101010101010101010101fa3c80b870b0244010103e002dbc10000018000000fd00283c4b4b10010a2020202020200000000f00d10a3cd10a281e0a0006af9bfa000000fe004231343055414e30332e32200a00ba";
         };
       };
       lenovo-work = {
@@ -658,7 +666,7 @@ in
           };
         };
         fingerprint = {
-          eDP-1 = "00ffffffffffff0006af9bfa00000000001f0104a51e137803aeac93585991281d505400000001010101010101010101010101010101fa3c80b870b0244010103e002dbc100000180000000f0000000000000000000000000020000000fe0041554f0a202020202020202020000000fe004231343055414e30332e32200a00dc";
+          eDP-1 = "00ffffffffffff0030ae3d4000000000001f0104a51e1378e3aeac93585991281d505400000001010101010101010101010101010101fa3c80b870b0244010103e002dbc10000018000000fd00283c4b4b10010a2020202020200000000f00d10a3cd10a281e0a0006af9bfa000000fe004231343055414e30332e32200a00ba";
           DP-1 = "00ffffffffffff00410c8fc1a10f00001d1d0103803c22782a67a1a5554da2270e5054bfef00d1c0b30095008180814081c0010101014dd000a0f0703e803020350055502100001aa36600a0f0701f803020350055502100001a000000fc0050484c203237364538560a2020000000fd0017501ea03c000a2020202020200171020333f14c9004031f1301125d5e5f606123090707830100006d030c001000387820006001020367d85dc401788003e30f000c565e00a0a0a029503020350055502100001e023a801871382d40582c450055502100001e011d007251d01e206e28550055502100001e4d6c80a070703e8030203a0055502100001a000000004e";
         };
       };
@@ -686,7 +694,7 @@ in
           };
         };
         fingerprint = {
-          eDP-1 = "00ffffffffffff0006af9bfa00000000001f0104a51e137803aeac93585991281d505400000001010101010101010101010101010101fa3c80b870b0244010103e002dbc100000180000000f0000000000000000000000000020000000fe0041554f0a202020202020202020000000fe004231343055414e30332e32200a00dc";
+          eDP-1 = "00ffffffffffff0030ae3d4000000000001f0104a51e1378e3aeac93585991281d505400000001010101010101010101010101010101fa3c80b870b0244010103e002dbc10000018000000fd00283c4b4b10010a2020202020200000000f00d10a3cd10a281e0a0006af9bfa000000fe004231343055414e30332e32200a00ba";
           DP-2 = "00ffffffffffff00410c8fc1a10f00001d1d0103803c22782a67a1a5554da2270e5054bfef00d1c0b30095008180814081c0010101014dd000a0f0703e803020350055502100001aa36600a0f0701f803020350055502100001a000000fc0050484c203237364538560a2020000000fd0017501ea03c000a2020202020200171020333f14c9004031f1301125d5e5f606123090707830100006d030c001000387820006001020367d85dc401788003e30f000c565e00a0a0a029503020350055502100001e023a801871382d40582c450055502100001e011d007251d01e206e28550055502100001e4d6c80a070703e8030203a0055502100001a000000004e";
         };
       };
@@ -718,7 +726,7 @@ in
           };
         };
         fingerprint = {
-          eDP-1 = "00ffffffffffff0006af9bfa00000000001f0104a51e137803aeac93585991281d505400000001010101010101010101010101010101fa3c80b870b0244010103e002dbc100000180000000f0000000000000000000000000020000000fe0041554f0a202020202020202020000000fe004231343055414e30332e32200a00dc";
+          eDP-1 = "00ffffffffffff0030ae3d4000000000001f0104a51e1378e3aeac93585991281d505400000001010101010101010101010101010101fa3c80b870b0244010103e002dbc10000018000000fd00283c4b4b10010a2020202020200000000f00d10a3cd10a281e0a0006af9bfa000000fe004231343055414e30332e32200a00ba";
           HDMI-1 = "00ffffffffffff0005e37928d0040000181d0103803e22782a08a5a2574fa2280f5054bfef00d1c0b30095008180814081c0010101014dd000a0f0703e80302035006d552100001aa36600a0f0701f80302035006d552100001a000000fc00553238373947360a2020202020000000fd0017501e8c3c000a2020202020200100020333f14c9004031f1301125d5e5f606123090707830100006d030c001000397820006001020367d85dc401788003e30f000c011d007251d01e206e2855006d552100001e8c0ad08a20e02d10103e96006d55210000184d6c80a070703e8030203a006d552100001aa36600a0f0701f80302035006d552100001a00000000ea";
         };
       };
