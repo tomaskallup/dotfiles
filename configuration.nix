@@ -133,6 +133,9 @@ in
   virtualisation.docker = {
     enable = true;
     enableOnBoot = true;
+    package = pkgs.docker.override {
+      buildGoModule = pkgs.buildGo123Module;
+    };
     daemon = {
       settings = {
         data-root = "/data/docker";
@@ -295,9 +298,10 @@ in
     package = pkgs.postgresql_14;
     enableTCPIP = true;
     authentication = pkgs.lib.mkOverride 10 ''
-      local all all              trust
-      host  all all 127.0.0.1/32 trust
-      host  all all ::1/128      trust
+      local all all               trust
+      host  all all 127.0.0.1/32  trust
+      host  all all ::1/128       trust
+      host  all all 172.0.0.0/8 trust
     '';
     ensureDatabases = [ "distributor" ];
   };
@@ -309,6 +313,7 @@ in
     {
       EDITOR = "nvim";
       GTK_THEME = "Adwaita-dark";
+      MOZ_USE_XINPUT2 = "1";
     }
     // (
       if session == "dwl" then
@@ -411,7 +416,6 @@ in
       # GUI Applications
       libsForQt5.kwalletmanager
       firefox-devedition
-      floorp
       alacritty
       slack
       pavucontrol
@@ -445,7 +449,7 @@ in
       playerctl
       pciutils
       ranger
-      kwallet-pam
+      kdePackages.kwallet-pam
       kwalletcli
       libsForQt5.kwallet
       udisks

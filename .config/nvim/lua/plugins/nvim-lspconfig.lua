@@ -41,6 +41,14 @@ return {
       end,
     }) -- Setup lua development for neovim (completion etc.)
 
+    --[[ local capabilities = require('blink.cmp').get_lsp_capabilities();
+    local capabilitiesWithoutFomatting = require('blink.cmp').get_lsp_capabilities({
+      textDocument = {
+        formatting = false,
+        rangeFormatting = false,
+        range_formatting = false,
+      },
+    }) ]]
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
     local capabilitiesWithoutFomatting = require('cmp_nvim_lsp').default_capabilities({
       textDocument = {
@@ -164,7 +172,7 @@ return {
             if string.find(fname, 'c3c/lib/') then
               return nil
             end
-            return vim.fs.dirname(vim.fs.find('.git', { path = fname, upward = true })[1]);
+            return vim.fs.dirname(vim.fs.find({'project.json', '.git'}, { path = fname, upward = true })[1]);
           end,
           settings = {},
           name = 'c3lsp',

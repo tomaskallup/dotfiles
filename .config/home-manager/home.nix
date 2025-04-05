@@ -46,9 +46,9 @@ in
     efm-langserver
     jq
     nodejs_20
+    yarn
     nodePackages.typescript-language-server
     nodePackages.peerflix
-    nodePackages."@prisma/language-server"
     eslint_d
     prettierd
     stylua
@@ -97,7 +97,7 @@ in
             xrandr --newmode "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync && xrandr --addmode DP-3 2560x1440_60.00
             xrandr --auto
             [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
-            ${pkgs.kwallet-pam}/libexec/pam_kwallet_init
+            ${pkgs.kdePackages.kwallet-pam}/libexec/pam_kwallet_init
             exec dwm
           '';
         }
@@ -126,6 +126,7 @@ in
       { };
   home.sessionPath = [
     "$HOME/Pkg/c3c/bin"
+    "$HOME/.yarn/bin"
   ];
 
   # Let Home Manager install and manage itself.
@@ -324,6 +325,9 @@ in
       };
       merge = {
         tool = "nvimdiff";
+      };
+      mergetool = {
+        keepBackup = false;
       };
       "mergetool \"nvimdiff\"" = {
         cmd = "nvim -d \"$LOCAL\" \"$REMOTE\" \"$MERGED\" -c 'wincmd w' -c 'wincmd w' -c 'wincmd J'";

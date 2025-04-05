@@ -1,5 +1,6 @@
 return {
   'hrsh7th/nvim-cmp',
+  -- enabled = false,
   lazy = false,
   -- these dependencies will only be loaded when cmp loads
   -- dependencies are always lazy-loaded unless specified otherwise
