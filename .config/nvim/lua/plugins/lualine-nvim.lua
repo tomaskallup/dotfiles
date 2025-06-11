@@ -1,6 +1,6 @@
 local filename_component = {
   'filename',
-  file_status = true,    -- Displays file status (readonly status, modified status)
+  file_status = true,   -- Displays file status (readonly status, modified status)
   newfile_status = true, -- Display new file status (new file means no write after created)
   path = 1,
 
@@ -19,44 +19,48 @@ return {
   dependencies = {
     'nvim-tree/nvim-web-devicons',
   },
-  opts = {
-    options = {
-      theme = 'material',
-      icons_enabled = true,
-      component_separators = { left = '', right = '' },
-      section_separators = { left = '', right = '' },
-      disabled_filetypes = {
-        statusline = {},
-        winbar = {},
+  config = function()
+    local code_companion_component = require('modules.lualine-code-companion')
+
+    require('lualine').setup({
+      options = {
+        theme = 'material',
+        icons_enabled = true,
+        component_separators = { left = '', right = '' },
+        section_separators = { left = '', right = '' },
+        disabled_filetypes = {
+          statusline = {},
+          winbar = {},
+        },
+        ignore_focus = {},
+        always_divide_middle = true,
+        globalstatus = true,
+        refresh = {
+          statusline = 1000,
+          tabline = 1000,
+          winbar = 1000,
+        },
       },
-      ignore_focus = {},
-      always_divide_middle = true,
-      globalstatus = true,
-      refresh = {
-        statusline = 1000,
-        tabline = 1000,
-        winbar = 1000,
+      sections = {
+        lualine_a = { 'mode' },
+        lualine_b = { 'branch', 'diff', 'diagnostics' },
+        lualine_c = { filename_component },
+        lualine_x = { 'encoding', 'fileformat', 'filetype', 'lsp_status' },
+        lualine_y = { 'code_companion_component', 'progress' },
+        lualine_z = { 'location' },
       },
-    },
-    sections = {
-      lualine_a = { 'mode' },
-      lualine_b = { 'branch', 'diff', 'diagnostics' },
-      lualine_c = { filename_component },
-      lualine_x = { 'encoding', 'fileformat', 'filetype' },
-      lualine_y = { 'progress' },
-      lualine_z = { 'location' },
-    },
-    inactive_sections = {
-      lualine_a = {},
-      lualine_b = {},
-      lualine_c = { filename_component },
-      lualine_x = { 'location' },
-      lualine_y = {},
-      lualine_z = {},
-    },
-    tabline = {},
-    winbar = {},
-    inactive_winbar = {},
-    extensions = {},
-  },
+      inactive_sections = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = { filename_component },
+        lualine_x = { 'location' },
+        lualine_y = {},
+        lualine_z = {},
+      },
+      tabline = {},
+      winbar = {},
+      inactive_winbar = {},
+      extensions = {},
+    })
+  end,
 }

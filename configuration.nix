@@ -10,7 +10,7 @@ let
   # propagate them to relevent services run at the end of sway config
   # see
   # https://github.com/emersion/xdg-desktop-portal-wlr/wiki/"It-doesn't-work"-Troubleshooting-Checklist
-  # note: this is pretty much the same as  /etc/sway/config.d/nixos.conf but also restarts  
+  # note: this is pretty much the same as  /etc/sway/config.d/nixos.conf but also restarts
   # some user services to make sure they have the correct environment variables
   dbus-sway-environment = pkgs.writeTextFile {
     name = "dbus-sway-environment";
@@ -63,7 +63,7 @@ let
 
   dwl-custom = (pkgs.callPackage "${dwl-custom-source}/dwl-custom.nix" { });
 
-  # conc = builtins.getFlake("github:prixladi/conc");
+  conc = builtins.getFlake ("github:prixladi/conc");
 
 in
 {
@@ -188,9 +188,9 @@ in
       wantedBy = [ "sleep.target" ];
     };
   };
-  /* systemd.user.services = {
+  systemd.user.services = {
     concd = conc.outputs.services.${pkgs.system}.daemon;
-  }; */
+  };
 
   # Set your time zone.
   time.timeZone = "Europe/Prague";
@@ -198,9 +198,19 @@ in
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-  networking.extraHosts = ''
+  networking.hosts = lib.mkForce {
+    "127.0.0.1" = [ "localhost" ];
+    "127.0.0.2" = [];
+    "192.168.3.53" = [ "yomama.reaslocal" ];
+    # "192.168.3.173" = [ "malus-nixus" ];
+  };
+  /* networking.extraHosts = ''
     192.168.3.53 yomama.reaslocal
-  '';
+    192.168.3.159 malus-nixus
+    # 127.0.0.1 aoe-api.reliclink.com
+    # 127.0.0.1 aoe-api.worldsedgelink.com
+    # 127.0.0.1 pb-live-release1-api.worldsedgelink.com
+  ''; */
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -210,6 +220,14 @@ in
   #keyMap = lib.mkForce "us";
   #useXkbConfig = true; # use xkbOptions in tty.
   #};
+
+  services.upower = {
+    enable = true;
+    percentageLow = 15;
+    percentageCritical = 10;
+    percentageAction = 5;
+    criticalPowerAction = "Hibernate";
+  };
 
   # Greeter/DM
   services.greetd = {
@@ -375,10 +393,20 @@ in
     };
   };
 
+  programs.gamemode.enable = true;
   programs.steam = {
-    enable = false;
+    enable = true;
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+    protontricks.enable = true;
+    package = pkgs.steam.override {
+      extraPkgs =
+        pkgs: with pkgs; [
+          libkrb5
+          keyutils
+          gamemode
+        ];
+    };
   };
 
   # Enable manpages for libs
@@ -429,6 +457,7 @@ in
       gf
       gdb
       sxiv
+      lutris
 
       # CLI Tools
       curl
@@ -463,7 +492,7 @@ in
       neovim
       valgrind
       # helix
-      # conc.outputs.packages.${pkgs.system}.cli
+      conc.outputs.packages.${pkgs.system}.cli
 
       # GUI Misc (themes, fonts, scripts etc)
       gnome-themes-extra # gtk theme
@@ -516,13 +545,6 @@ in
 
   # Fonts
   fonts.packages = with pkgs; [
-    /* (nerdfonts.override {
-      fonts = [
-        "Iosevka"
-        "IosevkaTerm"
-        "NerdFontsSymbolsOnly"
-      ];
-    }) */
     nerd-fonts.iosevka-term
     nerd-fonts.comic-shanns-mono
     iosevka
@@ -836,6 +858,7 @@ in
       "tty"
       "lp"
       "plugdev"
+      "gamemode"
     ];
   };
   users.groups.mongodb = {
@@ -883,7 +906,18 @@ in
   system.stateVersion = "23.05"; # Did you read the comment?
 
   # Allow swaylock in PAM
-  security.pam.services.swaylock = { };
+  security.pam.services.swaylock = {
+    enable = true;
+  };
+  security.pam.services.i3lock = {
+    enable = true;
+  };
+  security.pam.services.i3lock-color = {
+    enable = true;
+  };
+  security.pam.services.i3lock-fancy-rapid = {
+    enable = true;
+  };
   security.pam.services.greetd = {
     name = "kwallet";
     enableKwallet = true;
@@ -950,6 +984,12 @@ in
       nevnzyTtKL2w820PDmI7plFN3wR3epd4kTAP5KT196Pjwjg+Dqgt2OnGAafKr+Qr
       o2cdIF5MbULVkux4RKzpNKaoDtrnvC1jROM5s1R0Lb96dQcS/VwmyX22lKdbbY9F
       ij5GZar9JA==
+      -----END CERTIFICATE-----
+    ''
+    ''
+      luskaner/ageLANServer
+      -----BEGIN CERTIFICATE-----
+      MIIDzDCCArSgAwIBAgIBATANBgkqhkiG9w0BAQsFADBCMSkwJwYDVQQKEyBnaXRodWIuY29tL2x1c2thbmVyL2FnZUxBTlNlcnZlcjEVMBMGA1UEAxMMYWdlTEFOU2VydmVyMB4XDTI1MDUwMjEzNTU0MloXDTI2MDUwMjEzNTU0MlowQjEpMCcGA1UEChMgZ2l0aHViLmNvbS9sdXNrYW5lci9hZ2VMQU5TZXJ2ZXIxFTATBgNVBAMTDGFnZUxBTlNlcnZlcjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALVDvJ4Aub2Wj71VCddRTZxKVH2UW0LhHz8pMEBzwZYCShVU4ql51map4cStMLUEW8MVKSGOksj8Q3p+Ej5CdCe4+hJtTUt3Fy8yMJoGVKYiPLP5R4NQTUCZ0e+HjeCcUx8NVtNITntRmvoiIC1VwxfMYpq8u8hLGEI4AkKdnqJY8/Ahz/8Hk4h/j/WMMJCs4NfS2Z/V8FJxtriFWsVWqEChMRlbAvK6LipZIpJHUct+d43LAzjoQz1aYMNoLg94cH7/NNJ/owB5ld+E7Q599BNP/n+Yex03RgSOArafiyVIogxbBlWnkOoFFanljGFjJuWnvXS71Izt/vs2U33u/nUCAwEAAaOBzDCByTAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFPWe3SXZqh8ww6zCXnYDCqqlM5RSMGUGA1UdEQReMFyCFWFvZS1hcGkucmVsaWNsaW5rLmNvbYIaYW9lLWFwaS53b3JsZHNlZGdlbGluay5jb22CJ3BiLWxpdmUtcmVsZWFzZTEtYXBpLndvcmxkc2VkZ2VsaW5rLmNvbTANBgkqhkiG9w0BAQsFAAOCAQEAUjt3ZdVyeUgbaqGxGh0kpZu6W8DWKslrga/cSBwF51cfLm9e0YvLsQ7WhD24tCDY3fMqIClCu/W0OkjwRETpUHjHeRIcUX+EXHVUFSb6BBJj6s8JE3Ihx83a3ktD3PJPrrJ0gFeJZrTO9aReGxrDy2aa3mwGP8l+X5NxRMCs3N/JPkOWhMIFL+dZcCXjsq10TaNTjAF+Z0q/1Np6ZM2CmrgOee4Ng0uyA50aetwPwRhV/5kEHbJscQqMIfHbfSaXG3+m4Bu4ZhhEnHIPwPdCymP3bzuRPeBcezy7Shmf+WXsl+AmaT8WlhZedQB/9ZJnnsVL0sPvo8JyGQc7rpronw==
       -----END CERTIFICATE-----
     ''
   ];

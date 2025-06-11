@@ -112,7 +112,7 @@
   /* hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   hardware.amdgpu.initrd.enable = false; */
 
-  services.fwupd.enable = true;
+  services.fwupd.enable = false;
   services.thermald.enable = true;
   hardware.graphics = {
     enable = true;

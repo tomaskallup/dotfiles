@@ -1,6 +1,6 @@
 return {
   'hrsh7th/nvim-cmp',
-  -- enabled = false,
+  enabled = false,
   lazy = false,
   -- these dependencies will only be loaded when cmp loads
   -- dependencies are always lazy-loaded unless specified otherwise
@@ -9,39 +9,13 @@ return {
     'hrsh7th/cmp-buffer',
     'hrsh7th/cmp-path',
     'hrsh7th/cmp-nvim-lsp-signature-help',
-    'saadparwaiz1/cmp_luasnip',
-    'L3MON4D3/LuaSnip',
-    {
-      'Exafunction/codeium.nvim',
-      enabled = false,
-      dependencies = {
-        'nvim-lua/plenary.nvim',
-      },
-      config = function()
-        require('codeium').setup({
-          tools = {
-            language_server = '/home/armeeh/.nix-profile/bin/codeium_language_server',
-          },
-        })
-      end,
-    },
     'onsails/lspkind.nvim',
-    --[[ { 'supermaven-inc/supermaven-nvim', opts = {
-      disable_keymaps = true,
-      disable_inline_completion = true
-    } }, ]]
   },
   config = function()
     local cmp = require('cmp')
-    local luasnip = require('luasnip')
     local compare = cmp.config.compare;
 
     cmp.setup({
-      snippet = {
-        expand = function(args)
-          luasnip.lsp_expand(args.body)
-        end,
-      },
       mapping = cmp.mapping.preset.insert({
         ['<C-b>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
@@ -51,8 +25,6 @@ return {
         ['<Tab>'] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_next_item()
-          elseif luasnip.expand_or_jumpable() then
-            luasnip.expand_or_jump()
           else
             fallback()
           end
@@ -60,15 +32,13 @@ return {
         ['<S-Tab>'] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_prev_item()
-          elseif luasnip.jumpable(-1) then
-            luasnip.jump(-1)
           else
             fallback()
           end
         end, { 'i', 's' }),
       }),
       sources = cmp.config.sources({
-        { name = 'luasnip', priority = 3 },
+        { name = 'lazydev', priority = 11 },
         { name = 'nvim_lsp_signature_help' , priority = 1},
         { name = 'path',    priority = 4 },
         -- { name = 'codeium' },
