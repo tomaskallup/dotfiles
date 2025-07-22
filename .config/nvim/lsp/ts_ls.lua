@@ -1,4 +1,13 @@
 return {
+  cmd = { 'typescript-language-server', '--stdio' },
+  filetypes = {
+    'javascript',
+    'javascriptreact',
+    'javascript.jsx',
+    'typescript',
+    'typescriptreact',
+    'typescript.tsx',
+  },
   capabilities = {
     textDocument = {
       formatting = false,
@@ -21,6 +30,7 @@ return {
     },
   },
   init_options = {
+    hostInfo = 'neovim',
     maxTsServerMemory = '8192',
     preferences = { quotePreference = 'single', allowIncompleteCompletions = false },
     provideFormatter = false,

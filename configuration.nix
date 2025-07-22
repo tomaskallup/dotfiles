@@ -158,6 +158,7 @@ in
         extraOptions = [
           "--ulimit=nofile=26677:46677"
           "--ulimit=nproc=65535"
+          "--memory=6G"
         ];
       };
     };
@@ -199,18 +200,20 @@ in
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
   networking.hosts = lib.mkForce {
-    "127.0.0.1" = [ "localhost" ];
-    "127.0.0.2" = [];
+    "127.0.0.1" = [ "localhost" "malus-nixus" ];
+    "127.0.0.2" = [ ];
     "192.168.3.53" = [ "yomama.reaslocal" ];
     # "192.168.3.173" = [ "malus-nixus" ];
   };
-  /* networking.extraHosts = ''
-    192.168.3.53 yomama.reaslocal
-    192.168.3.159 malus-nixus
-    # 127.0.0.1 aoe-api.reliclink.com
-    # 127.0.0.1 aoe-api.worldsedgelink.com
-    # 127.0.0.1 pb-live-release1-api.worldsedgelink.com
-  ''; */
+  /*
+    networking.extraHosts = ''
+      192.168.3.53 yomama.reaslocal
+      192.168.3.159 malus-nixus
+      # 127.0.0.1 aoe-api.reliclink.com
+      # 127.0.0.1 aoe-api.worldsedgelink.com
+      # 127.0.0.1 pb-live-release1-api.worldsedgelink.com
+    '';
+  */
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -399,6 +402,7 @@ in
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
     protontricks.enable = true;
+    extraCompatPackages = with pkgs; [ proton-ge-bin ];
     package = pkgs.steam.override {
       extraPkgs =
         pkgs: with pkgs; [
@@ -457,7 +461,14 @@ in
       gf
       gdb
       sxiv
-      lutris
+      (lutris.override {
+        extraLibraries = pkgs: [
+          # List library dependencies here
+          vkd3d
+        ];
+      })
+      protonup-qt
+      bottles
 
       # CLI Tools
       curl

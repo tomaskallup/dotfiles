@@ -48,8 +48,10 @@ in
     nodejs_20
     yarn
     nodePackages.typescript-language-server
+    vtsls
     nodePackages.peerflix
     eslint_d
+    eslint
     prettierd
     stylua
     lua-language-server

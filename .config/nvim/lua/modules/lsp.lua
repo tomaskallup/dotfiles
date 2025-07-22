@@ -7,8 +7,13 @@ vim.lsp.enable({
   'lua_ls',
   'nil_ls',
   'prismals',
-  'ts_ls',
+  -- 'ts_ls',
+  'vtsls',
   'yamlls',
+})
+
+vim.lsp.config('vtsls', {
+  root_markers = { 'yarn.lock', 'lerna.json' },
 })
 
 vim.diagnostic.config({
@@ -43,7 +48,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
       vim.lsp.buf.format({
         async = true,
         filter = function(client)
-          return client.name ~= 'ts_ls' and client.name ~= 'pyright'
+          return client.name ~= 'ts_ls' and client.name ~= 'pyright' and client.name ~= 'vtsls'
         end,
       })
     end, opts)

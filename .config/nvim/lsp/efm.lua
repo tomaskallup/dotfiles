@@ -1,12 +1,17 @@
-local eslint = require('efmls-configs.linters.eslint_d')
-local eslint_format = require('efmls-configs.formatters.eslint_d')
+local eslintd = require('efmls-configs.linters.eslint_d')
+local eslintd_format = require('efmls-configs.formatters.eslint_d')
+-- local eslint = require('efmls-configs.linters.eslint')
+-- local eslint_format = require('efmls-configs.formatters.eslint')
 local prettier = require('efmls-configs.formatters.prettier_d')
 local stylua = require('efmls-configs.formatters.stylua')
 local jq = require('efmls-configs.formatters.jq')
+
+eslintd_format.rootMarkers = eslintd.rootMarkers
+
 local languages = {
-  typescript = { eslint, eslint_format, prettier },
-  typescriptreact = { eslint, eslint_format, prettier },
-  javascript = { eslint, eslint_format, prettier },
+  typescript = { eslintd, eslintd_format },
+  typescriptreact = { eslintd, eslintd_format },
+  javascript = { eslintd, eslintd_format },
   lua = { stylua },
   json = { jq },
   css = { prettier },

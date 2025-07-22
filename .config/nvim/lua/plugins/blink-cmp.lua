@@ -14,8 +14,8 @@ return {
       ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
       ['<C-e>'] = { 'hide', 'fallback' },
 
-      ['<S-Tab>'] = { 'select_prev', 'fallback' },
-      ['<Tab>'] = { 'select_next', 'fallback' },
+      ['<S-Tab>'] = { 'select_prev', 'fallback_to_mappings' },
+      ['<Tab>'] = { 'select_next', 'fallback_to_mappings' },
       ['<C-p>'] = { 'select_prev', 'fallback_to_mappings' },
       ['<C-n>'] = { 'select_next', 'fallback_to_mappings' },
 
@@ -60,8 +60,10 @@ return {
     },
 
     sources = {
-      default = { 'lsp', 'path', 'buffer' },
+      default = { 'lsp', 'buffer', 'path' },
       providers = {
+        -- defaults to `{ 'buffer' }`
+        lsp = { fallbacks = {} },
         buffer = {
           opts = {
             -- or (recommended) filter to only "normal" buffers

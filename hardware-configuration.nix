@@ -21,14 +21,19 @@
     # "i915"
     "thinkpad_acpi"
   ];
-  boot.initrd.kernelModules = [ "dm-snapshot" /* "rtw89_8852ce" */ ];
+  boot.initrd.kernelModules = [
+    "dm-snapshot" # "rtw89_8852ce"
+  ];
+
+  # Ensure systemd loads in initrd, this helps with hibernation & swap files
+  boot.initrd.systemd.enable = true;
   /*
     boot.kernelModules = [
       "kvm-intel"
       "i915"
     ];
   */
-  boot.extraModulePackages = [];
+  boot.extraModulePackages = [ ];
   boot.kernelParams = [
     # "mem_sleep_default=deep"
     # "psi=1"
@@ -44,10 +49,12 @@
     HibernateDelaySec=60m
     SuspendState=mem
   '';
-  /* boot.extraModprobeConfig = ''
-    options rtw89pci disable_aspm_l1=y
-    options rtw89pci disable_aspm_l1ss=y
-  ''; */
+  /*
+    boot.extraModprobeConfig = ''
+      options rtw89pci disable_aspm_l1=y
+      options rtw89pci disable_aspm_l1ss=y
+    '';
+  */
   /*
     services.udev.extraRules = ''
       # Remove NVIDIA USB xHCI Host Controller devices, if present
@@ -97,7 +104,15 @@
     fsType = "ext4";
   };
 
-  swapDevices = [ { device = "/dev/disk/by-label/swap"; } ];
+  fileSystems."/big-data" = {
+    device = "/dev/disk/by-label/big-data";
+    fsType = "ext4";
+  };
+
+  swapDevices = [
+    { device = "/dev/disk/by-label/swap"; }
+    { device = "/big-data/swapfile"; size = 48 * 1024; }
+  ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
@@ -109,8 +124,10 @@
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   # hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-  /* hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-  hardware.amdgpu.initrd.enable = false; */
+  /*
+    hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+    hardware.amdgpu.initrd.enable = false;
+  */
 
   services.fwupd.enable = false;
   services.thermald.enable = true;

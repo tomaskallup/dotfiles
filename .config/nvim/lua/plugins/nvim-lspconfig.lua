@@ -1,4 +1,3 @@
 return {
-  'neovim/nvim-lspconfig',
-  cmd = {'LspInfo', 'LspStart', 'LspStop', 'LspRestart'},
+  'neovim/nvim-lspconfig'
 }
