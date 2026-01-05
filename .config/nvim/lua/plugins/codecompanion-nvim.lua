@@ -1,18 +1,20 @@
 return {
+  enabled = true,
   'olimorris/codecompanion.nvim',
   opts = {
     adapters = {
-      novita = function()
-        return require('codecompanion.adapters').extend('novita', {
-          schema = {
-            model = {
-              -- default = 'deepseek/deepseek-v3-turbo',
-              -- default = 'deepseek/deepseek-r1-turbo',
-              default = 'deepseek/deepseek-r1-distill-llama-8b',
+      http = {
+        novita = function()
+          return require('codecompanion.adapters').extend('novita', {
+            schema = {
+              model = {
+                -- default = 'deepseek/deepseek-v3-turbo',
+                default = 'qwen/qwen3-coder-480b-a35b-instruct',
+              },
             },
-          },
-        })
-      end,
+          })
+        end,
+      },
     },
     strategies = {
       chat = {
@@ -27,8 +29,18 @@ return {
     },
     display = {
       diff = {
-        enabled = true,
-        provider = 'mini_diff',
+        provider_opts = {
+          inline = {
+            layout = 'float',
+            opts = {
+              context_lines = 3,
+              dim = 25,
+              full_width_removed = true,
+              show_keymap_hints = true,
+              show_removed = true,
+            },
+          },
+        },
       },
     },
   },

@@ -127,15 +127,27 @@ in
     };
   };
 
+  # Enable virtmanager
+  programs.virt-manager = {
+    enable = true;
+  };
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
+  };
+  virtualisation.spiceUSBRedirection.enable = true;
+
   # Enable waydroid
-  virtualisation.waydroid.enable = true;
+  virtualisation.waydroid.enable = false;
   # Enable docker
   virtualisation.docker = {
     enable = true;
     enableOnBoot = true;
-    package = pkgs.docker.override {
-      buildGoModule = pkgs.buildGo123Module;
-    };
+    /*
+      package = pkgs.docker.override {
+        buildGoModule = pkgs.buildGo123Module;
+      };
+    */
     daemon = {
       settings = {
         data-root = "/data/docker";
@@ -200,7 +212,10 @@ in
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
   networking.hosts = lib.mkForce {
-    "127.0.0.1" = [ "localhost" "malus-nixus" ];
+    "127.0.0.1" = [
+      "localhost"
+      "malus-nixus"
+    ];
     "127.0.0.2" = [ ];
     "192.168.3.53" = [ "yomama.reaslocal" ];
     # "192.168.3.173" = [ "malus-nixus" ];
@@ -231,6 +246,12 @@ in
     percentageAction = 5;
     criticalPowerAction = "Hibernate";
   };
+  services.usbmuxd.enable = true;
+  services.nfs.server.enable = true;
+  services.nfs.server.exports = ''
+    /big-data/export         192.168.122.0/24(rw,fsid=0,no_subtree_check)
+    /big-data/export/m2dev/  192.168.122.0/24(rw,nohide,insecure,no_subtree_check,no_root_squash)
+  '';
 
   # Greeter/DM
   services.greetd = {
@@ -241,8 +262,25 @@ in
       };
     };
   };
+  # Power saver
+  services.auto-cpufreq = {
+    enable = true;
+    settings = {
+      battery = {
+        governor = "powersave";
+        turbo = "never";
+      };
+      charger = {
+        governor = "performance";
+        turbo = "auto";
+      };
+    };
+  };
+
+  # Enable early OOM killer
+  services.earlyoom.enable = true;
   # Sleep on lid close
-  services.logind.lidSwitch = "suspend-then-hibernate";
+  services.logind.settings.Login.HandleLidSwitch = "suspend-then-hibernate";
   # Install packages
   programs._1password.enable = true;
   programs._1password-gui = {
@@ -316,7 +354,7 @@ in
   services.postgresql = {
     enable = true;
     dataDir = "/data/postgres";
-    package = pkgs.postgresql_14;
+    package = pkgs.postgresql_18;
     enableTCPIP = true;
     authentication = pkgs.lib.mkOverride 10 ''
       local all all               trust
@@ -325,54 +363,53 @@ in
       host  all all 172.0.0.0/8 trust
     '';
     ensureDatabases = [ "distributor" ];
+    extraPlugins = ps: with ps; [ postgis ];
   };
   # Automatic disk mounting
   services.udisks2.enable = true;
 
   # Window server & related
-  environment.sessionVariables =
-    {
-      EDITOR = "nvim";
-      GTK_THEME = "Adwaita-dark";
-      MOZ_USE_XINPUT2 = "1";
-    }
-    // (
-      if session == "dwl" then
-        {
-          MOZ_ENABLE_WAYLAND = "1";
-          QT_QPA_PLATFORM = "wayland";
-          XDG_CURRENT_DESKTOP = "sway";
-          NIXOS_OZONE_WL = "1";
+  environment.sessionVariables = {
+    EDITOR = "nvim";
+    GTK_THEME = "Adwaita-dark";
+    MOZ_USE_XINPUT2 = "1";
+  }
+  // (
+    if session == "dwl" then
+      {
+        MOZ_ENABLE_WAYLAND = "1";
+        QT_QPA_PLATFORM = "wayland";
+        XDG_CURRENT_DESKTOP = "sway";
+        NIXOS_OZONE_WL = "1";
+      }
+    else
+      { VDPAU_DRIVER = "va_gl"; }
+  );
+  environment.etc = {
+    "firefox-test/policies/policies.json".text = ''
+      {
+        "policies": {
+          "DontCheckDefaultBrowser": true,
+          "DisableAppUpdate": true
         }
-      else
-        { VDPAU_DRIVER = "va_gl"; }
-    );
-  environment.etc =
-    {
-      "firefox-test/policies/policies.json".text = ''
-        {
-          "policies": {
-            "DontCheckDefaultBrowser": true,
-            "DisableAppUpdate": true
+      }
+    '';
+  }
+  // (
+    if session == "dwl" then
+      {
+        "wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
+          bluez_monitor.properties = {
+            ["bluez5.enable-sbc-xq"] = true,
+            ["bluez5.enable-msbc"] = true,
+            ["bluez5.enable-hw-volume"] = true,
+            ["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
           }
-        }
-      '';
-    }
-    // (
-      if session == "dwl" then
-        {
-          "wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
-            bluez_monitor.properties = {
-              ["bluez5.enable-sbc-xq"] = true,
-              ["bluez5.enable-msbc"] = true,
-              ["bluez5.enable-hw-volume"] = true,
-              ["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
-            }
-          '';
-        }
-      else
-        { }
-    );
+        '';
+      }
+    else
+      { }
+  );
 
   programs.light.enable = true;
   programs.xwayland.enable = session == "dwl";
@@ -388,7 +425,8 @@ in
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     configPackages = [
       pkgs.xdg-desktop-portal-gtk
-    ] ++ (if session == "dwl" then [ pkgs.xdg-desktop-portal-wlr ] else [ ]);
+    ]
+    ++ (if session == "dwl" then [ pkgs.xdg-desktop-portal-wlr ] else [ ]);
     config = {
       common = {
         default = if session == "dwl" then "wlr" else "gtk";
@@ -446,7 +484,7 @@ in
       gnumake
 
       # GUI Applications
-      libsForQt5.kwalletmanager
+      kdePackages.kwalletmanager
       firefox-devedition
       alacritty
       slack
@@ -544,6 +582,7 @@ in
           xidlehook
           xorg.xinit
           wineWowPackages.full
+          winetricks
           glxinfo
           upower
           dunst
@@ -631,7 +670,7 @@ in
 
   services.xserver = {
     enable = session == "dwm";
-    videoDrivers = [ "modesetting" ];
+    videoDrivers = [ "amdgpu" ];
     # videoDrivers = ["intel"];
     deviceSection = ''
       Option "TearFree" "true"
@@ -656,18 +695,18 @@ in
     profiles = {
       lenovo-laptop-only = {
         config = {
-          eDP-1 = {
+          eDP = {
             enable = true;
             primary = true;
             mode = "1920x1200";
           };
-          DP-1 = {
+          DisplayPort-1 = {
             enable = false;
           };
-          DP-2 = {
+          DisplayPort-2 = {
             enable = false;
           };
-          DP-3 = {
+          DisplayPort-3 = {
             enable = false;
           };
           VIRTUAL1 = {
@@ -675,27 +714,30 @@ in
           };
         };
         fingerprint = {
-          eDP-1 = "00ffffffffffff0030ae3d4000000000001f0104a51e1378e3aeac93585991281d505400000001010101010101010101010101010101fa3c80b870b0244010103e002dbc10000018000000fd00283c4b4b10010a2020202020200000000f00d10a3cd10a281e0a0006af9bfa000000fe004231343055414e30332e32200a00ba";
+          eDP = "00ffffffffffff0030ae3d4000000000001f0104a51e1378e3aeac93585991281d505400000001010101010101010101010101010101fa3c80b870b0244010103e002dbc10000018000000fd00283c4b4b10010a2020202020200000000f00d10a3cd10a281e0a0006af9bfa000000fe004231343055414e30332e32200a00ba";
         };
       };
       lenovo-work = {
         config = {
-          eDP-1 = {
+          eDP = {
             enable = true;
             primary = true;
             mode = "1920x1200";
           };
-          DP-1 = {
+          DisplayPort-0 = {
             enable = true;
             mode = "2560x1440";
             crtc = 1;
             position = "1920x0";
             rate = "32.08";
           };
-          DP-2 = {
+          DisplayPort-1 = {
             enable = false;
           };
-          DP-3 = {
+          DisplayPort-2 = {
+            enable = false;
+          };
+          DisplayPort-3 = {
             enable = false;
           };
           VIRTUAL1 = {
@@ -703,27 +745,27 @@ in
           };
         };
         fingerprint = {
-          eDP-1 = "00ffffffffffff0030ae3d4000000000001f0104a51e1378e3aeac93585991281d505400000001010101010101010101010101010101fa3c80b870b0244010103e002dbc10000018000000fd00283c4b4b10010a2020202020200000000f00d10a3cd10a281e0a0006af9bfa000000fe004231343055414e30332e32200a00ba";
-          DP-1 = "00ffffffffffff00410c8fc1a10f00001d1d0103803c22782a67a1a5554da2270e5054bfef00d1c0b30095008180814081c0010101014dd000a0f0703e803020350055502100001aa36600a0f0701f803020350055502100001a000000fc0050484c203237364538560a2020000000fd0017501ea03c000a2020202020200171020333f14c9004031f1301125d5e5f606123090707830100006d030c001000387820006001020367d85dc401788003e30f000c565e00a0a0a029503020350055502100001e023a801871382d40582c450055502100001e011d007251d01e206e28550055502100001e4d6c80a070703e8030203a0055502100001a000000004e";
+          eDP = "00ffffffffffff0030ae3d4000000000001f0104a51e1378e3aeac93585991281d505400000001010101010101010101010101010101fa3c80b870b0244010103e002dbc10000018000000fd00283c4b4b10010a2020202020200000000f00d10a3cd10a281e0a0006af9bfa000000fe004231343055414e30332e32200a00ba";
+          DisplayPort-0 = "00ffffffffffff00410c8fc1a10f00001d1d0103803c22782a67a1a5554da2270e5054bfef00d1c0b30095008180814081c0010101014dd000a0f0703e803020350055502100001aa36600a0f0701f803020350055502100001a000000fc0050484c203237364538560a2020000000fd0017501ea03c000a2020202020200171020333f14c9004031f1301125d5e5f606123090707830100006d030c001000387820006001020367d85dc401788003e30f000c565e00a0a0a029503020350055502100001e023a801871382d40582c450055502100001e011d007251d01e206e28550055502100001e4d6c80a070703e8030203a0055502100001a000000004e";
         };
       };
       lenovo-work-no-dock = {
         config = {
-          eDP-1 = {
+          eDP = {
             enable = true;
             primary = true;
             mode = "1920x1200";
           };
-          DP-2 = {
+          DisplayPort-2 = {
             enable = true;
             mode = "2560x1440";
             crtc = 1;
             position = "1920x0";
           };
-          DP-1 = {
+          DisplayPort-1 = {
             enable = false;
           };
-          DP-3 = {
+          DisplayPort-3 = {
             enable = false;
           };
           VIRTUAL1 = {
@@ -731,56 +773,39 @@ in
           };
         };
         fingerprint = {
-          eDP-1 = "00ffffffffffff0030ae3d4000000000001f0104a51e1378e3aeac93585991281d505400000001010101010101010101010101010101fa3c80b870b0244010103e002dbc10000018000000fd00283c4b4b10010a2020202020200000000f00d10a3cd10a281e0a0006af9bfa000000fe004231343055414e30332e32200a00ba";
-          DP-2 = "00ffffffffffff00410c8fc1a10f00001d1d0103803c22782a67a1a5554da2270e5054bfef00d1c0b30095008180814081c0010101014dd000a0f0703e803020350055502100001aa36600a0f0701f803020350055502100001a000000fc0050484c203237364538560a2020000000fd0017501ea03c000a2020202020200171020333f14c9004031f1301125d5e5f606123090707830100006d030c001000387820006001020367d85dc401788003e30f000c565e00a0a0a029503020350055502100001e023a801871382d40582c450055502100001e011d007251d01e206e28550055502100001e4d6c80a070703e8030203a0055502100001a000000004e";
+          eDP = "00ffffffffffff0030ae3d4000000000001f0104a51e1378e3aeac93585991281d505400000001010101010101010101010101010101fa3c80b870b0244010103e002dbc10000018000000fd00283c4b4b10010a2020202020200000000f00d10a3cd10a281e0a0006af9bfa000000fe004231343055414e30332e32200a00ba";
+          DisplayPort-2 = "00ffffffffffff00410c8fc1a10f00001d1d0103803c22782a67a1a5554da2270e5054bfef00d1c0b30095008180814081c0010101014dd000a0f0703e803020350055502100001aa36600a0f0701f803020350055502100001a000000fc0050484c203237364538560a2020000000fd0017501ea03c000a2020202020200171020333f14c9004031f1301125d5e5f606123090707830100006d030c001000387820006001020367d85dc401788003e30f000c565e00a0a0a029503020350055502100001e023a801871382d40582c450055502100001e011d007251d01e206e28550055502100001e4d6c80a070703e8030203a0055502100001a000000004e";
         };
       };
       lenovo-home = {
+        hooks = {
+          preswitch = {
+            "00-newMode" =
+              "xrandr --newmode \"2560x1440_60.00\"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync && xrandr --addmode DP-3 2560x1440_60.00";
+            "01-addMode" = "xrandr --addmode HDMI-A-0 \"2560x1440_60.00\"";
+          };
+        };
+
         config = {
-          eDP-1 = {
+          eDP = {
             enable = true;
             primary = true;
             mode = "1920x1200";
           };
-          HDMI-1 = {
+          HDMI-A-0 = {
             enable = true;
-            mode = "2560x1440";
+            mode = "2560x1440_60.00";
             crtc = 1;
             position = "1920x0";
             rate = "32.08";
           };
-          DP-1 = {
+          DisplayPort-1 = {
             enable = false;
           };
-          DP-2 = {
+          DisplayPort-2 = {
             enable = false;
           };
-          DP-3 = {
-            enable = false;
-          };
-          VIRTUAL1 = {
-            enable = false;
-          };
-        };
-        fingerprint = {
-          eDP-1 = "00ffffffffffff0030ae3d4000000000001f0104a51e1378e3aeac93585991281d505400000001010101010101010101010101010101fa3c80b870b0244010103e002dbc10000018000000fd00283c4b4b10010a2020202020200000000f00d10a3cd10a281e0a0006af9bfa000000fe004231343055414e30332e32200a00ba";
-          HDMI-1 = "00ffffffffffff0005e37928d0040000181d0103803e22782a08a5a2574fa2280f5054bfef00d1c0b30095008180814081c0010101014dd000a0f0703e80302035006d552100001aa36600a0f0701f80302035006d552100001a000000fc00553238373947360a2020202020000000fd0017501e8c3c000a2020202020200100020333f14c9004031f1301125d5e5f606123090707830100006d030c001000397820006001020367d85dc401788003e30f000c011d007251d01e206e2855006d552100001e8c0ad08a20e02d10103e96006d55210000184d6c80a070703e8030203a006d552100001aa36600a0f0701f80302035006d552100001a00000000ea";
-        };
-      };
-      dell-laptop-only = {
-        config = {
-          eDP-1 = {
-            enable = true;
-            primary = true;
-            mode = "1920x1080";
-          };
-          DP-1 = {
-            enable = false;
-          };
-          DP-2 = {
-            enable = false;
-          };
-          DP-3 = {
+          DisplayPort-3 = {
             enable = false;
           };
           VIRTUAL1 = {
@@ -788,67 +813,8 @@ in
           };
         };
         fingerprint = {
-          eDP-1 = "00ffffffffffff004d10ba1400000000161d0104a52213780ede50a3544c99260f505400000001010101010101010101010101010101ac3780a070383e403020350058c210000018000000000000000000000000000000000000000000fe004d57503154804c513135364d31000000000002410332001200000a010a202000d3";
-        };
-      };
-      dell-work = {
-        config = {
-          eDP-1 = {
-            enable = true;
-            primary = true;
-            mode = "1920x1080";
-            crtc = 0;
-            position = "0x0";
-            rate = "60";
-          };
-          DP-1 = {
-            enable = true;
-            primary = false;
-            mode = "2560x1440";
-            crtc = 1;
-            position = "1920x0";
-            rate = "60";
-          };
-          DP-2 = {
-            enable = false;
-          };
-          DP-3 = {
-            enable = false;
-          };
-        };
-        fingerprint = {
-          DP-1 = "00ffffffffffff00410c8fc1a10f00001d1d0103803c22782a67a1a5554da2270e5054bfef00d1c0b30095008180814081c0010101014dd000a0f0703e803020350055502100001aa36600a0f0701f803020350055502100001a000000fc0050484c203237364538560a2020000000fd0017501ea03c000a2020202020200171020333f14c9004031f1301125d5e5f606123090707830100006d030c001000387820006001020367d85dc401788003e30f000c565e00a0a0a029503020350055502100001e023a801871382d40582c450055502100001e011d007251d01e206e28550055502100001e4d6c80a070703e8030203a0055502100001a000000004e";
-          eDP-1 = "00ffffffffffff004d10ba1400000000161d0104a52213780ede50a3544c99260f505400000001010101010101010101010101010101ac3780a070383e403020350058c210000018000000000000000000000000000000000000000000fe004d57503154804c513135364d31000000000002410332001200000a010a202000d3";
-        };
-      };
-      dell-home = {
-        config = {
-          eDP-1 = {
-            enable = true;
-            primary = true;
-            mode = "1920x1080";
-            crtc = 0;
-            position = "0x0";
-            rate = "60";
-          };
-          DP-3 = {
-            enable = true;
-            primary = false;
-            mode = "2560x1440";
-            crtc = 1;
-            position = "1920x0";
-            rate = "60";
-          };
-          DP-1 = {
-            enable = false;
-          };
-          DP-2 = {
-            enable = false;
-          };
-        };
-        fingerprint = {
-          DP-3 = "00ffffffffffff0005e37928d0040000181d0103803e22782a08a5a2574fa2280f5054bfef00d1c0b30095008180814081c0010101014dd000a0f0703e80302035006d552100001aa36600a0f0701f80302035006d552100001a000000fc00553238373947360a2020202020000000fd0017501e8c3c000a2020202020200100020333f14c9004031f1301125d5e5f606123090707830100006d030c001000397820006001020367d85dc401788003e30f000c011d007251d01e206e2855006d552100001e8c0ad08a20e02d10103e96006d55210000184d6c80a070703e8030203a006d552100001aa36600a0f0701f80302035006d552100001a00000000ea";
-          eDP-1 = "00ffffffffffff004d10ba1400000000161d0104a52213780ede50a3544c99260f505400000001010101010101010101010101010101ac3780a070383e403020350058c210000018000000000000000000000000000000000000000000fe004d57503154804c513135364d31000000000002410332001200000a010a202000d3";
+          eDP = "00ffffffffffff0030ae3d4000000000001f0104a51e1378e3aeac93585991281d505400000001010101010101010101010101010101fa3c80b870b0244010103e002dbc10000018000000fd00283c4b4b10010a2020202020200000000f00d10a3cd10a281e0a0006af9bfa000000fe004231343055414e30332e32200a00ba";
+          HDMI-A-0 = "00ffffffffffff0005e37928d0040000181d0103803e22782a08a5a2574fa2280f5054bfef00d1c0b30095008180814081c0010101014dd000a0f0703e80302035006d552100001aa36600a0f0701f80302035006d552100001a000000fc00553238373947360a2020202020000000fd0017501e8c3c000a2020202020200100020333f14c9004031f1301125d5e5f606123090707830100006d030c001000397820006001020367d85dc401788003e30f000c011d007251d01e206e2855006d552100001e8c0ad08a20e02d10103e96006d55210000184d6c80a070703e8030203a006d552100001aa36600a0f0701f80302035006d552100001a00000000ea";
         };
       };
     };
@@ -870,6 +836,7 @@ in
       "lp"
       "plugdev"
       "gamemode"
+      "libvirtd"
     ];
   };
   users.groups.mongodb = {

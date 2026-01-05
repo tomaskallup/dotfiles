@@ -66,12 +66,21 @@ in
     vscode-langservers-extracted
     nixfmt-rfc-style
     delta
-    frozenDevenv.devenv
+    beam27Packages.elixir-ls
+    # frozenDevenv.devenv
+    devenv
     lldb # Debugging for C3
 
     qgis # Working with geo data
     qmk
   ];
+
+  dconf.settings = {
+    "org/virt-manager/virt-manager/connections" = {
+      autoconnect = [ "qemu:///system" ];
+      uris = [ "qemu:///system" ];
+    };
+  };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
@@ -99,7 +108,6 @@ in
       if session == "dwm" then
         {
           ".xinitrc".text = ''
-            xrandr --newmode "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync && xrandr --addmode DP-3 2560x1440_60.00
             xrandr --auto
             [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
             ${pkgs.kdePackages.kwallet-pam}/libexec/pam_kwallet_init
@@ -166,60 +174,62 @@ in
       repo = "cd `realpath ~/Projects/*/*(/) | fzy`";
       gse = "git ls-files --modified --exclude-standard | fzy | xargs $EDITOR";
     };
-    initExtraFirst = ''
-      (( ''${+commands[direnv]} )) && emulate zsh -c "$(direnv export zsh)"
+    initContent = lib.mkMerge [
+      (lib.mkBefore ''
+        (( ''${+commands[direnv]} )) && emulate zsh -c "$(direnv export zsh)"
 
-      if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
-        source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
-      fi
+        if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+          source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+        fi
 
-      (( ''${+commands[direnv]} )) && emulate zsh -c "$(direnv hook zsh)"
+        (( ''${+commands[direnv]} )) && emulate zsh -c "$(direnv hook zsh)"
 
-      source ~/.p10k.zsh
-    '';
-    initExtra = ''
-      setopt HIST_IGNORE_ALL_DUPS
-      setopt INC_APPEND_HISTORY
+        source ~/.p10k.zsh
+      '')
+      (lib.mkAfter ''
+        setopt HIST_IGNORE_ALL_DUPS
+        setopt INC_APPEND_HISTORY
 
-      autoload -U up-line-or-beginning-search
-      autoload -U down-line-or-beginning-search
-      zle -N up-line-or-beginning-search
-      zle -N down-line-or-beginning-search
-      bindkey -e
-      bindkey "^[[A" up-line-or-beginning-search # Up
-      bindkey "^[OA" up-line-or-beginning-search # Up
-      bindkey "^[[B" down-line-or-beginning-search # Down
-      bindkey "^[OB" down-line-or-beginning-search # Down
-      bindkey "^[[1;5C" forward-word
-      bindkey "^[[1;5D" backward-word
+        autoload -U up-line-or-beginning-search
+        autoload -U down-line-or-beginning-search
+        zle -N up-line-or-beginning-search
+        zle -N down-line-or-beginning-search
+        bindkey -e
+        bindkey "^[[A" up-line-or-beginning-search # Up
+        bindkey "^[OA" up-line-or-beginning-search # Up
+        bindkey "^[[B" down-line-or-beginning-search # Down
+        bindkey "^[OB" down-line-or-beginning-search # Down
+        bindkey "^[[1;5C" forward-word
+        bindkey "^[[1;5D" backward-word
 
-      autoload -U edit-command-line
-      zle -N edit-command-line
-      bindkey '^xe' edit-command-line
+        autoload -U edit-command-line
+        zle -N edit-command-line
+        bindkey '^xe' edit-command-line
 
-      include () {
-        [[ -f "$1" ]] && source "$1"
-      }
+        include () {
+          [[ -f "$1" ]] && source "$1"
+        }
 
-      mongo_uri_to_user_and_pass () {
-        user_and_pass=''${''${''${1#*://}%%@*}:/:}
-        parts=(''${(@s/:/)user_and_pass})
-        MONGODB_USERNAME=$parts[1] MONGODB_PASSWORD=$parts[2] ''${@:2}
-      }
+        mongo_uri_to_user_and_pass () {
+          user_and_pass=''${''${''${1#*://}%%@*}:/:}
+          parts=(''${(@s/:/)user_and_pass})
+          MONGODB_USERNAME=$parts[1] MONGODB_PASSWORD=$parts[2] ''${@:2}
+        }
 
-      local term_title () { print -n "\e]0;''${(j: :q)@}\a" }
-      precmd () {
-        local DIR="''$(print -P '[%c]')"
-        term_title "$DIR" "zsh"
-      }
-      preexec () {
-        local DIR="''$(print -P '[%c]')"
-        local CMD="''${(j:\n:)''${(f)1}}"
-        term_title "''$DIR" "''$CMD"
-      }
+        local term_title () { print -n "\e]0;''${(j: :q)@}\a" }
+        precmd () {
+          local DIR="''$(print -P '[%c]')"
+          term_title "$DIR" "zsh"
+        }
+        preexec () {
+          local DIR="''$(print -P '[%c]')"
+          local CMD="''${(j:\n:)''${(f)1}}"
+          term_title "''$DIR" "''$CMD"
+        }
 
-      include '/home/armeeh/.env'
-    '';
+        include '/home/armeeh/.env'
+      '')
+    ];
 
     history = {
       expireDuplicatesFirst = true;
@@ -283,7 +293,7 @@ in
     defaultCacheTtlSsh = 28800;
     maxCacheTtl = 28800;
     maxCacheTtlSsh = 28800;
-    pinentryPackage = pkgs.pinentry-gtk2;
+    pinentry.package = pkgs.pinentry-gtk2;
   };
 
   services.fusuma = {
@@ -315,14 +325,15 @@ in
     terminal = "screen-256color";
   };
 
+  programs.diff-so-fancy.enable = false;
+
   programs.git = {
     enable = true;
 
-    userName = "Tomas Kallup";
-    userEmail = "t.kallup@gmail.com";
-    diff-so-fancy.enable = false;
+    settings = {
+      user.name = "Tomas Kallup";
+      user.email = "t.kallup@gmail.com";
 
-    extraConfig = {
       core = {
         editor = "$EDITOR";
         pager = "delta";
@@ -363,37 +374,37 @@ in
       branch = {
         autoSetupMerge = "simple";
       };
-    };
 
-    aliases = {
-      bcleanup = "!git fetch --prune && git branch --merged | grep -E -v \"(^\\*|\\+|master|develop|staging)\" > /tmp/git-branch-cleanup && $EDITOR /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git branch -d";
-      pbcleanup = "!git fetch --prune && git branch -vv | grep ': gone]' | sed \"s/^\\s\\+\\([^ ]\\+\\).*/\\1/\" | grep -E -v \"(^\\*|master|develop|staging)\" > /tmp/git-branch-cleanup && $EDITOR /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git branch -D";
-      rbcleanup = "!git fetch --prune && git branch -r --merged | grep -E -v \"(^\\*|\\+|master|develop|staging)\" > /tmp/git-branch-cleanup && $EDITOR /tmp/git-branch-cleanup && sed -i \"\" \"s/origin\\///\" /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git push origin --delete";
-      a = "add";
-      ac = "!git diff --name-only --diff-filter=U | xargs git add";
-      ap = "add -p";
-      c = "commit";
-      ch = "checkout";
-      cm = "commit -m";
-      d = "diff";
-      f = "fetch";
-      r = "reset";
-      rh = "reset HEAD";
-      rb = "rebase";
-      rbc = "rebase --continue";
-      rba = "rebase --abort";
-      rbs = "rebase --skip";
-      s = "status -sb";
-      st = "stash";
-      sta = "stash apply";
-      p = "push";
-      pf = "push --force-with-lease";
-      pl = "pull";
-      mt = "mergetool";
-      fixc = "!$EDITOR `git diff --name-only --diff-filter=U`";
-      bi = "!git branch | sed '/HEAD/d' | sed -e 's/*\\?\\s\\+\\(remotes\\/origin\\/\\)\\?//' | fzy | xargs -r git checkout";
-      bia = "!git branch -a | sed '/HEAD/d' | sed -e 's/*\\?\\s\\+\\(remotes\\/origin\\/\\)\\?//' | fzy | xargs -r git checkout";
-      lg = "log --format='%C(auto) %h %s'";
+      alias = {
+        bcleanup = "!git fetch --prune && git branch --merged | grep -E -v \"(^\\*|\\+|master|develop|staging)\" > /tmp/git-branch-cleanup && $EDITOR /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git branch -d";
+        pbcleanup = "!git fetch --prune && git branch -vv | grep ': gone]' | sed \"s/^\\s\\+\\([^ ]\\+\\).*/\\1/\" | grep -E -v \"(^\\*|master|develop|staging)\" > /tmp/git-branch-cleanup && $EDITOR /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git branch -D";
+        rbcleanup = "!git fetch --prune && git branch -r --merged | grep -E -v \"(^\\*|\\+|master|develop|staging)\" > /tmp/git-branch-cleanup && $EDITOR /tmp/git-branch-cleanup && sed -i \"\" \"s/origin\\///\" /tmp/git-branch-cleanup && cat /tmp/git-branch-cleanup | xargs git push origin --delete";
+        a = "add";
+        ac = "!git diff --name-only --diff-filter=U | xargs git add";
+        ap = "add -p";
+        c = "commit";
+        ch = "checkout";
+        cm = "commit -m";
+        d = "diff";
+        f = "fetch";
+        r = "reset";
+        rh = "reset HEAD";
+        rb = "rebase";
+        rbc = "rebase --continue";
+        rba = "rebase --abort";
+        rbs = "rebase --skip";
+        s = "status -sb";
+        st = "stash";
+        sta = "stash apply";
+        p = "push";
+        pf = "push --force-with-lease";
+        pl = "pull";
+        mt = "mergetool";
+        fixc = "!$EDITOR `git diff --name-only --diff-filter=U`";
+        bi = "!git branch | sed '/HEAD/d' | sed -e 's/*\\?\\s\\+\\(remotes\\/origin\\/\\)\\?//' | fzy | xargs -r git checkout";
+        bia = "!git branch -a | sed '/HEAD/d' | sed -e 's/*\\?\\s\\+\\(remotes\\/origin\\/\\)\\?//' | fzy | xargs -r git checkout";
+        lg = "log --format='%C(auto) %h %s'";
+      };
     };
   };
 

@@ -23,10 +23,13 @@
   ];
   boot.initrd.kernelModules = [
     "dm-snapshot" # "rtw89_8852ce"
+    "amdgpu"
   ];
 
   # Ensure systemd loads in initrd, this helps with hibernation & swap files
   boot.initrd.systemd.enable = true;
+  # Enable SysRq to recover from out-of-memory
+  boot.kernel.sysctl."kernel.sysrq" = 1;
   /*
     boot.kernelModules = [
       "kvm-intel"
@@ -43,6 +46,7 @@
     "acpi_backlight=native"
     # "pci=noaer"
     # "pci=nomsi"
+    "amdgpu.preempt_mm=0"
   ];
   # suspend-then-hibernate
   systemd.sleep.extraConfig = ''

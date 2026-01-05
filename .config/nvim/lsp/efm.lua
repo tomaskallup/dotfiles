@@ -21,14 +21,28 @@ local languages = {
   nix = {
     { formatCommand = 'nixfmt', formatStdin = true },
   },
+  elixir = {
+    {
+      prefix = 'credo',
+      lintSource = 'credo',
+      lintCommand = 'mix credo suggest --format oneline "${INPUT}"',
+      lintStdin = false,
+      lintFormats = { '[%t] → %#%l:%c %m' },
+      rootMarkers = {
+        'mix.exs',
+      },
+    }
+  },
 }
 
 return {
-  cmd = { 'efm-langserver', '-logfile', '/home/armeeh/efm.log' },
+  cmd = { 'efm-langserver' },
   single_file_support = true,
   filetypes = vim.tbl_keys(languages),
   settings = {
     languages = languages,
+    logFile = '/home/armeeh/efm.log',
+    logLevel = 1
   },
   init_options = {
     documentFormatting = true,

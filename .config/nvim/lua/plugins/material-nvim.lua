@@ -10,7 +10,7 @@ return {
         sidebars = true,
         terminal = true,
         floating_windows = true,
-        cursor_line = true,
+        cursor_line = false,
       },
       disable = {
         colored_cursor = true,

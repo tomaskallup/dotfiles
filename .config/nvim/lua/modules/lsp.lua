@@ -10,10 +10,11 @@ vim.lsp.enable({
   -- 'ts_ls',
   'vtsls',
   'yamlls',
+  'elixirls'
 })
 
 vim.lsp.config('vtsls', {
-  root_markers = { 'yarn.lock', 'lerna.json' },
+  root_markers = { 'yarn.lock', 'lerna.json', 'turbo.json' },
 })
 
 vim.diagnostic.config({
@@ -36,7 +37,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
     local opts = { buffer = ev.buf }
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', 'gh', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', '<C-w>gd', function () vim.cmd('vsplit') vim.lsp.buf.definition({ reuse_win = true }) end, opts)
+    vim.keymap.set('n', 'gh', function () vim.lsp.buf.hover({ border = 'rounded' }) end, opts)
     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
 
     vim.keymap.set('n', '<space>d', vim.diagnostic.open_float)

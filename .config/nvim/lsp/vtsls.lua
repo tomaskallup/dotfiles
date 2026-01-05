@@ -14,12 +14,13 @@ return {
       rangeFormatting = false,
     },
   },
-  root_markers = { 'yarn.lock', 'lerna.json' },
+  root_markers = { 'yarn.lock', 'lerna.json', 'turbo.json', 'package.json' },
   settings = {
     documentFormatting = false,
     typescript = {
       tsserver = {
         maxTsServerMemory = 8192,
+        log = '/home/armeeh/tsserver.log',
       },
     },
     vtsls = {
@@ -31,6 +32,12 @@ return {
     provideFormatter = false,
     vtsls = {
       autoUseWorkspaceTsdk = true,
+    },
+    typescript = {
+      tsserver = {
+        maxTsServerMemory = 8192,
+        log = '/home/armeeh/tsserver.log',
+      },
     },
   },
 }

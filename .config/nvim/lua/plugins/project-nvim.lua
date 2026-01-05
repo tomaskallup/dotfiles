@@ -1,10 +1,9 @@
 return {
-	'ahmedkhalf/project.nvim',
-	main = 'project_nvim',
-	opts = {
-		patterns = { '.envrc', 'lerna.json', 'nx.json', '.git' },
+  'DrKJeff16/project.nvim',
+  opts = {
+    patterns = { '.envrc', 'turbo.json', '.git' },
     ignore_lsp = { 'ccls' },
 
     silent_chdir = true,
-	},
+  },
 }

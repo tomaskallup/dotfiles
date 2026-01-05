@@ -14,7 +14,7 @@ return {
       rangeFormatting = false,
     },
   },
-  root_markers = { 'yarn.lock', 'lerna.json' },
+  root_markers = { 'yarn.lock', 'lerna.json', 'turbo.json' },
   settings = {
     documentFormatting = false,
     typescript = {
