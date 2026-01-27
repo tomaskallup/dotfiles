@@ -299,7 +299,6 @@ in
     enable = true;
     enableCompletion = false;
   };
-  programs.adb.enable = false;
   programs.winbox = {
     enable = true;
     openFirewall = true;
@@ -363,7 +362,7 @@ in
       host  all all 172.0.0.0/8 trust
     '';
     ensureDatabases = [ "distributor" ];
-    extraPlugins = ps: with ps; [ postgis ];
+    extensions = ps: with ps; [ postgis ];
   };
   # Automatic disk mounting
   services.udisks2.enable = true;
@@ -496,8 +495,6 @@ in
       mpv
       libreoffice-qt
       ungoogled-chromium
-      gf
-      gdb
       sxiv
       (lutris.override {
         extraLibraries = pkgs: [
@@ -505,8 +502,6 @@ in
           vkd3d
         ];
       })
-      protonup-qt
-      bottles
 
       # CLI Tools
       curl
@@ -542,6 +537,7 @@ in
       valgrind
       # helix
       conc.outputs.packages.${pkgs.system}.cli
+      ncdu
 
       # GUI Misc (themes, fonts, scripts etc)
       gnome-themes-extra # gtk theme
@@ -582,8 +578,8 @@ in
           xidlehook
           xorg.xinit
           wineWowPackages.full
-          winetricks
-          glxinfo
+          # winetricks
+          # mesa-demos
           upower
           dunst
           xdotool
@@ -598,7 +594,7 @@ in
     nerd-fonts.iosevka-term
     nerd-fonts.comic-shanns-mono
     iosevka
-    noto-fonts-emoji
+    noto-fonts-color-emoji
     symbola
     unifont
   ];
@@ -831,7 +827,6 @@ in
       "network"
       "networkmanager"
       "docker"
-      "adbusers"
       "tty"
       "lp"
       "plugdev"

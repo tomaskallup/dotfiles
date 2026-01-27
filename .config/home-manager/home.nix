@@ -49,7 +49,7 @@ in
     yarn
     nodePackages.typescript-language-server
     vtsls
-    nodePackages.peerflix
+    typescript-go
     eslint_d
     eslint
     prettierd
@@ -59,20 +59,23 @@ in
     atool
     unzip
     zip
-    cmake-language-server
-    ccls
-    clang-tools
+    # cmake-language-server
+    # ccls
+    # clang-tools
     yaml-language-server
     vscode-langservers-extracted
-    nixfmt-rfc-style
+    nixfmt
     delta
     beam27Packages.elixir-ls
+    haskell.compiler.ghc912
+    haskell.packages.ghc912.haskell-language-server
+    haskell.packages.ghc912.hlint
+    haskell.packages.ghc912.cabal-install
     # frozenDevenv.devenv
     devenv
-    lldb # Debugging for C3
+    # lldb # Debugging for C3
 
     qgis # Working with geo data
-    qmk
   ];
 
   dconf.settings = {
