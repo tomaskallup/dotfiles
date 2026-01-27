@@ -2,15 +2,17 @@ vim.lsp.enable({
   'c3lsp',
   'cssls',
   'clangd',
-  'efm',
+  -- 'efm',
   'jsonls',
   'lua_ls',
   'nil_ls',
   'prismals',
   -- 'ts_ls',
-  'vtsls',
+  -- 'vtsls',
+  'tsgo',
   'yamlls',
-  'elixirls'
+  'elixirls',
+  'hls'
 })
 
 vim.lsp.config('vtsls', {
@@ -24,7 +26,7 @@ vim.diagnostic.config({
   float = true,
   jump = {
     float = true,
-  }
+  },
 })
 
 -- Use LspAttach autocommand to only map the following keys
@@ -37,8 +39,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
     local opts = { buffer = ev.buf }
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', '<C-w>gd', function () vim.cmd('vsplit') vim.lsp.buf.definition({ reuse_win = true }) end, opts)
-    vim.keymap.set('n', 'gh', function () vim.lsp.buf.hover({ border = 'rounded' }) end, opts)
+    vim.keymap.set('n', '<C-w>gd', function()
+      vim.cmd('vsplit')
+      vim.lsp.buf.definition({ reuse_win = true })
+    end, opts)
+    vim.keymap.set('n', 'gh', function()
+      vim.lsp.buf.hover({ border = 'rounded' })
+    end, opts)
     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
 
     vim.keymap.set('n', '<space>d', vim.diagnostic.open_float)
@@ -46,14 +53,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
     vim.keymap.set({ 'n', 'v' }, '<space>i', vim.lsp.buf.code_action, opts)
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    vim.keymap.set('n', '<space>=', function()
+    --[[ vim.keymap.set('n', '<space>=', function()
       vim.lsp.buf.format({
         async = true,
         filter = function(client)
           return client.name ~= 'ts_ls' and client.name ~= 'pyright' and client.name ~= 'vtsls'
         end,
       })
-    end, opts)
+    end, opts) ]]
   end,
 })
 

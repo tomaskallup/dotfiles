@@ -16,21 +16,24 @@ return {
     })
 
     require('nvim-treesitter.parsers').c3 = {
+      tier = 1,
       install_info = {
         -- url = 'https://github.com/c3lang/tree-sitter-c3',
         url = '~/Pkg/tree-sitter-c3',
         files = { 'src/parser.c', 'src/scanner.c' },
         branch = 'main',
+        revision = 'HEAD',
       },
       filetype = 'c3',
     }
 
-    local languages = { 'c3', 'c', 'javascript', 'typescript', 'lua', 'elixir' }
+    local languages = { 'c3', 'c', 'javascript', 'typescript', 'tsx', 'lua', 'elixir', 'haskell', 'markdown' }
+    local patterns = { 'c3', 'c', 'javascript', 'typescript', 'typescriptreact', 'lua', 'elixir', 'haskell', 'markdown' }
 
-    tree_sitter.install(languages):wait(300000)
+    tree_sitter.install(languages)
 
     vim.api.nvim_create_autocmd('FileType', {
-      pattern = languages,
+      pattern = patterns,
       callback = function()
         vim.treesitter.start()
 
