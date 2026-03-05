@@ -27,8 +27,8 @@ return {
       filetype = 'c3',
     }
 
-    local languages = { 'c3', 'c', 'javascript', 'typescript', 'tsx', 'lua', 'elixir', 'haskell', 'markdown' }
-    local patterns = { 'c3', 'c', 'javascript', 'typescript', 'typescriptreact', 'lua', 'elixir', 'haskell', 'markdown' }
+    local languages = { 'c3', 'c', 'javascript', 'typescript', 'tsx', 'lua', 'elixir', 'haskell', 'markdown', 'heex', 'yaml' }
+    local patterns = { 'c3', 'c', 'javascript', 'typescript', 'typescriptreact', 'lua', 'elixir', 'haskell', 'markdown', 'heex', 'yaml' }
 
     tree_sitter.install(languages)
 

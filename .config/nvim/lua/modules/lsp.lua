@@ -11,7 +11,8 @@ vim.lsp.enable({
   -- 'vtsls',
   'tsgo',
   'yamlls',
-  'elixirls',
+  -- 'elixirls',
+  'expert',
   'hls'
 })
 
