@@ -1,3 +1,12 @@
+local list_extend = function(where, what)
+  return vim.list_extend(vim.deepcopy(where), what)
+end
+
+local list_filter = function(where, what)
+  -- stylua: ignore
+  return vim.iter(where):filter(function(val) return not vim.list_contains(what, val) end):totable()
+end
+
 return {
 	'folke/snacks.nvim',
 	priority = 1000,
@@ -77,6 +86,10 @@ return {
 			{ desc = 'Find files in Notes' },
 		},
 	},
+	---@class snacks.Picker
+	---@field [string] unknown
+	---@class snacks.picker.Config
+	---@field [string] unknown
 	---@type snacks.Config
 	opts = {
 		indent = { enabled = true },
@@ -92,6 +105,33 @@ return {
 							},
 						},
 						list = { keys = { ['dd'] = 'bufdelete' } },
+					},
+				},
+				grep = {
+					case_sens = false,
+					toggles = {
+						case_sens = 's',
+					},
+					finder = function(opts, ctx)
+						local args_extend = { '--case-sensitive' }
+						opts.args = list_filter(opts.args or {}, args_extend)
+						if opts.case_sens then
+							opts.args = list_extend(opts.args, args_extend)
+						end
+						return require('snacks.picker.source.grep').grep(opts, ctx)
+					end,
+					actions = {
+						toggle_live_case_sens = function(picker) -- [[Override]]
+							picker.opts.case_sens = not picker.opts.case_sens
+							picker:find()
+						end,
+					},
+					win = {
+						input = {
+							keys = {
+								['<C-i>'] = { 'toggle_live_case_sens', mode = { 'i' } },
+							},
+						},
 					},
 				},
 			},

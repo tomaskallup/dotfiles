@@ -108,14 +108,14 @@
     fsType = "ext4";
   };
 
-  fileSystems."/big-data" = {
+  /* fileSystems."/big-data" = {
     device = "/dev/disk/by-label/big-data";
     fsType = "ext4";
-  };
+  }; */
 
   swapDevices = [
     { device = "/dev/disk/by-label/swap"; }
-    { device = "/big-data/swapfile"; size = 48 * 1024; }
+    # { device = "/big-data/swapfile"; size = 48 * 1024; }
   ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking

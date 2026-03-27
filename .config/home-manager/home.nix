@@ -2,12 +2,8 @@
 session:
 
 let
-  unstable = import <unstable> {
-    config = {
-      allowUnfree = true;
-    };
-  };
-  c3-lsp = builtins.getFlake ("github:tomaskallup/c3-lsp/main");
+  expert = builtins.getFlake ("github:elixir-lang/expert");
+  llm-nix = builtins.getFlake ("github:numtide/llm-agents.nix");
 in
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -47,7 +43,7 @@ in
     jq
     nodejs_20
     yarn
-    nodePackages.typescript-language-server
+    # nodePackages.typescript-language-server
     vtsls
     typescript-go
     eslint_d
@@ -64,18 +60,23 @@ in
     # clang-tools
     yaml-language-server
     vscode-langservers-extracted
+    tailwindcss-language-server
     nixfmt
     delta
-    beam27Packages.elixir-ls
     haskell.compiler.ghc912
     haskell.packages.ghc912.haskell-language-server
     haskell.packages.ghc912.hlint
-    haskell.packages.ghc912.cabal-install
+    cabal-install
     # frozenDevenv.devenv
     devenv
+    beamMinimal27Packages.elixir
+    expert.outputs.packages.${stdenv.hostPlatform.system}.expert
     # lldb # Debugging for C3
 
-    qgis # Working with geo data
+    # qgis # Working with geo data
+    # llm shit
+    llm-nix.outputs.packages.${stdenv.hostPlatform.system}.claude-code
+    llm-nix.outputs.packages.${stdenv.hostPlatform.system}.claude-code-acp
   ];
 
   dconf.settings = {
@@ -87,39 +88,38 @@ in
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
-  home.file =
-    {
-      # # Building this configuration will create a copy of 'dotfiles/screenrc' in
-      # # the Nix store. Activating the configuration will then make '~/.screenrc' a
-      # # symlink to the Nix store copy.
-      # ".screenrc".source = dotfiles/screenrc;
+  home.file = {
+    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
+    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
+    # # symlink to the Nix store copy.
+    # ".screenrc".source = dotfiles/screenrc;
 
-      # # You can also set the file content immediately.
-      # ".gradle/gradle.properties".text = ''
-      #   org.gradle.console=verbose
-      #   org.gradle.daemon.idletimeout=3600000
-      # '';
-      ".gtkrc-2.0".text = ''
-        gtk-cursor-theme-name="Adwaita"
-      '';
-      ".config/gtk-3.0/settings.ini".text = ''
-        [Settings]
-        gtk-cursor-theme-name=Adwaita
-      '';
-    }
-    // (
-      if session == "dwm" then
-        {
-          ".xinitrc".text = ''
-            xrandr --auto
-            [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
-            ${pkgs.kdePackages.kwallet-pam}/libexec/pam_kwallet_init
-            exec dwm
-          '';
-        }
-      else
-        { }
-    );
+    # # You can also set the file content immediately.
+    # ".gradle/gradle.properties".text = ''
+    #   org.gradle.console=verbose
+    #   org.gradle.daemon.idletimeout=3600000
+    # '';
+    ".gtkrc-2.0".text = ''
+      gtk-cursor-theme-name="Adwaita"
+    '';
+    ".config/gtk-3.0/settings.ini".text = ''
+      [Settings]
+      gtk-cursor-theme-name=Adwaita
+    '';
+  }
+  // (
+    if session == "dwm" then
+      {
+        ".xinitrc".text = ''
+          xrandr --auto
+          [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
+          ${pkgs.kdePackages.kwallet-pam}/libexec/pam_kwallet_init
+          exec dwm
+        '';
+      }
+    else
+      { }
+  );
 
   # You can also manage environment variables but you will have to manually
   # source
@@ -301,7 +301,7 @@ in
 
   services.fusuma = {
     enable = session == "dwm";
-    package = unstable.fusuma;
+    package = pkgs.fusuma;
     settings = {
       threshold = {
         pinch = 0.4;
@@ -447,281 +447,280 @@ in
       SystemdService=dunst.service
     '';
   };
-  systemd.user.services =
-    {
-      ### Generic
-      ## Bluetooth management
-      blueman = {
-        Unit = {
-          Description = "Blueman is a GTK+ Bluetooth Manager";
-          Documentation = "man:blueman-applet(1)";
-          PartOf = "graphical-session.target";
-        };
-
-        Service = {
-          Type = "simple";
-          ExecStart = "${pkgs.blueman}/bin/blueman-applet";
-        };
-
-        Install.WantedBy = [
-          "dwl-session.target"
-          "dwm-session.target"
-        ];
+  systemd.user.services = {
+    ### Generic
+    ## Bluetooth management
+    blueman = {
+      Unit = {
+        Description = "Blueman is a GTK+ Bluetooth Manager";
+        Documentation = "man:blueman-applet(1)";
+        PartOf = "graphical-session.target";
       };
 
-      ## Music/video player controller
-      playerctl = {
-        Unit = {
-          Description = "mpris media player command-line controller";
-          Documentation = "man:playerctl(1)";
-          PartOf = "graphical-session.target";
-        };
-
-        Service = {
-          Type = "simple";
-          ExecStart = "${pkgs.playerctl}/bin/playerctld daemon";
-        };
-
-        Install.WantedBy = [
-          "dwl-session.target"
-          "dwm-session.target"
-        ];
+      Service = {
+        Type = "simple";
+        ExecStart = "${pkgs.blueman}/bin/blueman-applet";
       };
 
-      ## Udiskie for automounting drives
-      udiskie = {
-        Unit = {
-          Description = "Automounter for removable media ";
-          Documentation = "https://github.com/coldfix/udiskie/wiki";
-          PartOf = "graphical-session.target";
-        };
+      Install.WantedBy = [
+        "dwl-session.target"
+        "dwm-session.target"
+      ];
+    };
 
-        Service = {
-          Type = "simple";
-          ExecStart = ''
-            ${pkgs.udiskie}/bin/udiskie -At
-          '';
-        };
-
-        Install.WantedBy = [
-          "dwl-session.target"
-          "dwm-session.target"
-        ];
+    ## Music/video player controller
+    playerctl = {
+      Unit = {
+        Description = "mpris media player command-line controller";
+        Documentation = "man:playerctl(1)";
+        PartOf = "graphical-session.target";
       };
-    }
-    // (
-      if session == "dwl" then
-        {
 
-          ### Wayland
-          ## Notification daemon
-          fnott = {
-            Unit = {
-              Description = "Keyboard driven and lightweight Wayland notification daemon";
-              Documentation = "man:fnott(1) man:fnott.ini(5)";
-              PartOf = "graphical-session.target";
-              After = "graphical-session-pre.target";
-            };
+      Service = {
+        Type = "simple";
+        ExecStart = "${pkgs.playerctl}/bin/playerctld daemon";
+      };
 
-            Service = {
-              Type = "dbus";
-              BusName = "org.freedesktop.Notifications";
-              ExecStart = "${pkgs.fnott}/bin/fnott";
-            };
+      Install.WantedBy = [
+        "dwl-session.target"
+        "dwm-session.target"
+      ];
+    };
+
+    ## Udiskie for automounting drives
+    udiskie = {
+      Unit = {
+        Description = "Automounter for removable media ";
+        Documentation = "https://github.com/coldfix/udiskie/wiki";
+        PartOf = "graphical-session.target";
+      };
+
+      Service = {
+        Type = "simple";
+        ExecStart = ''
+          ${pkgs.udiskie}/bin/udiskie -At
+        '';
+      };
+
+      Install.WantedBy = [
+        "dwl-session.target"
+        "dwm-session.target"
+      ];
+    };
+  }
+  // (
+    if session == "dwl" then
+      {
+
+        ### Wayland
+        ## Notification daemon
+        fnott = {
+          Unit = {
+            Description = "Keyboard driven and lightweight Wayland notification daemon";
+            Documentation = "man:fnott(1) man:fnott.ini(5)";
+            PartOf = "graphical-session.target";
+            After = "graphical-session-pre.target";
           };
 
-          ## Automatic display configuration
-          kanshi = {
-            Unit = {
-              Description = "This is a Wayland equivalent for tools like autorandr.";
-              Documentation = "man:kanshi(1) man:kanshi(5)";
-              PartOf = "graphical-session.target";
-            };
+          Service = {
+            Type = "dbus";
+            BusName = "org.freedesktop.Notifications";
+            ExecStart = "${pkgs.fnott}/bin/fnott";
+          };
+        };
 
-            Service = {
-              Type = "simple";
-              ExecStart = "${pkgs.kanshi}/bin/kanshi";
-            };
-
-            Install.WantedBy = [ "dwl-session.target" ];
+        ## Automatic display configuration
+        kanshi = {
+          Unit = {
+            Description = "This is a Wayland equivalent for tools like autorandr.";
+            Documentation = "man:kanshi(1) man:kanshi(5)";
+            PartOf = "graphical-session.target";
           };
 
-          ## Wayland bar
-          waybar = {
-            Unit = {
-              Description = "Highly customizable Wayland bar for Sway and Wlroots based compositors.";
-              Documentation = "man:waybar(5)";
-              PartOf = "graphical-session.target";
-            };
-
-            Service = {
-              Type = "simple";
-              Environment = {
-                PATH = "$PATH:${
-                  lib.makeBinPath [
-                    pkgs.gawk
-                    pkgs.bash
-                    pkgs.inotifytools
-                  ]
-                }";
-              };
-              ExecStart = "${pkgs.waybar}/bin/waybar";
-            };
-
-            Install.WantedBy = [ "dwl-session.target" ];
+          Service = {
+            Type = "simple";
+            ExecStart = "${pkgs.kanshi}/bin/kanshi";
           };
 
-          ## Swayidle for automatic locking
-          swayidle = {
-            Unit = {
-              Description = "Idle manager for Wayland";
-              Documentation = "man:swayidle(1)";
-              PartOf = "graphical-session.target";
-            };
+          Install.WantedBy = [ "dwl-session.target" ];
+        };
 
-            Service = {
-              Type = "simple";
-              ExecStart = ''
-                ${pkgs.swayidle}/bin/swayidle -w\
-                  timeout 600 'lock.sh' \
-                  timeout 1200 'systemctl suspend-then-hibernate' \
-                  before-sleep 'lock.sh'
-              '';
-            };
-
-            Install.WantedBy = [ "dwl-session.target" ];
+        ## Wayland bar
+        waybar = {
+          Unit = {
+            Description = "Highly customizable Wayland bar for Sway and Wlroots based compositors.";
+            Documentation = "man:waybar(5)";
+            PartOf = "graphical-session.target";
           };
 
-          ## Sway Audio Idle Inhibit
-          sway-audio-idle-inhibit = {
-            Unit = {
-              Description = "Automatically start idle inhibit when audio is playing";
-              Documentation = "https://github.com/ErikReider/SwayAudioIdleInhibit";
-              PartOf = "graphical-session.target";
+          Service = {
+            Type = "simple";
+            Environment = {
+              PATH = "$PATH:${
+                lib.makeBinPath [
+                  pkgs.gawk
+                  pkgs.bash
+                  pkgs.inotifytools
+                ]
+              }";
             };
-
-            Service = {
-              Type = "simple";
-              ExecStart = ''
-                ${pkgs.nur.repos."999eagle".swayaudioidleinhibit}/bin/sway-audio-idle-inhibit
-              '';
-              Restart = "always";
-            };
-
-            Install.WantedBy = [ "dwl-session.target" ];
+            ExecStart = "${pkgs.waybar}/bin/waybar";
           };
 
-          ## Persist clip board after app closes
-          wl-clip-persist = {
-            Unit = {
-              Description = "Automatically preserve clipboard when app closes";
-              Documentation = "https://github.com/Linus789/wl-clip-persist";
-              PartOf = "graphical-session.target";
-            };
+          Install.WantedBy = [ "dwl-session.target" ];
+        };
 
-            Service = {
-              Type = "simple";
-              ExecStart = ''
-                ${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard both
-              '';
-              Restart = "always";
-            };
-
-            Install.WantedBy = [ "dwl-session.target" ];
+        ## Swayidle for automatic locking
+        swayidle = {
+          Unit = {
+            Description = "Idle manager for Wayland";
+            Documentation = "man:swayidle(1)";
+            PartOf = "graphical-session.target";
           };
 
-        }
-      else
-        {
-
-          ### Xorg
-          ## Xidlehook for automatic locking
-          xidlehook = {
-            Unit = {
-              Description = "Idle manager for X11";
-              Documentation = "man:xidlehook(1)";
-              PartOf = "graphical-session.target";
-            };
-
-            Service = {
-              Type = "simple";
-              Environment = [
-                "DISPLAY=:0"
-                "XIDLEHOOK_SOCK=%t/xidlehook.socket"
-              ];
-              ExecStart = ''
-                ${pkgs.xidlehook}/bin/xidlehook \
-                --not-when-fullscreen \
-                --not-when-audio \
-                --timer 600 \
-                  "xrandr --output $(xrandr | grep primary | awk '{print $1}') --brightness .1" \
-                  "xrandr --output $(xrandr | grep primary | awk '{print $1}') --brightness 1" \
-                --timer 15 \
-                  "xrandr --output $(xrandr | grep primary | awk '{print $1}') --brightness 1; lock-xorg.sh" \
-                  "" \
-                --timer 3600 \
-                  "systemctl suspend-then-hibernate" \
-                  ""
-              '';
-            };
-
-            Install.WantedBy = [ "dwm-session.target" ];
+          Service = {
+            Type = "simple";
+            ExecStart = ''
+              ${pkgs.swayidle}/bin/swayidle -w\
+                timeout 600 'lock.sh' \
+                timeout 1200 'systemctl suspend-then-hibernate' \
+                before-sleep 'lock.sh'
+            '';
           };
 
-          ## Notification daemon
-          dunst = {
-            Unit = {
-              Description = "Dunst notification daemon";
-              Documentation = "man:dunst(1)";
-              PartOf = "graphical-session.target";
-              After = "graphical-session-pre.target";
-            };
+          Install.WantedBy = [ "dwl-session.target" ];
+        };
 
-            Service = {
-              Type = "dbus";
-              BusName = "org.freedesktop.Notifications";
-              ExecStart = "${pkgs.dunst}/bin/dunst";
-            };
+        ## Sway Audio Idle Inhibit
+        sway-audio-idle-inhibit = {
+          Unit = {
+            Description = "Automatically start idle inhibit when audio is playing";
+            Documentation = "https://github.com/ErikReider/SwayAudioIdleInhibit";
+            PartOf = "graphical-session.target";
           };
 
-          kwallet = {
-            Unit = {
-              Description = "Daemon for kwallet";
-              Documentation = "https://github.com/KDE/kwallet";
-              PartOf = "graphical-session.target";
-              After = "graphical-session-pre.target";
-            };
-
-            Service = {
-              Type = "simple";
-              ExecStart = ''
-                ${pkgs.libsForQt5.kwallet}/bin/kwalletd5
-              '';
-              Restart = "always";
-            };
-
-            Install.WantedBy = [ "dwm-session.target" ];
+          Service = {
+            Type = "simple";
+            ExecStart = ''
+              ${pkgs.nur.repos."999eagle".swayaudioidleinhibit}/bin/sway-audio-idle-inhibit
+            '';
+            Restart = "always";
           };
 
-          "1password" = {
-            Unit = {
-              Description = "Run 1password in silent mode";
-              Documentation = "https://1password.com/";
-              PartOf = "graphical-session.target";
-              After = "graphical-session-pre.target";
-            };
+          Install.WantedBy = [ "dwl-session.target" ];
+        };
 
-            Service = {
-              Type = "simple";
-              ExecStart = ''
-                ${pkgs._1password-gui}/bin/1password --silent
-              '';
-              Restart = "always";
-            };
-
-            Install.WantedBy = [ "dwm-session.target" ];
+        ## Persist clip board after app closes
+        wl-clip-persist = {
+          Unit = {
+            Description = "Automatically preserve clipboard when app closes";
+            Documentation = "https://github.com/Linus789/wl-clip-persist";
+            PartOf = "graphical-session.target";
           };
 
-        }
-    );
+          Service = {
+            Type = "simple";
+            ExecStart = ''
+              ${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard both
+            '';
+            Restart = "always";
+          };
+
+          Install.WantedBy = [ "dwl-session.target" ];
+        };
+
+      }
+    else
+      {
+
+        ### Xorg
+        ## Xidlehook for automatic locking
+        xidlehook = {
+          Unit = {
+            Description = "Idle manager for X11";
+            Documentation = "man:xidlehook(1)";
+            PartOf = "graphical-session.target";
+          };
+
+          Service = {
+            Type = "simple";
+            Environment = [
+              "DISPLAY=:0"
+              "XIDLEHOOK_SOCK=%t/xidlehook.socket"
+            ];
+            ExecStart = ''
+              ${pkgs.xidlehook}/bin/xidlehook \
+              --not-when-fullscreen \
+              --not-when-audio \
+              --timer 600 \
+                "xrandr --output $(xrandr | grep primary | awk '{print $1}') --brightness .1" \
+                "xrandr --output $(xrandr | grep primary | awk '{print $1}') --brightness 1" \
+              --timer 15 \
+                "xrandr --output $(xrandr | grep primary | awk '{print $1}') --brightness 1; lock-xorg.sh" \
+                "" \
+              --timer 3600 \
+                "systemctl suspend-then-hibernate" \
+                ""
+            '';
+          };
+
+          Install.WantedBy = [ "dwm-session.target" ];
+        };
+
+        ## Notification daemon
+        dunst = {
+          Unit = {
+            Description = "Dunst notification daemon";
+            Documentation = "man:dunst(1)";
+            PartOf = "graphical-session.target";
+            After = "graphical-session-pre.target";
+          };
+
+          Service = {
+            Type = "dbus";
+            BusName = "org.freedesktop.Notifications";
+            ExecStart = "${pkgs.dunst}/bin/dunst";
+          };
+        };
+
+        kwallet = {
+          Unit = {
+            Description = "Daemon for kwallet";
+            Documentation = "https://github.com/KDE/kwallet";
+            PartOf = "graphical-session.target";
+            After = "graphical-session-pre.target";
+          };
+
+          Service = {
+            Type = "simple";
+            ExecStart = ''
+              ${pkgs.libsForQt5.kwallet}/bin/kwalletd5
+            '';
+            Restart = "always";
+          };
+
+          Install.WantedBy = [ "dwm-session.target" ];
+        };
+
+        "1password" = {
+          Unit = {
+            Description = "Run 1password in silent mode";
+            Documentation = "https://1password.com/";
+            PartOf = "graphical-session.target";
+            After = "graphical-session-pre.target";
+          };
+
+          Service = {
+            Type = "simple";
+            ExecStart = ''
+              ${pkgs._1password-gui}/bin/1password --silent
+            '';
+            Restart = "always";
+          };
+
+          Install.WantedBy = [ "dwm-session.target" ];
+        };
+
+      }
+  );
 }

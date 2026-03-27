@@ -194,7 +194,7 @@ in
         Type = "forking";
         Environment = [ "DISPLAY=:0" ];
         ExecStart = ''
-          ${dwm-custom.outputs.packages.${pkgs.system}.default}/bin/lock-xorg.sh
+          ${dwm-custom.outputs.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/lock-xorg.sh
         '';
       };
 
@@ -202,7 +202,7 @@ in
     };
   };
   systemd.user.services = {
-    concd = conc.outputs.services.${pkgs.system}.daemon;
+    concd = conc.outputs.services.${pkgs.stdenv.hostPlatform.system}.daemon;
   };
 
   # Set your time zone.
@@ -218,6 +218,7 @@ in
     ];
     "127.0.0.2" = [ ];
     "192.168.3.53" = [ "yomama.reaslocal" ];
+    "192.168.3.60" = [ "rpi-proxy.reaslocal" ];
     # "192.168.3.173" = [ "malus-nixus" ];
   };
   /*
@@ -536,7 +537,7 @@ in
       neovim
       valgrind
       # helix
-      conc.outputs.packages.${pkgs.system}.cli
+      conc.outputs.packages.${stdenv.hostPlatform.system}.cli
       ncdu
 
       # GUI Misc (themes, fonts, scripts etc)
@@ -571,8 +572,8 @@ in
         ]
       else
         [
-          dwm-custom.outputs.packages.${system}.default
-          dmenu-custom.outputs.packages.${system}.default
+          dwm-custom.outputs.packages.${stdenv.hostPlatform.system}.default
+          dmenu-custom.outputs.packages.${stdenv.hostPlatform.system}.default
           i3lock-fancy-rapid
           xclip
           xidlehook
@@ -832,6 +833,7 @@ in
       "plugdev"
       "gamemode"
       "libvirtd"
+      "kvm"
     ];
   };
   users.groups.mongodb = {

@@ -13,7 +13,8 @@ vim.lsp.enable({
   'yamlls',
   -- 'elixirls',
   'expert',
-  'hls'
+  'hls',
+  'tailwindcss',
 })
 
 vim.lsp.config('vtsls', {
