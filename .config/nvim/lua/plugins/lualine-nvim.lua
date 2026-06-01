@@ -20,8 +20,6 @@ return {
     'nvim-tree/nvim-web-devicons',
   },
   config = function()
-    local code_companion_component = require('modules.lualine-code-companion')
-
     require('lualine').setup({
       options = {
         theme = 'material',
@@ -46,7 +44,7 @@ return {
         lualine_b = { 'branch', 'diff', 'diagnostics' },
         lualine_c = { filename_component },
         lualine_x = { 'encoding', 'fileformat', 'filetype', 'lsp_status' },
-        lualine_y = { 'code_companion_component', 'progress' },
+        lualine_y = { 'progress' },
         lualine_z = { 'location' },
       },
       inactive_sections = {

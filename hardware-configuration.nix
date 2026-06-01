@@ -53,10 +53,17 @@
     HibernateDelaySec=60m
     SuspendState=mem
   '';
+
+  boot.extraModprobeConfig = ''
+    options overlay metacopy=off
+    options overlay redirect_dir=off
+  '';
+
   /*
     boot.extraModprobeConfig = ''
       options rtw89pci disable_aspm_l1=y
       options rtw89pci disable_aspm_l1ss=y
+      options overlay redirect_dir=off
     '';
   */
   /*

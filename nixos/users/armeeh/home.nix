@@ -54,14 +54,19 @@
     cabal-install
     # frozenDevenv.devenv
     devenv
-    beamMinimal27Packages.elixir
+    beamMinimal28Packages.elixir_1_19
+    beamMinimal28Packages.elixir-ls
     expert.outputs.packages.${stdenv.hostPlatform.system}.expert
     # lldb # Debugging for C3
+    pgformatter
 
     # qgis # Working with geo data
     # llm shit
+    snip
     llm-nix.outputs.packages.${stdenv.hostPlatform.system}.claude-code
     llm-nix.outputs.packages.${stdenv.hostPlatform.system}.claude-code-acp
+    # llm-nix.outputs.packages.${stdenv.hostPlatform.system}.oh-my-opencode
+    llm-nix.outputs.packages.${stdenv.hostPlatform.system}.opencode
   ];
 
   dconf.settings = {
@@ -302,11 +307,16 @@
     terminal = "screen-256color";
   };
 
-  programs.diff-so-fancy.enable = false;
+  programs.difftastic = {
+    enable = true;
+    git.enable = true;
+  };
 
   programs.git = {
     enable = true;
 
+    # Enforce new signing format
+    signing.format = null;
     settings = {
       user.name = "Tomas Kallup";
       user.email = "t.kallup@gmail.com";

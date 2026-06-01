@@ -1,5 +1,5 @@
 return {
-	enabled = true,
+	enabled = false,
 	'olimorris/codecompanion.nvim',
 	opts = {
 		adapters = {

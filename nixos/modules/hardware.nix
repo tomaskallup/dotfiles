@@ -1,5 +1,6 @@
 { pkgs, ... }:
 {
+  boot.plymouth.enable = true;
   # Ensure systemd loads in initrd, this helps with hibernation & swap files
   boot.initrd.systemd.enable = true;
   # Add encrypted drive to initrd
@@ -13,6 +14,12 @@
   # boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelPackages = pkgs.linuxPackages_zen;
   boot.kernel.sysctl."kernel.sysrq" = 1;
+  boot.initrd.availableKernelModules = [
+    "thinkpad_acpi"
+  ];
+  boot.kernelParams = [
+    "thinkpad_acpi.fan_control=1"
+  ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
