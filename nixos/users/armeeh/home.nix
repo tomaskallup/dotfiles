@@ -26,7 +26,7 @@
   home.packages = with pkgs; [
     efm-langserver
     jq
-    nodejs_20
+    nodejs_22
     yarn
     # nodePackages.typescript-language-server
     vtsls
@@ -48,9 +48,9 @@
     tailwindcss-language-server
     nixfmt
     delta
-    haskell.compiler.ghc912
-    haskell.packages.ghc912.haskell-language-server
-    haskell.packages.ghc912.hlint
+    # haskell.compiler.ghc912
+    # haskell.packages.ghc912.haskell-language-server
+    # haskell.packages.ghc912.hlint
     cabal-install
     # frozenDevenv.devenv
     devenv
@@ -64,7 +64,6 @@
     # llm shit
     snip
     llm-nix.outputs.packages.${stdenv.hostPlatform.system}.claude-code
-    llm-nix.outputs.packages.${stdenv.hostPlatform.system}.claude-code-acp
     # llm-nix.outputs.packages.${stdenv.hostPlatform.system}.oh-my-opencode
     llm-nix.outputs.packages.${stdenv.hostPlatform.system}.opencode
   ];
@@ -545,7 +544,7 @@
       Service = {
         Type = "simple";
         ExecStart = ''
-          ${pkgs.libsForQt5.kwallet}/bin/kwalletd5
+          ${pkgs.kdePackages.kwallet}/bin/kwalletd6
         '';
         Restart = "always";
       };

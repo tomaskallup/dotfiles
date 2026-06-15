@@ -231,6 +231,7 @@ in
       libreoffice-qt
       ungoogled-chromium
       sxiv
+      prismlauncher
 
       # CLI Tools
       curl
@@ -253,8 +254,7 @@ in
       pciutils
       ranger
       kdePackages.kwallet-pam
-      kwalletcli
-      libsForQt5.kwallet
+      kdePackages.kwallet
       udisks
       highlight
       imagemagick_light
@@ -265,7 +265,6 @@ in
       tree-sitter
       neovim
       valgrind
-      # helix
       conc.outputs.packages.${stdenv.hostPlatform.system}.cli
       ncdu
 
