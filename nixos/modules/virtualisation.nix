@@ -17,6 +17,10 @@
     daemon = {
       settings = {
         data-root = "/data/docker";
+        dns = [
+          "8.8.8.8"
+          "1.1.1.1"
+        ];
       };
     };
   };

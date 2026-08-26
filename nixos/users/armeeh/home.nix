@@ -44,7 +44,8 @@
     # ccls
     # clang-tools
     yaml-language-server
-    vscode-langservers-extracted
+    vscode-css-languageserver
+    vscode-json-languageserver
     tailwindcss-language-server
     nixfmt
     delta
@@ -119,7 +120,6 @@
     XCURSOR_SIZE = "16";
   };
   home.sessionPath = [
-    "$HOME/Pkg/c3c/bin"
     "$HOME/.yarn/bin"
   ];
 
@@ -148,6 +148,7 @@
       y = "yarn";
       g = "git";
       yS = "yarn $(jq -r '.scripts | keys | .[]' < package.json | fzy)";
+      pS = "pnpm $(jq -r '.scripts | keys | .[]' < package.json | fzy)";
       cleanservices = "rm -rf packages/*/dist(N) packages/*/tsconfig.build.tsbuildinfo(N) services/*/build(N) services/*/tsconfig.build.tsbuildinfo(N) functions/*/build(N) functions/*/tsconfig.build.tsbuildinfo(N) && yarn && yarn lerna run build --concurrency 2";
       e = "$EDITOR";
       fzfe = "git ls-files --cached --modified --other --exclude-standard --deduplicate | fzy | xargs $EDITOR";

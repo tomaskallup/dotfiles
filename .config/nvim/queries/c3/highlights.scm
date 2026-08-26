@@ -1,1 +1,0 @@
-/home/armeeh/Pkg/tree-sitter-c3/queries/highlights.scm

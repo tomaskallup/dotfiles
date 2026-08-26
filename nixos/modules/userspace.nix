@@ -3,6 +3,7 @@
   conc,
   dwm-custom,
   dmenu-custom,
+  c3c,
   ...
 }:
 let
@@ -216,6 +217,8 @@ in
       glibc.static
       nix-prefetch-github
       gnumake
+      cmake
+      c3c.outputs.packages.${stdenv.hostPlatform.system}.c3c
 
       # GUI Applications
       kdePackages.kwalletmanager
@@ -232,6 +235,7 @@ in
       ungoogled-chromium
       sxiv
       prismlauncher
+      pixelorama
 
       # CLI Tools
       curl
@@ -267,6 +271,7 @@ in
       valgrind
       conc.outputs.packages.${stdenv.hostPlatform.system}.cli
       ncdu
+      gh
 
       # GUI Misc (themes, fonts, scripts etc)
       gnome-themes-extra # gtk theme

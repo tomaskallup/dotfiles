@@ -8,8 +8,8 @@ vim.lsp.enable({
 	'nil_ls',
 	'prismals',
 	-- 'ts_ls',
-	'vtsls',
-	-- 'tsgo',
+	-- 'vtsls',
+	'tsgo',
 	'yamlls',
 	'elixirls',
 	-- 'expert',
@@ -24,18 +24,13 @@ vim.lsp.config('vtsls', {
 --- @param diagnostic? vim.Diagnostic
 --- @param bufnr integer
 local function on_jump(diagnostic, bufnr)
-  print(vim.inspect(diagnostic))
+	print(vim.inspect(diagnostic))
 
 	if not diagnostic then
 		return
 	end
 
-	vim.diagnostic.show(
-		diagnostic.namespace,
-		bufnr,
-		{ diagnostic },
-		{ float = true }
-	)
+	vim.diagnostic.show(diagnostic.namespace, bufnr, { diagnostic }, { float = true })
 end
 
 vim.diagnostic.config({
@@ -44,7 +39,7 @@ vim.diagnostic.config({
 	underline = true,
 	float = true,
 	jump = {
-    float = true,
+		float = true,
 		on_jump = on_jump,
 	},
 })

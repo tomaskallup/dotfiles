@@ -21,6 +21,8 @@ vim.opt.spelloptions = { 'camel' }
 vim.o.foldlevelstart = 20
 vim.o.foldlevel = 20
 
+vim.o.diffopt = 'internal,filler,closeoff,indent-heuristic,inline:char,linematch:40,algorithm:minimal'
+
 -- Make sure semantic_tokens do not overwrite treesitter highlighting
 vim.hl.priorities.semantic_tokens = 95
 

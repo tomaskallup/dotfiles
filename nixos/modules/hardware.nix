@@ -19,6 +19,8 @@
   ];
   boot.kernelParams = [
     "thinkpad_acpi.fan_control=1"
+    "clocksource=hpet"
+    "tsc=unstable"
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -151,6 +153,7 @@
   services.printing = {
     enable = true;
     drivers = with pkgs; [ hplipWithPlugin ];
+    cups-pdf.enable = true;
   };
   services.avahi = {
     enable = true;

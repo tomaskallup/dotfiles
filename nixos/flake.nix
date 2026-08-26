@@ -16,6 +16,7 @@
     conc.url = "github:prixladi/conc/master";
     expert.url = "github:elixir-lang/expert";
     llm-nix.url = "github:numtide/llm-agents.nix";
+    c3c.url = "github:c3lang/c3c";
   };
   outputs =
     inputs@{
